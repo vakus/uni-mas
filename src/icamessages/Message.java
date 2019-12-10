@@ -5,6 +5,8 @@
  */
 package icamessages;
 
+import java.util.HashMap;
+
 /**
  *
  * @author v8243060
@@ -66,10 +68,14 @@ public class Message {
         return sender + "/" + recipient + "/" + type.toString() + "/" + messageDetails;
     }
     
+    /**
+     * This is to convert back from the tostring method
+     * @param msg
+     * @return 
+     */
     //TO DO
     public static Message parseMessage(String msg){
         String[] msgArr = msg.split("/",4);
-        
         String sender = msgArr[0];
         String recipient = msgArr[1];
         MessageType type = MessageType.valueOf(msgArr[2].toUpperCase());

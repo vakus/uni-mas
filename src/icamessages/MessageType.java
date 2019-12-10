@@ -12,7 +12,6 @@ package icamessages;
 public enum MessageType {
     USER_MSG,
     SYS_MSG,
-    REMOVE_AGENT,
-    REMOVE_PORTAL,
+    REMOVE_METAAGENT,
     ERROR
 }
