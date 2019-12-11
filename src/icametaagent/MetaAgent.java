@@ -6,7 +6,6 @@
 package icametaagent;
 
 import icamessages.Message;
-import java.util.*;
 
 /**
  *
@@ -27,6 +26,5 @@ public abstract class MetaAgent implements Runnable{
         return name;
     }
     
-    public abstract void sendMessage(Message m);
-    public abstract Message receiveMessage();
+    public abstract void sendMessage(MetaAgent agent, Message msg);
 }

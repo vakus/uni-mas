@@ -25,13 +25,7 @@ public class SocketAgent extends MetaAgent
     }
 
     @Override
-    public void sendMessage(Message m) 
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Message receiveMessage() 
+    public void sendMessage(MetaAgent agent, Message msg) 
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
