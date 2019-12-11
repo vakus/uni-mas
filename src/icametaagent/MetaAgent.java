@@ -11,7 +11,7 @@ import icamessages.Message;
  *
  * @author v8036651
  */
-public abstract class MetaAgent implements Runnable{
+public abstract class MetaAgent{
 
     protected final String name;
 
