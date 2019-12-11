@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -46,13 +47,17 @@ public class PortalTest {
     @Test
     public void testGetMetaAgent() {
         System.out.println("Testing the get meta agent method.");
-        String n = "Test";
+        
+        String n = "A1";
         Portal instance = new Portal("Test");
-        instance.addAgent(new MetaAgentImpl(n));
-        MetaAgent expResult = new MetaAgentImpl(n);
+        
+        instance.addAgent("A1", new User(n,instance));
+        User expResult = new User(n, instance);
         String sExpResult = expResult.getName();
-        MetaAgent result = instance.getMetaAgent(n);
+        
+        User result = new User(instance.getMetaAgent(n).getName(), instance);
         String sResult = result.getName();
+        
         assertEquals(sExpResult, sResult);
     }
 
@@ -63,12 +68,11 @@ public class PortalTest {
     @Test
     public void testRemoveAgent() {
         System.out.println("Testing the remove agent method.");
-        String name = "Barry";
         Portal instance = new Portal("Test");
         Portal expResult = instance;
         
-        instance.addAgent(new MetaAgentImpl("Barry"));
-        instance.removeAgent(name);
+        instance.addAgent("A1", new User("Barry", instance));
+        instance.removeAgent("A1");
         
         String sExpResult = expResult.toString();
         String sResult = instance.toString();
@@ -80,54 +84,53 @@ public class PortalTest {
      * Test of sendMessage method, of class Portal.
      */
     @Test
-    public void testSendMessage() {
+    public void testSendMessageAsUserMessage() {
         System.out.println("Testing the send message method");
-        MetaAgent agent = new MetaAgentImpl("Agent1");
-        MetaAgent agent2 = new MetaAgentImpl("Agent1");
-        Message message = new Message(agent.getName(), agent2.getName(), MessageType.USER_MSG, "Hello");
         Portal instance = new Portal("Test Portal");
-        instance.addAgent(agent);
-        instance.addAgent(agent2);
-        instance.sendMessage(agent, message);
-    }
-   
-    /**
-     * Test of run method, of class Portal.
-     */
-    
-    /*
-    @Test
-    public void testRun() {
-        System.out.println("Testing the run method");
-        Portal instance = new Portal("Test");
-        instance.run();
-    }
-    */
-    
-    public class MetaAgentImpl extends MetaAgent {
-
-        public MetaAgentImpl(String name) {
-            super(name);
-        }
-
-        public void sendMessage(Message m) {
-        }
-
-        public Message receiveMessage() {
-            return null;
-        }
-
-        @Override
-        public void run() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void sendMessage(MetaAgent agent, Message msg) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
+        User agent = new User("A1", instance);
+        User agent2 = new User("A2", instance);
+        Message message = new Message(instance.getName(), instance.getName(), MessageType.USER_MSG, "Hello");
         
+        instance.sendMessage(instance, message);
+        
+        String expResult = "User Message " + "Hello";
+        String result = "User Message " + message.getMessageDetails();
+        
+        assertEquals(expResult, result);
     }
-
-
+    
+    /**
+     * Test of sendMessage method, of class Portal.
+     */
+    @Test
+    public void testSendMessageAsErrorMessage() {
+        System.out.println("Testing the send message method");
+        Portal instance = new Portal("Test Portal");
+        User agent = new User("A1", instance);
+        User agent2 = new User("A2", instance);
+        Message message = new Message(instance.getName(), instance.getName(), MessageType.ERROR, "Hello");
+        
+        instance.sendMessage(instance, message);
+        
+        String expResult = "Error:" + "Hello";
+        String result = "Error:" + message.getMessageDetails();
+        
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of the isNameAllowed method, of class Portal.
+     */
+    @Test
+    public void testIsNameAllowedWithAnInvalidName(){
+        System.out.println("Testing the is name allowed method");
+        Portal instance = new Portal("Test Portal");
+        User agent1 = new User("Agent", instance);
+        User agent2 = new User("Agent", instance);
+        
+        boolean expResult = false;
+        boolean result = instance.isNameAllowed(agent2.getName());
+        
+        assertTrue(result == expResult);
+    }
 }
