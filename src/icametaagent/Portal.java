@@ -6,9 +6,12 @@
 package icametaagent;
 
 import icamessages.Message;
+import icamessages.MessageType;
 import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,49 +21,54 @@ public class Portal extends MetaAgent {
 
     protected HashMap<String, MetaAgent> routingTable;
     protected BlockingQueue<Message> messageQueue;
-    
 
     /**
-     *
-     * @param n
+     * Creates new portal with specific node name
+     * @param name
      */
-    public Portal(String n) 
-    {
-        super(n);
+    public Portal(String name) {
+        super(name);
         this.messageQueue = new ArrayBlockingQueue<>(100);
         this.routingTable = new HashMap<>();
     }
 
-    public MetaAgent getMetaAget(String n) 
-    {
+    public MetaAgent getMetaAgent(String n) {
         return routingTable.get(n);
     }
-    
-    public void addAgent(MetaAgent meta)
-    {
+
+    public void addAgent(MetaAgent meta) {
         routingTable.put(meta.getName(), meta);
     }
-    
-    public void removeAgent(String name)
-    {
+
+    public void removeAgent(String name) {
         routingTable.remove(name);
     }
 
     @Override
-    public void sendMessage(Message m) 
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void sendMessage(MetaAgent agent, Message message) {
+        if (message.getRecipient().equals(this.name)) {
+            messageQueue.add(message);
+        } else {
+            routingTable.get(message.getRecipient()).sendMessage(this, message);
+        }
     }
 
     @Override
-    public Message receiveMessage() 
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void run() 
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void run() {
+        while(true){
+            if(!messageQueue.isEmpty()){
+                try {
+                    Message msg = messageQueue.take();
+                    
+                    //process the system message
+                    if(msg.getMessageType().equals(MessageType.ADD_METAAGENT)){
+                        
+                    }
+                    
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 }
