@@ -26,7 +26,7 @@ public class Router extends Portal implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (!server.isClosed()) {
             try {
                 Socket s = server.accept();
                 SocketAgent newAgent = new SocketAgent("socket", this, s);
@@ -38,7 +38,9 @@ public class Router extends Portal implements Runnable {
             } catch (IOException ex) {
                 Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         }
     }
+    
+    
+
 }
