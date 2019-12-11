@@ -7,23 +7,38 @@ package icametaagent;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author v8036651
  */
-public class Router extends Portal {
+public class Router extends Portal implements Runnable {
+
     protected ServerSocket server;
-    
-    public Router(String n) throws IOException 
-    {
+
+    public Router(String n) throws IOException {
         super(n);
         server = new ServerSocket(42069);
     }
 
     @Override
-    public void run() 
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void run() {
+        while (true) {
+            try {
+                Socket s = server.accept();
+                SocketAgent newAgent = new SocketAgent("socket", this, s);
+                
+                Thread thread = new Thread(newAgent);
+                thread.start();
+                
+                
+            } catch (IOException ex) {
+                Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
     }
 }
