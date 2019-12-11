@@ -10,8 +10,24 @@ package icamessages;
  * @author v8243060
  */
 public enum MessageType {
+
+    /**
+     *
+     */
     USER_MSG,
+
+    /**
+     *
+     */
     ADD_METAAGENT,
+
+    /**
+     *
+     */
     REMOVE_METAAGENT,
+
+    /**
+     *
+     */
     ERROR
 }

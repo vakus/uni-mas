@@ -6,6 +6,7 @@
 package icametaagent;
 
 import icamessages.Message;
+import icamessages.MessageType;
 
 /**
  *
@@ -22,9 +23,12 @@ public class User extends MetaAgent
     }
 
     @Override
-    public void sendMessage(MetaAgent agent, Message m) 
+    public void sendMessage(MetaAgent agent, Message msg) 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(msg.getRecipient().equals(this.name)){
+            System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
+        }else{
+            connection.sendMessage(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
+        }
     }
-    
 }

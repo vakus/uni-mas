@@ -30,14 +30,14 @@ public class Message {
      * Contains the message itself
      */
     private String messageDetails;
-
-    public Message(){
-        sender = "error";
-        recipient = "error";
-        type = MessageType.ERROR;
-        messageDetails = "error";
-    }
     
+    /**
+     *Constructor for message class when passed parameters.
+     * @param sender
+     * @param recipeint
+     * @param type
+     * @param details
+     */
     public Message(String sender, String recipeint, MessageType type, String details){
         this.sender = sender;
         this.recipient = recipeint;
@@ -45,29 +45,49 @@ public class Message {
         this.messageDetails = details;
     }
 
+    /**
+     *Retrieve sender
+     * @return
+     */
     public String getSender(){
         return sender;
     }
     
+    /**
+     *Retrieve recipient
+     * @return
+     */
     public String getRecipient(){
         return recipient;
     }
     
+    /**
+     *Retrieve message type
+     * @return
+     */
     public MessageType getMessageType(){
         return type;
     }
     
+    /**
+     *Retrieve message details
+     * @return
+     */
     public String getMessageDetails(){
         return messageDetails;
     }
     
+    /**
+     * toString() method which allows the message to be passed between the portals.
+     * @return 
+     */
     @Override
     public String toString(){
         return sender + "/" + recipient + "/" + type.toString() + "/" + messageDetails;
     }
     
     /**
-     * This is to convert back from the tostring method
+     * This is to convert back from the toString() method
      * @param msg The string that should be parsed to Message
      * @return Message object created from the string
      */

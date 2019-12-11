@@ -67,4 +67,7 @@ public class Portal extends MetaAgent {
     private boolean isNameAllowed(String name){
         return routingTable.get(name) != null;
     }
+    
+    
+
 }
