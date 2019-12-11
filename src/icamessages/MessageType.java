@@ -11,7 +11,7 @@ package icamessages;
  */
 public enum MessageType {
     USER_MSG,
-    SYS_MSG,
+    ADD_METAAGENT,
     REMOVE_METAAGENT,
     ERROR
 }
