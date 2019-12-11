@@ -39,7 +39,7 @@ public class UserTest {
     }
 
     /**
-     * Test of sendMessage method, of class User.
+     * Test of messageHandler method, of class User.
      */
     @Test
     public void testSendMessage() {
@@ -47,7 +47,7 @@ public class UserTest {
         MetaAgent agent = null;
         Message m = null;
         User instance = null;
-        instance.sendMessage(agent, m);
+        instance.messageHandler(agent, m);
     }
     
 }

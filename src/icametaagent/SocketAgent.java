@@ -9,6 +9,7 @@ import icamessages.Message;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,17 +21,20 @@ public class SocketAgent extends MetaAgent implements Runnable {
 
     protected Portal portalConection;
     protected Socket routerConnection;
+    private Worker worker;
 
     public SocketAgent(String name, Portal p, Socket s) {
         super(name);
         portalConection = p;
         routerConnection = s;
+        worker = new Worker(this);
     }
 
     @Override
-    public void sendMessage(MetaAgent agent, Message msg) {
+    public void messageHandler(MetaAgent agent, Message msg) {
         try {
             routerConnection.getOutputStream().write(msg.toString().getBytes());
+            routerConnection.getOutputStream().flush();
         } catch (IOException ex) {
             Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,12 +60,32 @@ public class SocketAgent extends MetaAgent implements Runnable {
                     
                     String armsg = new String(rmsg);
                     Message farmsg = Message.parseMessage(armsg);
-                    portalConection.sendMessage(this, farmsg);
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+}
 
+class Worker implements Runnable{
+
+    public BlockingQueue<Message> messageQueue;
+    private SocketAgent agent;
+    
+    public Worker(SocketAgent agent){
+        this.agent = agent;
+    }
+    
+    @Override
+    public void run() {
+        while(true){
+            try {
+                agent.portalConection.messageHandler(agent, messageQueue.take());
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
 }

@@ -29,5 +29,9 @@ public enum MessageType {
     /**
      *
      */
-    ERROR
+    ERROR,
+    
+    ADD_PORTAL,
+    REMOVE_PORTAL,
+    LOAD_TABLE,
 }

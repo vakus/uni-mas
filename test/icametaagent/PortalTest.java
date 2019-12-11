@@ -81,7 +81,7 @@ public class PortalTest {
     }
     
      /**
-     * Test of sendMessage method, of class Portal.
+     * Test of messageHandler method, of class Portal.
      */
     @Test
     public void testSendMessageAsUserMessage() {
@@ -91,7 +91,7 @@ public class PortalTest {
         User agent2 = new User("A2", instance);
         Message message = new Message(instance.getName(), instance.getName(), MessageType.USER_MSG, "Hello");
         
-        instance.sendMessage(instance, message);
+        instance.messageHandler(instance, message);
         
         String expResult = "User Message " + "Hello";
         String result = "User Message " + message.getMessageDetails();
@@ -100,7 +100,7 @@ public class PortalTest {
     }
     
     /**
-     * Test of sendMessage method, of class Portal.
+     * Test of messageHandler method, of class Portal.
      */
     @Test
     public void testSendMessageAsErrorMessage() {
@@ -110,7 +110,7 @@ public class PortalTest {
         User agent2 = new User("A2", instance);
         Message message = new Message(instance.getName(), instance.getName(), MessageType.ERROR, "Hello");
         
-        instance.sendMessage(instance, message);
+        instance.messageHandler(instance, message);
         
         String expResult = "Error:" + "Hello";
         String result = "Error:" + message.getMessageDetails();

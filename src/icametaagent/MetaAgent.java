@@ -26,5 +26,5 @@ public abstract class MetaAgent{
         return name;
     }
     
-    public abstract void sendMessage(MetaAgent agent, Message msg);
+    public abstract void messageHandler(MetaAgent agent, Message msg);
 }
