@@ -6,6 +6,7 @@
 package icametaagent;
 
 import icamessages.Message;
+import icamessages.MessageType;
 import java.util.HashMap;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -40,82 +41,68 @@ public class PortalTest {
     }
 
     /**
-     * Test of getMetaAget method, of class Portal.
+     * Test of getMetaAgent method, of class Portal.
      */
     @Test
     public void testGetMetaAgent() {
-        System.out.println("Testing the get meta agent method, with no values.");
+        System.out.println("Testing the get meta agent method.");
         String n = "Test";
         Portal instance = new Portal("Test");
         instance.addAgent(new MetaAgentImpl(n));
         MetaAgent expResult = new MetaAgentImpl(n);
+        String sExpResult = expResult.getName();
         MetaAgent result = instance.getMetaAgent(n);
-        assertEquals(expResult, result);
+        String sResult = result.getName();
+        assertEquals(sExpResult, sResult);
     }
 
-    /**
-     * Test of addAgent method, of class Portal.
-     */
-    @Test
-    public void testAddAgent() {
-        System.out.println("addAgent");
-        MetaAgent meta = null;
-        Portal instance = null;
-        instance.addAgent(meta);
-    }
-
+    
     /**
      * Test of removeAgent method, of class Portal.
      */
     @Test
     public void testRemoveAgent() {
-        System.out.println("removeAgent");
-        String name = "";
-        Portal instance = null;
+        System.out.println("Testing the remove agent method.");
+        String name = "Barry";
+        Portal instance = new Portal("Test");
+        Portal expResult = instance;
+        
+        instance.addAgent(new MetaAgentImpl("Barry"));
         instance.removeAgent(name);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        String sExpResult = expResult.toString();
+        String sResult = instance.toString();
+        
+        assertEquals(sExpResult, sResult);
     }
-
-    /**
+    
+     /**
      * Test of sendMessage method, of class Portal.
      */
     @Test
     public void testSendMessage() {
-        System.out.println("sendMessage");
-        Message m = null;
-        Portal instance = null;
-        instance.sendMessage(m);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println("Testing the send message method");
+        MetaAgent agent = new MetaAgentImpl("Agent1");
+        MetaAgent agent2 = new MetaAgentImpl("Agent1");
+        Message message = new Message(agent.getName(), agent2.getName(), MessageType.USER_MSG, "Hello");
+        Portal instance = new Portal("Test Portal");
+        instance.addAgent(agent);
+        instance.addAgent(agent2);
+        instance.sendMessage(agent, message);
     }
-
-    /**
-     * Test of receiveMessage method, of class Portal.
-     */
-    @Test
-    public void testReceiveMessage() {
-        System.out.println("receiveMessage");
-        Portal instance = null;
-        Message expResult = null;
-        Message result = instance.receiveMessage();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
+   
     /**
      * Test of run method, of class Portal.
      */
+    
+    /*
     @Test
     public void testRun() {
-        System.out.println("run");
-        Portal instance = null;
+        System.out.println("Testing the run method");
+        Portal instance = new Portal("Test");
         instance.run();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-    
+    */
     
     public class MetaAgentImpl extends MetaAgent {
 
@@ -134,7 +121,13 @@ public class PortalTest {
         public void run() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+
+        @Override
+        public void sendMessage(MetaAgent agent, Message msg) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
         
     }
-    
+
+
 }
