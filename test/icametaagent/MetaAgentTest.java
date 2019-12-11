@@ -69,15 +69,13 @@ public class MetaAgentTest {
             super("");
         }
 
-        public void sendMessage(Message m) {
-        }
-
-        public Message receiveMessage() {
-            return null;
+        @Override
+        public void run() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void run() {
+        public void sendMessage(MetaAgent agent, Message msg) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
         
@@ -88,16 +86,14 @@ public class MetaAgentTest {
         public MetaAgentImpl2() {
             super("Five");
         }
-
-        public void sendMessage(Message m) {
-        }
-
-        public Message receiveMessage() {
-            return null;
-        }
         
         @Override
         public void run() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void sendMessage(MetaAgent agent, Message msg) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }
