@@ -44,7 +44,7 @@ public class MetaAgentTest {
     @Test
     public void testGetNameWithNoValues() {
         System.out.println("Testing the get name method with no values");
-        MetaAgent instance = new MetaAgentImpl();
+        MetaAgent instance = new MetaAgentImpl("");
         String expResult = "";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -56,7 +56,7 @@ public class MetaAgentTest {
     @Test
     public void testGetNameWithValues() {
         System.out.println("Testing the get name method");
-        MetaAgent instance = new MetaAgentImpl2();
+        MetaAgent instance = new MetaAgentImpl("Five");
         String expResult = "Five";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -65,13 +65,8 @@ public class MetaAgentTest {
     
     public class MetaAgentImpl extends MetaAgent {
 
-        public MetaAgentImpl() {
-            super("");
-        }
-
-        @Override
-        public void run() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        public MetaAgentImpl(String name) {
+            super(name);
         }
 
         @Override
@@ -80,22 +75,5 @@ public class MetaAgentTest {
         }
         
     }
-    
-    public class MetaAgentImpl2 extends MetaAgent {
 
-        public MetaAgentImpl2() {
-            super("Five");
-        }
-        
-        @Override
-        public void run() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void sendMessage(MetaAgent agent, Message msg) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-    }
-    
 }

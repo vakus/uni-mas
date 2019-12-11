@@ -17,9 +17,9 @@ import static org.junit.Assert.*;
  *
  * @author v8077971
  */
-public class UserTest {
+public class SocketAgentTest {
     
-    public UserTest() {
+    public SocketAgentTest() {
     }
     
     @BeforeClass
@@ -39,15 +39,27 @@ public class UserTest {
     }
 
     /**
-     * Test of sendMessage method, of class User.
+     * Test of sendMessage method, of class SocketAgent.
      */
     @Test
     public void testSendMessage() {
         System.out.println("sendMessage");
         MetaAgent agent = null;
-        Message m = null;
-        User instance = null;
-        instance.sendMessage(agent, m);
+        Message msg = null;
+        SocketAgent instance = null;
+        instance.sendMessage(agent, msg);
+    }
+
+    /**
+     * Test of run method, of class SocketAgent.
+     */
+    @Test
+    public void testRun() {
+        System.out.println("run");
+        SocketAgent instance = null;
+        instance.run();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
     
 }
