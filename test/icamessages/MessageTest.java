@@ -36,18 +36,6 @@ public class MessageTest {
     @After
     public void tearDown() {
     }
-
-    /**
-     * Test of getSender method, of class Message, where there are no values.
-     */
-    @Test
-    public void testGetSenderWithNoValues() {
-        System.out.println("Testing the get sender method with no values.");
-        Message instance = new Message();
-        String expResult = "error";
-        String result = instance.getSender();
-        assertEquals(expResult, result);
-    }
     
     /**
      * Test of getSender method, of class Message, where there are values.
@@ -58,18 +46,6 @@ public class MessageTest {
         Message instance = new Message("Abe", "Barry", MessageType.USER_MSG, "Testing");
         String expResult = "Abe";
         String result = instance.getSender();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of getRecipient method, of class Message, where there are no values.
-     */
-    @Test
-    public void testGetRecipientWithNoValues() {
-        System.out.println("Testing the get recipient method with no values.");
-        Message instance = new Message();
-        String expResult = "error";
-        String result = instance.getRecipient();
         assertEquals(expResult, result);
     }
     
@@ -86,18 +62,6 @@ public class MessageTest {
     }
 
     /**
-     * Test of getMessageType method, of class Message, where there are no values.
-     */
-    @Test
-    public void testGetMessageTypeWithNoValues() {
-        System.out.println("Testing the get message type method with no values.");
-        Message instance = new Message();
-        MessageType expResult = MessageType.ERROR;
-        MessageType result = instance.getMessageType();
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of getMessageType method, of class Message, where it is a user message.
      */
     @Test
@@ -106,18 +70,6 @@ public class MessageTest {
         Message instance = new Message("Abe", "Barry", MessageType.USER_MSG, "Testing");
         MessageType expResult = MessageType.USER_MSG;
         MessageType result = instance.getMessageType();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of getMessageDetails method, of class Message, where there are no values.
-     */
-    @Test
-    public void testGetMessageDetailsWithNoValues() {
-        System.out.println("Testing the get message details method with no values.");
-        Message instance = new Message();
-        String expResult = "error";
-        String result = instance.getMessageDetails();
         assertEquals(expResult, result);
     }
 
@@ -133,17 +85,6 @@ public class MessageTest {
         assertEquals(expResult, result);
     }
     
-    /**
-     * Test of toString method, of class Message, where there are no values.
-     */
-    @Test
-    public void testToStringWithNoValues() {
-        System.out.println("Testing the to string method with no values.");
-        Message instance = new Message();
-        String expResult = "error/error/ERROR/error";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-    }
 
     /**
      * Test of toString method, of class Message, where there are values.

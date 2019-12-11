@@ -70,7 +70,7 @@ public class MetaAgentTest {
         }
 
         @Override
-        public void sendMessage(MetaAgent agent, Message msg) {
+        public void messageHandler(MetaAgent agent, Message msg) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
         

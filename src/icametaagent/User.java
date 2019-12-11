@@ -23,12 +23,12 @@ public class User extends MetaAgent
     }
 
     @Override
-    public void sendMessage(MetaAgent agent, Message msg) 
+    public void messageHandler(MetaAgent agent, Message msg) 
     {
         if(msg.getRecipient().equals(this.name)){
             System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
         }else{
-            connection.sendMessage(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
+            //connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
         }
     }
 }
