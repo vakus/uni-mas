@@ -28,7 +28,7 @@ public class User extends MetaAgent
         if(msg.getRecipient().equals(this.name)){
             System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
         }else{
-            //connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
+            connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
         }
     }
 }
