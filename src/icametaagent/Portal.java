@@ -19,7 +19,6 @@ public class Portal extends MetaAgent {
     protected HashMap<String, MetaAgent> routingTable;
     /**
      * This list only stores list of socketAgents which are to be sent messages only unique
-     * ps domk argument with patryk
      */
     private ArrayList<SocketAgent> socketAgents;
 
@@ -31,6 +30,7 @@ public class Portal extends MetaAgent {
     public Portal(String name) {
         super(name);
         this.routingTable = new HashMap<>();
+        this.socketAgents = new ArrayList<>();
     }
 
     public MetaAgent getMetaAgent(String n) {
@@ -39,6 +39,11 @@ public class Portal extends MetaAgent {
 
     public void addAgent(String name, MetaAgent meta) {
         routingTable.put(name, meta);
+        if(this instanceof Router || (this instanceof Portal && socketAgents.size() == 0)){
+            if(meta instanceof SocketAgent){
+                socketAgents.add((SocketAgent) meta);
+            }
+        }
     }
 
     public void removeAgent(String name) {
@@ -47,24 +52,19 @@ public class Portal extends MetaAgent {
 
     @Override
     public void messageHandler(MetaAgent agent, Message message) {
-        System.out.println(message.toString());
+        System.out.println(this.name + "Processing: " + message.toString());
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
             switch (message.getMessageType()) {
                 case ADD_METAAGENT:
-                    System.out.println(message.getMessageType().toString());
+                    System.out.println(this.name + "Adding " + message.toString());
                     if (isNameAllowed(message.getSender())) {
                         addAgent(message.getSender(), agent);
 
                         
-                        
-                        for (String s : routingTable.keySet()) {
-                            if (routingTable.get(s) instanceof SocketAgent){
-                                routingTable.get(s).messageHandler(this, message);
-                                if(this instanceof Portal){
-                                    break;
-                                }
+                        for(SocketAgent sa : socketAgents){
+                            if(!sa.equals(agent)){
+                                sa.messageHandler(this, message);
                             }
-                            
                         }
 
                     } else {
@@ -72,32 +72,34 @@ public class Portal extends MetaAgent {
                     }
                     break;
                 case REMOVE_METAAGENT:
-                    System.out.println(message.getMessageType().toString());
                     removeAgent(message.getSender());
                     break;
                 case USER_MSG:
-                    System.out.println(message.getMessageType().toString());
                     System.out.println("UserMessage: " + message.getMessageDetails());
                     break;
                 case ADD_PORTAL:
-                    System.out.println(message.getMessageType().toString());
 
-                    routingTable.put(message.getSender(), agent);
+                    addAgent(message.getSender(), agent);
 
+                    
+                    for(SocketAgent sa : socketAgents){
+                        if(!sa.equals(agent)){
+                            sa.messageHandler(this, new Message(message.getSender(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
+                        }
+                    }
+                    
                     String values = "";
                     for (String key : routingTable.keySet()) {
-                        System.out.println("k: " + key);
                         values += key + "\n";
                     }
+                    values += this.name + "\n";
 
                     agent.messageHandler(this, new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, values));
                     break;
                 case REMOVE_PORTAL:
-                    System.out.println(message.getMessageType().toString());
 
                     break;
                 case LOAD_TABLE:
-                    System.out.println(message.getMessageType().toString());
 
                     String[] values2 = message.getMessageDetails().split("\n");
                     for (String s : values2) {
@@ -105,17 +107,20 @@ public class Portal extends MetaAgent {
                     }
                     break;
                 default:
-                    System.out.println(message.getMessageType().toString());
                     System.out.println("Error:" + message.getMessageDetails());
                     break;
             }
         } else {
-            routingTable.get(message.getRecipient()).messageHandler(this, message);
+            if(routingTable.containsKey(message.getRecipient())){
+                routingTable.get(message.getRecipient()).messageHandler(this, message);
+            }else{
+                agent.messageHandler(this, new Message(this.getName(), message.getSender(), MessageType.ERROR, "FUCK YOU"));
+            }
         }
     }
 
     public boolean isNameAllowed(String name) {
-        return routingTable.get(name) != null;
+        return routingTable.get(name) == null;
     }
 
 }

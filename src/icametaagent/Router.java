@@ -29,6 +29,7 @@ public class Router extends Portal implements Runnable {
         while (!server.isClosed()) {
             try {
                 Socket s = server.accept();
+                System.out.println("Accepted connection from: " + s.getInetAddress().toString());
                 SocketAgent newAgent = new SocketAgent("socket", this, s);
                 
                 Thread thread = new Thread(newAgent);

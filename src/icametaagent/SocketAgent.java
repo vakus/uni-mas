@@ -8,8 +8,9 @@ package icametaagent;
 import icamessages.Message;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,23 +22,20 @@ public class SocketAgent extends MetaAgent implements Runnable {
 
     protected Portal portalConection;
     protected Socket routerConnection;
-    private Worker worker;
+    private ArrayBlockingQueue<Message> messageQueue;
+    private boolean busy;
 
     public SocketAgent(String name, Portal p, Socket s) {
         super(name);
+        busy = false;
         portalConection = p;
         routerConnection = s;
-        worker = new Worker(this);
+        messageQueue = new ArrayBlockingQueue<Message>(20);
     }
 
     @Override
     public void messageHandler(MetaAgent agent, Message msg) {
-        try {
-            routerConnection.getOutputStream().write(msg.toString().getBytes());
-            routerConnection.getOutputStream().flush();
-        } catch (IOException ex) {
-            Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        messageQueue.add(msg);
     }
 
     /**
@@ -50,7 +48,7 @@ public class SocketAgent extends MetaAgent implements Runnable {
 
         try {
             InputStream in = routerConnection.getInputStream();
-
+            OutputStream out = routerConnection.getOutputStream();
             while (!routerConnection.isClosed()) {
 
                 
@@ -59,33 +57,50 @@ public class SocketAgent extends MetaAgent implements Runnable {
                     in.read(rmsg);
                     
                     String armsg = new String(rmsg);
-                    Message farmsg = Message.parseMessage(armsg);
+                    
+                    if(armsg.equals("#")){
+                        busy = false;
+                        System.out.println("ACK");
+                        
+                    }else if(armsg.startsWith("#")){
+                        
+                        busy = false;
+                        armsg = armsg.substring(1);
+                        System.out.println("receiving: " + armsg);
+                        Message farmsg = Message.parseMessage(armsg);
+                        portalConection.messageHandler(this, farmsg);
+                        out.write("#".getBytes());
+                        out.flush();
+                        
+                    }else if(armsg.endsWith("#")){
+                        
+                        busy = false;
+                        armsg = armsg.substring(0, armsg.length()-1);
+                        System.out.println("receiving: " + armsg);
+                        Message farmsg = Message.parseMessage(armsg);
+                        portalConection.messageHandler(this, farmsg);
+                        out.write("#".getBytes());
+                        out.flush();
+                        
+                    }else{
+                        System.out.println("receiving: " + armsg);
+                        Message farmsg = Message.parseMessage(armsg);
+                        portalConection.messageHandler(this, farmsg);
+                        out.write("#".getBytes());
+                        out.flush();
+                    }
+                }
+                
+                if(!messageQueue.isEmpty() && !busy){
+                    Message msg = messageQueue.poll();
+                    System.out.println("sending: " + msg.toString());
+                    out.write(msg.toString().getBytes());
+                    out.flush();
+                    busy = true;
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-}
-
-class Worker implements Runnable{
-
-    public BlockingQueue<Message> messageQueue;
-    private SocketAgent agent;
-    
-    public Worker(SocketAgent agent){
-        this.agent = agent;
-    }
-    
-    @Override
-    public void run() {
-        while(true){
-            try {
-                agent.portalConection.messageHandler(agent, messageQueue.take());
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
 }
