@@ -11,11 +11,8 @@ import icamessages.Message;
  *
  * @author v8036651
  */
-public class CMDMonitor 
+public class CMDMonitor extends Monitor
 {
-    protected Message message;
-    protected String agentName;
-
     /**
      * A name of the agent must be passed as it says which agent the monitor is on,
      * this is to compare the intended recipient and the actual,
@@ -25,8 +22,7 @@ public class CMDMonitor
      */
     public CMDMonitor(Message msg, String name) 
     {
-        message = msg;
-        agentName = name;
+        super(msg,name);
     }
     
     /**
@@ -34,6 +30,7 @@ public class CMDMonitor
      * name of the recipient, the actual recipient, the message type and the
      * message details when a message is received.
      */
+    @Override
     public void ReceivedMessage ()
     {
         System.out.println("+==========================================+");
@@ -55,6 +52,7 @@ public class CMDMonitor
      * name of the intended sender, the intended recipient, the message type and the
      * message details when a message is sent.
      */
+    @Override
     public void SentMessage ()
     {
         System.out.println("+==========================================+");
