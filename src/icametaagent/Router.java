@@ -16,14 +16,22 @@ import java.util.logging.Logger;
  * @author v8036651
  */
 public class Router extends Portal implements Runnable {
-
+    
     protected ServerSocket server;
 
+    /**
+     * Constructor for a router object with a super class of portal.
+     * @param n
+     * @throws IOException 
+     */
     public Router(String n) throws IOException {
         super(n);
         server = new ServerSocket(42069);
     }
 
+    /**
+     * Overwrites the run method from the implements runnable.
+     */
     @Override
     public void run() {
         while (!server.isClosed()) {

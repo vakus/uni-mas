@@ -91,7 +91,6 @@ public class Message {
      * @param msg The string that should be parsed to Message
      * @return Message object created from the string
      */
-    //TO DO
     public static Message parseMessage(String msg){
         String[] msgArr = msg.split("/",4);
         String sender = msgArr[0];
