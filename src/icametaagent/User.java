@@ -16,12 +16,25 @@ public class User extends MetaAgent
 {
     protected Portal connection;
     
+    /**
+     * Constructor for a user,
+     * Draws from the super class of MetaAgent.
+     * @param name
+     * @param p 
+     */
     public User(String name, Portal p) 
     {
         super(name);
         connection = p;
     }
 
+    /**
+     * Overwrites the messageHandler method,
+     * This is used to display the message or pass the message on depending on
+     * the recipient of the message.
+     * @param agent
+     * @param msg 
+     */
     @Override
     public void messageHandler(MetaAgent agent, Message msg) 
     {

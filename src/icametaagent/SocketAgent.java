@@ -25,14 +25,27 @@ public class SocketAgent extends MetaAgent implements Runnable {
     private ArrayBlockingQueue<Message> messageQueue;
     private boolean busy;
 
+    /**
+     * Draws from the super class of MetaAgent,
+     * Constructor for the socket agent.
+     * @param name
+     * @param p
+     * @param s 
+     */
     public SocketAgent(String name, Portal p, Socket s) {
         super(name);
         busy = false;
         portalConection = p;
         routerConnection = s;
-        messageQueue = new ArrayBlockingQueue<Message>(20);
+        messageQueue = new ArrayBlockingQueue<>(20);
     }
 
+    /**
+     * Overwrites the messageHandler method from the super class of MetaAgent,
+     * this adds a message to the message queue.
+     * @param agent
+     * @param msg 
+     */
     @Override
     public void messageHandler(MetaAgent agent, Message msg) {
         messageQueue.add(msg);
@@ -42,6 +55,7 @@ public class SocketAgent extends MetaAgent implements Runnable {
      * rmsg = recived message
      * armsg = actual recived message
      * farmsg = final actual message to be sent
+     * 
      */
     @Override
     public void run() {

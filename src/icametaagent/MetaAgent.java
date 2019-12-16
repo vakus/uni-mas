@@ -16,15 +16,25 @@ public abstract class MetaAgent{
     protected final String name;
 
     /**
-     * Constructor
+     * Constructor for a new MetaAgent.
+     * @param name 
      */
     MetaAgent(String name) {
         this.name = name;
     }
 
+    /**
+     * Used to return the name value of a MetaAgent.
+     * @return 
+     */
     public String getName() {
         return name;
     }
     
+    /**
+     * Abstract method that is overwritten my sub classes for handling a message.
+     * @param agent
+     * @param msg 
+     */
     public abstract void messageHandler(MetaAgent agent, Message msg);
 }
