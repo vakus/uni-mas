@@ -6,6 +6,7 @@
 package icamonitors;
 
 import icamessages.Message;
+import java.util.Observable;
 import java.util.Observer;
 
 /**
@@ -39,7 +40,6 @@ public abstract class Monitor implements Observer
      */
     public abstract void SentMessage (Message message);
     
-
     
     
     
