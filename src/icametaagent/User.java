@@ -21,6 +21,7 @@ public class User extends MetaAgent
      * Draws from the super class of MetaAgent.
      * @param name
      * @param p 
+     * @author v8036651
      */
     public User(String name, Portal p) 
     {
@@ -34,6 +35,7 @@ public class User extends MetaAgent
      * the recipient of the message.
      * @param agent
      * @param msg 
+     * @author v8073331
      */
     @Override
     public void messageHandler(MetaAgent agent, Message msg) 
@@ -44,4 +46,20 @@ public class User extends MetaAgent
             connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
         }
     }
+    
+    /**
+     * Creates a message and sends it to the portal
+     * @param recipient recipient of the message
+     * @param details message details
+     * @author v8243060
+     * @throws IllegalArgumentException if recipient contains "/"
+     */
+    public void sendMessage (String recipient, String details){
+        if (!recipientValidation(recipient)){
+            throw new IllegalArgumentException("Recipient name not correct");
+        }
+        Message msg = new Message(name, recipient, MessageType.USER_MSG, details);
+        connection.messageHandler(this, msg);
+    }
+    
 }

@@ -18,23 +18,50 @@ public abstract class MetaAgent{
     /**
      * Constructor for a new MetaAgent.
      * @param name 
+     * @author v8036651
      */
     MetaAgent(String name) {
+        if (usernameValidation(name)){
+            throw new IllegalArgumentException("Invalid user name");
+        }
         this.name = name;
     }
 
     /**
      * Used to return the name value of a MetaAgent.
-     * @return 
+     * @return String of the name of the MetaAgent
+     * @author v8036651
      */
-    public String getName() {
+    public String getName() 
+    {
         return name;
     }
     
     /**
-     * Abstract method that is overwritten my sub classes for handling a message.
+     * Abstract method that is overwritten by subclasses for handling a message.
      * @param agent
      * @param msg 
+     * @author v8036651
      */
     public abstract void messageHandler(MetaAgent agent, Message msg);
+    
+    /**
+     * Validates whether the user name is allowed
+     * @param name metaagent name to be used
+     * @return true if metaagent name allowed
+     * @author v8243060
+     */
+    protected boolean usernameValidation(String name){
+        return (name != null && !name.contains("/") && !name.equalsIgnoreCase("global"));
+    }
+    
+    /**
+     * Validates the recipient string
+     * @param recipient recipient of the message
+     * @return true if recipient doesn't contain "/"
+     * @author v8243060
+     */
+    public boolean recipientValidation (String recipient){
+        return (!recipient.contains("/")); 
+    }
 }
