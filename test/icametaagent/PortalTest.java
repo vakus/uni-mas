@@ -6,6 +6,7 @@
 package icametaagent;
 
 import icamessages.Message;
+import icamessages.MessageType;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Observer;
@@ -41,18 +42,6 @@ public class PortalTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of addObserver method, of class Portal.
-     */
-    @Test
-    public void testAddObserver() {
-        System.out.println("addObserver");
-        Observer obs = null;
-        Portal instance = null;
-        instance.addObserver(obs);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of getMetaAgent method, of class Portal.
@@ -79,30 +68,15 @@ public class PortalTest {
      */
     @Test
     public void testAddSocketAgentToRouter() throws IOException{
-        Router instance = new Router("Test");
+        System.out.println("Testing the Add Socket Agent to Router method");
+        Router R1 = new Router("Test");
         Socket S1 = new Socket();
-        SocketAgent SA1 = new SocketAgent("SA 1", instance, S1);
+        SocketAgent SA1 = new SocketAgent("SA 1", R1, S1);
         
-        instance.addAgent("SA 1", SA1);
+        R1.addAgent(SA1.getName(), SA1);
         
         String expResult = "SA 1";
-        String result = instance.getMetaAgent(SA1.getName()).getName();
-        assertEquals(expResult,result);
-    }
-
-    /**
-     * Test of the addAgent method, of class Portal, where a socket agent is added to a portal.
-     * @throws IOException 
-     */
-    @Test
-    public void testAddUserToRouter() throws IOException{
-        Router instance2 = new Router("Test2");
-        User U1 = new User("U1", instance2);
-        
-        instance2.addAgent("P1", U1);
-        
-        String expResult = "P1";
-        String result = instance2.getMetaAgent(U1.getName()).getName();
+        String result = R1.getMetaAgent("SA 1").getName();
         assertEquals(expResult,result);
     }
     
@@ -160,22 +134,6 @@ public class PortalTest {
      * Test of the isNameAllowed method, of class Portal, with an invalid name
      */
     @Test
-    public void testIsNameAllowedWithNullName(){
-        System.out.println("Testing the is name allowed method");
-        Portal instance = new Portal("Test Portal");
-        User agent = new User(null, instance);
-        
-        instance.addAgent(null, agent);
-        
-        boolean expResult = false;
-        boolean result = instance.isNameAllowed(agent.getName());
-        assertTrue(result == expResult);
-    }
-    
-    /**
-     * Test of the isNameAllowed method, of class Portal, with an invalid name
-     */
-    @Test
     public void testIsNameAllowedWithAnInvalidName(){
         System.out.println("Testing the is name allowed method");
         Portal instance = new Portal("Test Portal");
@@ -194,15 +152,16 @@ public class PortalTest {
      */
     @Test
     public void testIsMessageOriginCorrect() {
-        System.out.println("isMessageOriginCorrect");
-        MetaAgent agent = null;
-        Message msg = null;
-        Portal instance = null;
-        boolean expResult = false;
+        System.out.println("Test the is message origin correct method");
+        Portal instance = new Portal("Fuck you, piece of shit");
+        User agent = new User("Fuck my life", instance);
+        User agent2 = new User("Fuck everything", instance);
+        
+        instance.addAgent(agent.getName(), agent);
+        Message msg = new Message(agent.getName(), agent.getName(), MessageType.USER_MSG, "FUCK YOU PIECE OF SHIT");
+        boolean expResult = true;
         boolean result = instance.isMessageOriginCorrect(agent, msg);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }
