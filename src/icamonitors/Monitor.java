@@ -39,6 +39,8 @@ public abstract class Monitor implements Observer
      */
     public abstract void SentMessage (Message message);
     
+
+    
     
     
 }
