@@ -37,7 +37,7 @@ public class CMDMonitor extends Monitor
     public void ReceivedMessage (Message message)
     {
         System.out.println("+==========================================+");
-        System.out.println("|This message was sent from:               |");
+        System.out.println("|This message was received from:           |");
         System.out.printf("|%42s|\n",message.getSender());
         System.out.println("|This message was received by:             |");
         System.out.printf("|%42s|\n",agentName);
@@ -48,6 +48,7 @@ public class CMDMonitor extends Monitor
         System.out.println("|The contents of the message is:           |");
         System.out.printf("|%42s|\n",message.getMessageDetails());
         System.out.println("+==========================================+");
+        System.out.println("");
     }
     
     /**
@@ -72,6 +73,7 @@ public class CMDMonitor extends Monitor
         System.out.println("|The contents of the message is:           |");
         System.out.printf("|%42s|\n",message.getMessageDetails());
         System.out.println("+==========================================+");
+        System.out.println("");
     }
 
     /**
