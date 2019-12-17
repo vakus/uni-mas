@@ -21,6 +21,7 @@ public class User extends MetaAgent
      * Draws from the super class of MetaAgent.
      * @param name
      * @param p 
+     * @author v8036651
      */
     public User(String name, Portal p) 
     {
@@ -34,6 +35,7 @@ public class User extends MetaAgent
      * the recipient of the message.
      * @param agent
      * @param msg 
+     * @author v8073331
      */
     @Override
     public void messageHandler(MetaAgent agent, Message msg) 
