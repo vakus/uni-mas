@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ICAmessages&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">
+import icamessages.Message;
+import icamessages.MessageType;
+import icametaagent.*;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author v8073331
+ */
+<span class="nc" id="L21">public class Main {</span>
+    public static void main(String[] args) throws IOException, InterruptedException {
+        
+        Router r1;
+        
+        Portal p1;
+        
+<span class="nc" id="L28">        Scanner keyb = new Scanner(System.in);</span>
+<span class="nc" id="L29">        System.out.println(&quot;Do you want to create router? Y/N&quot;);</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        if(keyb.nextLine().trim().equalsIgnoreCase(&quot;Y&quot;)){</span>
+<span class="nc" id="L31">            r1 = new Router(&quot;Router&quot;);</span>
+            
+<span class="nc" id="L33">            Thread t = new Thread(r1);</span>
+<span class="nc" id="L34">            t.start();</span>
+            
+<span class="nc" id="L36">            p1 = new Portal(&quot;Portal-1&quot;);</span>
+
+<span class="nc" id="L38">            Socket s = new Socket(&quot;127.0.0.1&quot;, 42069);</span>
+<span class="nc" id="L39">            SocketAgent a = new SocketAgent(&quot;&quot;, p1, s);</span>
+            
+<span class="nc" id="L41">            Thread st = new Thread(a);</span>
+<span class="nc" id="L42">            st.start();</span>
+<span class="nc" id="L43">            a.messageHandler(p1, new Message(p1.getName(), &quot;GLOBAL&quot;, MessageType.ADD_PORTAL, &quot;&quot;));</span>
+            
+            
+            
+<span class="nc" id="L47">            Thread.sleep(2000);</span>
+            
+<span class="nc" id="L49">            User a1 = new User(&quot;a1&quot;, p1);</span>
+<span class="nc" id="L50">            User a2 = new User(&quot;a2&quot;, p1);</span>
+            
+<span class="nc" id="L52">            System.out.println(&quot;wtryyy&quot;);</span>
+<span class="nc" id="L53">            p1.messageHandler(a1, new Message(a1.getName(), &quot;GLOBAL&quot;, MessageType.ADD_METAAGENT, &quot;&quot;));</span>
+<span class="nc" id="L54">            p1.messageHandler(a2, new Message(a2.getName(), &quot;GLOBAL&quot;, MessageType.ADD_METAAGENT, &quot;&quot;));</span>
+            
+            
+            
+            
+<span class="nc" id="L59">            p1.messageHandler(a2, new Message(a2.getName(), &quot;a1&quot;, MessageType.USER_MSG, &quot;HELLO THERE FROM A2&quot;));</span>
+            
+<span class="nc" id="L61">            System.out.println(&quot;Press enter to continue&quot;);</span>
+<span class="nc" id="L62">            keyb.nextLine();</span>
+            
+<span class="nc" id="L64">            p1.messageHandler(a1, new Message(&quot;a1&quot;, &quot;a4&quot;, MessageType.USER_MSG, &quot;HELLO A4 FROM A1&quot;));</span>
+            
+            try {
+<span class="nc" id="L67">                t.join();</span>
+<span class="nc" id="L68">            } catch (InterruptedException ex) {</span>
+<span class="nc" id="L69">                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L70">            }</span>
+<span class="nc" id="L71">        }else{</span>
+            //we must make connection to the router
+            
+<span class="nc" id="L74">            p1 = new Portal(&quot;Portal-2&quot;);</span>
+            
+            //System.out.println(&quot;Enter the router IP: &quot;);
+            //String ip = keyb.nextLine().trim();
+            
+<span class="nc" id="L79">            Socket s = new Socket(&quot;127.0.0.1&quot;, 42069);</span>
+<span class="nc" id="L80">            SocketAgent sa = new SocketAgent(&quot;&quot;, p1, s);</span>
+            
+<span class="nc" id="L82">            Thread t = new Thread(sa);</span>
+<span class="nc" id="L83">            t.start();</span>
+<span class="nc" id="L84">            sa.messageHandler(p1, new Message(p1.getName(), &quot;GLOBAL&quot;, MessageType.ADD_PORTAL, &quot;&quot;));</span>
+            
+<span class="nc" id="L86">            System.out.println(&quot;Press enter to continue&quot;);</span>
+<span class="nc" id="L87">            keyb.nextLine();</span>
+            
+<span class="nc" id="L89">            User a3 = new User(&quot;a3&quot;, p1);</span>
+<span class="nc" id="L90">            User a4 = new User(&quot;a4&quot;, p1);</span>
+            
+<span class="nc" id="L92">            p1.messageHandler(a3, new Message(a3.getName(), &quot;Global&quot;, MessageType.ADD_METAAGENT, &quot;&quot;));</span>
+<span class="nc" id="L93">            p1.messageHandler(a4, new Message(a4.getName(), &quot;Global&quot;, MessageType.ADD_METAAGENT, &quot;&quot;));</span>
+            
+            
+<span class="nc" id="L96">            p1.messageHandler(a4, new Message(a4.getName(), &quot;a1&quot;, MessageType.USER_MSG, &quot;HELLO THERE&quot;));</span>
+            
+        }
+        
+        
+        
+<span class="nc" id="L102">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

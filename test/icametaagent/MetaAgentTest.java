@@ -6,6 +6,7 @@
 package icametaagent;
 
 import icamessages.Message;
+import icamessages.MessageType;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -55,13 +56,13 @@ public class MetaAgentTest {
      */
     @Test
     public void testGetNameWithValues() {
-        System.out.println("Testing the get name method");
+        System.out.println("Testing the get name method with values");
         MetaAgent instance = new MetaAgentImpl("Five");
         String expResult = "Five";
         String result = instance.getName();
         assertEquals(expResult, result);
     }
-    
+
     
     public class MetaAgentImpl extends MetaAgent {
 
@@ -71,9 +72,7 @@ public class MetaAgentTest {
 
         @Override
         public void messageHandler(MetaAgent agent, Message msg) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
-        
     }
-
+    
 }
