@@ -17,12 +17,11 @@ public class CMDMonitor extends Monitor
      * A name of the agent must be passed as it says which agent the monitor is on,
      * this is to compare the intended recipient and the actual,
      * requires a message to be passed for the output.
-     * @param msg
      * @param name 
      */
-    public CMDMonitor(Message msg, String name) 
+    public CMDMonitor(String name) 
     {
-        super(msg,name);
+        super(name);
     }
     
     /**
@@ -31,7 +30,7 @@ public class CMDMonitor extends Monitor
      * message details when a message is received.
      */
     @Override
-    public void ReceivedMessage ()
+    public void ReceivedMessage (Message message)
     {
         System.out.println("+==========================================+");
         System.out.println("|This message was sent from:               |");
@@ -53,7 +52,7 @@ public class CMDMonitor extends Monitor
      * message details when a message is sent.
      */
     @Override
-    public void SentMessage ()
+    public void SentMessage (Message message)
     {
         System.out.println("+==========================================+");
         System.out.println("|This message was sent from:               |");
