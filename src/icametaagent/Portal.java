@@ -69,11 +69,19 @@ public class Portal extends MetaAgent {
      * @author v8073331
      */
     public void addAgent(String name, MetaAgent meta) {
-        if (!(meta instanceof SocketAgent && this instanceof Portal && socketAgents.isEmpty())) {
-            routingTable.put(name, meta);
-            if (meta instanceof SocketAgent) {
-                socketAgents.add((SocketAgent) meta);
+        if(meta instanceof SocketAgent){
+            if(socketAgents.contains((SocketAgent)meta)){
+                routingTable.put(name, meta);
+            }else{
+                if(this instanceof Router || (this instanceof Portal && socketAgents.isEmpty())){
+                    socketAgents.add((SocketAgent) meta);
+                    routingTable.put(name, meta);
+                }else{
+                    System.out.println("[ERROR] Portal should not have more than one SocketAgent");
+                }
             }
+        }else{
+            routingTable.put(name, meta);
         }
     }
 
@@ -134,19 +142,10 @@ public class Portal extends MetaAgent {
                         break;
 
                     case ADD_PORTAL:
-
+/*
                         if (this instanceof Portal) {
                             break;
-                        }
-                        addAgent(message.getSender(), agent);
-
-                        for (SocketAgent sa : socketAgents) {
-                            if (!sa.equals(agent)) {
-                                Message msg = new Message(message.getSender(), "GLOBAL", MessageType.ADD_METAAGENT, "");
-                                observers.updateSender(msg);
-                                sa.messageHandler(this, msg);
-                            }
-                        }
+                        }*/
 
                         String values = "";
                         for (String key : routingTable.keySet()) {
@@ -157,6 +156,17 @@ public class Portal extends MetaAgent {
                         Message msg = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, values);
                         agent.messageHandler(this, msg);
                         observers.updateSender(msg);
+                        
+                        addAgent(message.getSender(), agent);
+
+                        for (SocketAgent sa : socketAgents) {
+                            if (!sa.equals(agent)) {
+                                Message msg2 = new Message(message.getSender(), "GLOBAL", MessageType.ADD_METAAGENT, "");
+                                observers.updateSender(msg2);
+                                sa.messageHandler(this, msg2);
+                            }
+                        }
+                        
                         break;
                     case REMOVE_PORTAL:
 

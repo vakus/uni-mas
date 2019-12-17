@@ -49,6 +49,8 @@ public class Main {
             a.messageHandler(p1, new Message(p1.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
             
             
+            System.out.println("Press enter to continue 1");
+            keyb.nextLine();
             
             Thread.sleep(2000);
             
@@ -63,7 +65,7 @@ public class Main {
             
             p1.messageHandler(a2, new Message(a2.getName(), "a1", MessageType.USER_MSG, "HELLO THERE FROM A2"));
             
-            System.out.println("Press enter to continue");
+            System.out.println("Press enter to continue 2");
             keyb.nextLine();
             
             p1.messageHandler(a1, new Message("a1", "a4", MessageType.USER_MSG, "HELLO A4 FROM A1"));
@@ -88,7 +90,7 @@ public class Main {
             
             Thread t = new Thread(sa);
             t.start();
-            sa.messageHandler(p1, new Message(p1.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
+            sa.messageHandler(p1, new Message(p1.getName(), "Global", MessageType.ADD_PORTAL, ""));
             
             System.out.println("Press enter to continue");
             keyb.nextLine();
