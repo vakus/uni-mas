@@ -142,12 +142,23 @@ public class Portal extends MetaAgent {
 
     /**
      * Returns a boolean value,
-     * This checks if the name that is being used is in use in the portals routing table.
-     * @param name
-     * @return 
+     * This checks if the metaagent name is valid and doesn't already exist
+     * @param name metaagent name to be added
+     * @return true if metaagent name allowed and doesn't already exists
      */
-    public boolean isNameAllowed(String name) {
-        return routingTable.get(name) == null;
+    protected boolean isNameAllowed(String name) {
+        return (routingTable.get(name) == null && usernameValidation(name));
+    }
+    
+    /**
+     * Checks whether the message came from the correct branch/agent
+     * @param agent metaagent that send/propagated the message
+     * @param msg message sent
+     * @return true if metaagent in the routing table for the message sender is 
+     * the same as the metaagent who sent the message
+     */
+    protected boolean isMessageOriginCorrect(MetaAgent agent, Message msg){
+        return (agent.equals(this.routingTable.get(msg.getSender())));
     }
 
 }
