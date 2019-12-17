@@ -18,6 +18,7 @@ public abstract class MetaAgent{
     /**
      * Constructor for a new MetaAgent.
      * @param name 
+     * @author v8036651
      */
     MetaAgent(String name) {
         if (usernameValidation(name)){
@@ -28,9 +29,11 @@ public abstract class MetaAgent{
 
     /**
      * Used to return the name value of a MetaAgent.
-     * @return 
+     * @return String of the name of the MetaAgent
+     * @author v8036651
      */
-    public String getName() {
+    public String getName() 
+    {
         return name;
     }
     
@@ -38,6 +41,7 @@ public abstract class MetaAgent{
      * Abstract method that is overwritten by subclasses for handling a message.
      * @param agent
      * @param msg 
+     * @author v8036651
      */
     public abstract void messageHandler(MetaAgent agent, Message msg);
     
