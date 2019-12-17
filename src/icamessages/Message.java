@@ -11,23 +11,23 @@ package icamessages;
  */
 public class Message {
     /**
-     * String name of the sender of the message
+     * String name of the sender of the message.
      */
     private String sender;
     
     /**
      * String name of the recipient of the message
-     * If "global" then the message is a broadcast
+     * If "global" then the message is a broadcast.
      */
     private String recipient;
     
     /**
-     * Enum type of the message
+     * Enum type of the message.
      */
     private MessageType type;
     
     /**
-     * Contains the message itself
+     * Contains the message itself.
      */
     private String messageDetails;
     
@@ -46,7 +46,7 @@ public class Message {
     }
 
     /**
-     *Retrieve sender
+     *Retrieve sender.
      * @return
      */
     public String getSender(){
@@ -54,7 +54,7 @@ public class Message {
     }
     
     /**
-     *Retrieve recipient
+     *Retrieve recipient.
      * @return
      */
     public String getRecipient(){
@@ -62,7 +62,7 @@ public class Message {
     }
     
     /**
-     *Retrieve message type
+     *Retrieve message type.
      * @return
      */
     public MessageType getMessageType(){
@@ -70,7 +70,7 @@ public class Message {
     }
     
     /**
-     *Retrieve message details
+     *Retrieve message details.
      * @return
      */
     public String getMessageDetails(){
