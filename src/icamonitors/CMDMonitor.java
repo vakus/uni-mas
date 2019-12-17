@@ -38,15 +38,15 @@ public class CMDMonitor extends Monitor
     {
         System.out.println("+==========================================+");
         System.out.println("|This message was sent from:               |");
-        System.out.println("|" + message.getSender());
+        System.out.printf("%44f",message.getSender() + "\n");
         System.out.println("|This message was received by:             |");
-        System.out.println("|" + agentName);
+        System.out.printf("%44s",agentName + "\n");
         System.out.println("|This message was meant to be received by: |");
-        System.out.println("|" + message.getRecipient());
+        System.out.printf("%44f",message.getRecipient() + "\n");
         System.out.println("|This message type is:                     |");
-        System.out.println("|" + message.getMessageType());
+        System.out.printf("%44s",message.getMessageType() + "\n");
         System.out.println("|The contents of the message is:           |");
-        System.out.println("|" + message.getMessageDetails());
+        System.out.printf("%44s",message.getMessageDetails() + "\n");
         System.out.println("+==========================================+");
     }
     
@@ -62,15 +62,15 @@ public class CMDMonitor extends Monitor
     {
         System.out.println("+==========================================+");
         System.out.println("|This message was sent from:               |");
-        System.out.println("|" + agentName);
+        System.out.printf("%44f",agentName + "\n");
         System.out.println("|This message is meant to be sent from:    |");
-        System.out.println("|" + message.getSender());
+        System.out.printf("%44f",message.getSender() + "\n");
         System.out.println("|This message is meant to be received by:  |");
-        System.out.println("|" + message.getRecipient());
+        System.out.printf("%44f",message.getRecipient() + "\n");
         System.out.println("|This message type is:                     |");
-        System.out.println("|" + message.getMessageType());
+        System.out.printf("%44s",message.getMessageType() + "\n");
         System.out.println("|The contents of the message is:           |");
-        System.out.println("|" + message.getMessageDetails());
+        System.out.printf("%44s",message.getMessageDetails() + "\n");
         System.out.println("+==========================================+");
     }
 
@@ -83,6 +83,7 @@ public class CMDMonitor extends Monitor
     @Override
     public void update(Observable o, Object message) 
     {
+        System.out.println("Hello world");
         this.ReceivedMessage((Message)message);
     }
 }
