@@ -45,8 +45,19 @@ public abstract class MetaAgent{
      * Validates whether the user name is allowed
      * @param name metaagent name to be used
      * @return true if metaagent name allowed
+     * @author v8243060
      */
     protected boolean usernameValidation(String name){
         return (name != null && !name.contains("/") && !name.equalsIgnoreCase("global"));
+    }
+    
+    /**
+     * Validates the recipient string
+     * @param recipient recipient of the message
+     * @return true if recipient doesn't contain "/"
+     * @author v8243060
+     */
+    public boolean recipientValidation (String recipient){
+        return (!recipient.contains("/")); 
     }
 }
