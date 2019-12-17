@@ -17,7 +17,7 @@ public class Observer
     private ArrayList<Monitor> observers;
 
     /**
-     * 
+     * Constructor for the observer object.
      * @param observers 
      * @author v8036651
      */
@@ -27,7 +27,7 @@ public class Observer
     }
 
     /**
-     * 
+     * Getter for the array list of observers.
      * @return 
      * @author v8036651
      */
@@ -37,7 +37,7 @@ public class Observer
     }
 
     /**
-     * 
+     * Setter for the array list of observers.
      * @param observers 
      * @author v8036651
      */
@@ -47,7 +47,7 @@ public class Observer
     }
     
     /**
-     * 
+     * Updates all the monitors that are in use when called, this is done upon sending a message.
      * @param msg 
      * @author v8036651
      * @author v8073331
@@ -63,7 +63,7 @@ public class Observer
     }
     
     /**
-     * 
+     * Updates all the monitors that are in use when called, this is done upon receiving a message.
      * @param msg 
      * @author v8036651
      * @author v8073331
