@@ -49,7 +49,6 @@ public class Main {
             User a1 = new User("a1", p1);
             User a2 = new User("a2", p1);
             
-            System.out.println("wtryyy");
             p1.messageHandler(a1, new Message(a1.getName(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
             p1.messageHandler(a2, new Message(a2.getName(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
             
