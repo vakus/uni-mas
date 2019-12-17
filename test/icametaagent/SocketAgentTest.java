@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author v8073331
+ * @author v8077971
  */
 public class SocketAgentTest {
     
@@ -42,8 +42,8 @@ public class SocketAgentTest {
      * Test of messageHandler method, of class SocketAgent.
      */
     @Test
-    public void testSendMessage() {
-        System.out.println("sendMessage");
+    public void testMessageHandler() {
+        System.out.println("Testing the message handler method");
         MetaAgent agent = null;
         Message msg = null;
         SocketAgent instance = null;
@@ -53,7 +53,7 @@ public class SocketAgentTest {
     }
 
     /**
-     * Test of run method, of class SocketAgent.
+     * Test of run method, of class SocketAgent, where the router connection is closed.
      */
     @Test
     public void testRun() {

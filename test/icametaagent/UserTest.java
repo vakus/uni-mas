@@ -42,12 +42,14 @@ public class UserTest {
      * Test of messageHandler method, of class User.
      */
     @Test
-    public void testSendMessage() {
-        System.out.println("sendMessage");
+    public void testMessageHandler() {
+        System.out.println("messageHandler");
         MetaAgent agent = null;
-        Message m = null;
+        Message msg = null;
         User instance = null;
-        instance.messageHandler(agent, m);
+        instance.messageHandler(agent, msg);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
     
 }
