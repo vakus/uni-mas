@@ -6,15 +6,16 @@
 package icametaagent;
 
 import icamessages.Message;
+import icamessages.MessageType;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Observer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
@@ -41,6 +42,7 @@ public class PortalTest {
     public void tearDown() {
     }
 
+
     /**
      * Test of getMetaAgent method, of class Portal.
      */
@@ -50,7 +52,6 @@ public class PortalTest {
         
         String n = "A1";
         Portal instance = new Portal("Test");
-        
         instance.addAgent("A1", new User(n,instance));
         User expResult = new User(n, instance);
         String sExpResult = expResult.getName();
@@ -67,14 +68,15 @@ public class PortalTest {
      */
     @Test
     public void testAddSocketAgentToRouter() throws IOException{
-        Router instance = new Router("Test");
-        Socket s = new Socket();
-        SocketAgent SA1 = new SocketAgent("SA1", instance, s);
+        System.out.println("Testing the Add Socket Agent to Router method");
+        Router R1 = new Router("Test");
+        Socket S1 = new Socket();
+        SocketAgent SA1 = new SocketAgent("SA 1", R1, S1);
         
-        instance.addAgent("SA1", SA1);
+        R1.addAgent(SA1.getName(), SA1);
         
-        String expResult = "SA1";
-        String result = instance.getMetaAgent(SA1.getName()).getName();
+        String expResult = "SA 1";
+        String result = R1.getMetaAgent("SA 1").getName();
         assertEquals(expResult,result);
     }
     
@@ -96,10 +98,10 @@ public class PortalTest {
         assertEquals(sExpResult, sResult);
     }
 
+
     /**
      * Test of messageHandler method, of class Portal.
      */
-    @Ignore
     @Test
     public void testMessageHandler() {
         System.out.println("messageHandler");
@@ -143,6 +145,23 @@ public class PortalTest {
         boolean expResult = false;
         boolean result = instance.isNameAllowed(agent2.getName());
         assertTrue(result == expResult);
+    }
+
+    /**
+     * Test of isMessageOriginCorrect method, of class Portal.
+     */
+    @Test
+    public void testIsMessageOriginCorrect() {
+        System.out.println("Test the is message origin correct method");
+        Portal instance = new Portal("Fuck you, piece of shit");
+        User agent = new User("Fuck my life", instance);
+        User agent2 = new User("Fuck everything", instance);
+        
+        instance.addAgent(agent.getName(), agent);
+        Message msg = new Message(agent.getName(), agent.getName(), MessageType.USER_MSG, "FUCK YOU PIECE OF SHIT");
+        boolean expResult = true;
+        boolean result = instance.isMessageOriginCorrect(agent, msg);
+        assertEquals(expResult, result);
     }
     
 }
