@@ -20,6 +20,9 @@ public abstract class MetaAgent{
      * @param name 
      */
     MetaAgent(String name) {
+        if (usernameValidation(name)){
+            throw new IllegalArgumentException("Invalid user name");
+        }
         this.name = name;
     }
 
@@ -37,4 +40,13 @@ public abstract class MetaAgent{
      * @param msg 
      */
     public abstract void messageHandler(MetaAgent agent, Message msg);
+    
+    /**
+     * Validates whether the user name is allowed
+     * @param name user name to be used
+     * @return boolean
+     */
+    private boolean usernameValidation(String name){
+        return (name != null && !name.contains("/") && !name.equalsIgnoreCase("global"));
+    }
 }

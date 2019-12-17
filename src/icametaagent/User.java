@@ -44,4 +44,6 @@ public class User extends MetaAgent
             connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
         }
     }
+    
+    
 }
