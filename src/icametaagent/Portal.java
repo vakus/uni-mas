@@ -29,10 +29,11 @@ public class Portal extends MetaAgent {
   
     /**
      * Creates new portal with specific node name.
-     *
-     * @param name
+     * @param name 
+     * @author v8036651
      */
-    public Portal(String name) {
+    public Portal(String name) 
+    {
         super(name);
         this.routingTable = new HashMap<>();
         this.socketAgents = new ArrayList<>();
@@ -43,6 +44,7 @@ public class Portal extends MetaAgent {
     /**
      * MEthod for adding an observer to be used when handling a message.
      * @param obs 
+     * @author v8036651
      */
     public void addObserver(Observer obs)
     {
@@ -50,12 +52,14 @@ public class Portal extends MetaAgent {
     }
     /**
      * Returns an agent that is within the routing table with the key of n.
-     *
      * @param name
-     * @return
+     * @return 
+     * @author v8036651
      */
-    public MetaAgent getMetaAgent(String name) {
+    public MetaAgent getMetaAgent(String name) 
+    {
         return routingTable.get(name);
+
     }
 
     /**
@@ -76,10 +80,11 @@ public class Portal extends MetaAgent {
 
     /**
      * Removes the agent in location n from the routing table of the portal.
-     *
-     * @param name
+     * @param name 
+     * @author v8036651
      */
-    public void removeAgent(String name) {
+    public void removeAgent(String name) 
+    {
         routingTable.remove(name);
     }
 
@@ -88,10 +93,12 @@ public class Portal extends MetaAgent {
      * message object, It reads the message Type and acts upon it.
      *
      * @param agent
-     * @param message
+     * @param message 
+     * @author v8073331
      */
     @Override
-    public void messageHandler(MetaAgent agent, Message message) {
+    public void messageHandler(MetaAgent agent, Message message) 
+    {
         observers.notifyObservers(message);
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
 
@@ -178,7 +185,7 @@ public class Portal extends MetaAgent {
      * This checks if the metaagent name is valid and doesn't already exist
      * @param name metaagent name to be added
      * @return true if metaagent name allowed and doesn't already exists
-     * @author v8243060 & v8073331
+     * @author v8243060 & v8036651
      */
     protected boolean isNameAllowed(String name) {
         return (routingTable.get(name) == null && usernameValidation(name));

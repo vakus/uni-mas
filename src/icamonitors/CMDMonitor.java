@@ -19,6 +19,7 @@ public class CMDMonitor extends Monitor
      * this is to compare the intended recipient and the actual,
      * requires a message to be passed for the output.
      * @param name 
+     * @author v8036651
      */
     public CMDMonitor(String name) 
     {
@@ -29,6 +30,8 @@ public class CMDMonitor extends Monitor
      * Method to output to the command line showing the name of the sender, the
      * name of the recipient, the actual recipient, the message type and the
      * message details when a message is received.
+     * @parm message
+     * @author v8036651
      */
     @Override
     public void ReceivedMessage (Message message)
@@ -51,6 +54,8 @@ public class CMDMonitor extends Monitor
      * Method to output to the command line showing the name of the sender, the
      * name of the intended sender, the intended recipient, the message type and the
      * message details when a message is sent.
+     * @parm message
+     * @author v8036651
      */
     @Override
     public void SentMessage (Message message)
@@ -73,6 +78,7 @@ public class CMDMonitor extends Monitor
      * Update method which shows the sender and recipient then the agent it is attached to.
      * @param o
      * @param message 
+     * @author v8036651
      */
     @Override
     public void update(Observable o, Object message) 
