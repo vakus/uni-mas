@@ -12,70 +12,86 @@ import java.util.ArrayList;
  *
  * @author v8036651
  */
-public class Observer 
-{
+public class Observer {
+
     private ArrayList<Monitor> observers;
 
     /**
      * Constructor for the observer object.
-     * @param observers 
+     *
+     * @param observers
      * @author v8036651
      */
-    public Observer(ArrayList observers) 
-    {
+    public Observer(ArrayList observers) {
         this.observers = observers;
+    }
+
+    public Observer() {
+        this.observers = new ArrayList<>();
     }
 
     /**
      * Getter for the array list of observers.
-     * @return 
+     *
+     * @return
      * @author v8036651
      */
-    public ArrayList getObservers() 
-    {
+    public ArrayList getObservers() {
         return observers;
     }
 
     /**
      * Setter for the array list of observers.
-     * @param observers 
+     *
+     * @param observers
      * @author v8036651
      */
-    public void setObservers(ArrayList observers) 
-    {
+    public void setObservers(ArrayList observers) {
         this.observers = observers;
     }
-    
+
     /**
-     * Updates all the monitors that are in use when called, this is done upon sending a message.
-     * @param msg 
+     * adds observer into the list
+     *
+     * @param obs observer to add
+     * @author v8073331
+     */
+    public void addObserver(Monitor obs) {
+        this.observers.add(obs);
+    }
+
+    /**
+     * Updates all the monitors that are in use when called, this is done upon
+     * sending a message.
+     *
+     * @param msg
      * @author v8036651
      * @author v8073331
      */
-    public void updateSender(Message msg)
-    {
+    public void updateSender(Message msg) {
         observers.forEach((Monitor o) -> {
-            try{
+            try {
                 o.SentMessage(msg);
-            }catch(Exception e){
+            } catch (Exception e) {
             }
         });
     }
-    
+
     /**
-     * Updates all the monitors that are in use when called, this is done upon receiving a message.
-     * @param msg 
+     * Updates all the monitors that are in use when called, this is done upon
+     * receiving a message.
+     *
+     * @param msg
      * @author v8036651
      * @author v8073331
      */
-    public void updateReceiver(Message msg)
-    {
+    public void updateReceiver(Message msg) {
         observers.forEach((Monitor o) -> {
-            try{
+            try {
                 o.ReceivedMessage(msg);
-            }catch(Exception e){
+            } catch (Exception e) {
             }
         });
     }
-    
+
 }
