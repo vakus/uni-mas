@@ -9,6 +9,9 @@ import icamessages.Message;
 import icamessages.MessageType;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  *
@@ -22,6 +25,7 @@ public class Portal extends MetaAgent {
      */
     private ArrayList<SocketAgent> socketAgents;
 
+    private Observable observers;
 
     /**
      * Creates new portal with specific node name.
@@ -31,8 +35,17 @@ public class Portal extends MetaAgent {
         super(name);
         this.routingTable = new HashMap<>();
         this.socketAgents = new ArrayList<>();
+        this.observers = new Observable();
     }
 
+    /**
+     * MEthod for adding an observer to be used when handling a message.
+     * @param obs 
+     */
+    public void addObserver(Observer obs)
+    {
+        observers.addObserver(obs);
+    }
     /**
      * Returns an agent that is within the routing table with the key of n.
      * @param n
@@ -73,7 +86,7 @@ public class Portal extends MetaAgent {
      */
     @Override
     public void messageHandler(MetaAgent agent, Message message) {
-        System.out.println(this.name + "Processing: " + message.toString());
+        observers.notifyObservers(message);
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
             switch (message.getMessageType()) {
                 case ADD_METAAGENT:
