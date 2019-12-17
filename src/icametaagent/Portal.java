@@ -9,6 +9,9 @@ import icamessages.Message;
 import icamessages.MessageType;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  *
@@ -22,6 +25,8 @@ public class Portal extends MetaAgent {
      * only unique.
      */
     private ArrayList<SocketAgent> socketAgents;
+    private Observable observers;
+  
     /**
      * Creates new portal with specific node name.
      *
@@ -31,9 +36,18 @@ public class Portal extends MetaAgent {
         super(name);
         this.routingTable = new HashMap<>();
         this.socketAgents = new ArrayList<>();
+        this.observers = new Observable();
     }
     
     
+    /**
+     * MEthod for adding an observer to be used when handling a message.
+     * @param obs 
+     */
+    public void addObserver(Observer obs)
+    {
+        observers.addObserver(obs);
+    }
     /**
      * Returns an agent that is within the routing table with the key of n.
      *
@@ -78,7 +92,7 @@ public class Portal extends MetaAgent {
      */
     @Override
     public void messageHandler(MetaAgent agent, Message message) {
-        System.out.println(this.name + "Processing: " + message.toString());
+        observers.notifyObservers(message);
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
 
             synchronized (routingTable) {
@@ -111,8 +125,12 @@ public class Portal extends MetaAgent {
                     case USER_MSG:
                         System.out.println("UserMessage: " + message.getMessageDetails());
                         break;
+                        
                     case ADD_PORTAL:
 
+                        if (this instanceof Portal){
+                            break;
+                        }
                         addAgent(message.getSender(), agent);
 
                         for (SocketAgent sa : socketAgents) {
@@ -132,6 +150,7 @@ public class Portal extends MetaAgent {
                     case REMOVE_PORTAL:
 
                         break;
+    
                     case LOAD_TABLE:
 
                         String[] values2 = message.getMessageDetails().split("\n");
@@ -154,14 +173,26 @@ public class Portal extends MetaAgent {
     }
 
     /**
-     * Returns a boolean value, This checks if the name that is being used is in
-     * use in the portals routing table.
-     *
-     * @param name
-     * @return
-     */
-    public boolean isNameAllowed(String name) {
-        return routingTable.get(name) == null;
-    }
 
+     * Returns a boolean value,
+     * This checks if the metaagent name is valid and doesn't already exist
+     * @param name metaagent name to be added
+     * @return true if metaagent name allowed and doesn't already exists
+     * @author v8243060 & v8073331
+     */
+    protected boolean isNameAllowed(String name) {
+        return (routingTable.get(name) == null && usernameValidation(name));
+    }
+    
+    /**
+     * Checks whether the message came from the correct branch/agent
+     * @param agent metaagent that send/propagated the message
+     * @param msg message sent
+     * @return true if metaagent in the routing table for the message sender is 
+     * the same as the metaagent who sent the message
+     * @author v8243060
+     */
+    protected boolean isMessageOriginCorrect(MetaAgent agent, Message msg){
+        return (agent.equals(this.routingTable.get(msg.getSender())));
+    }
 }
