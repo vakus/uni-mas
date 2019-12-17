@@ -30,8 +30,10 @@ public class Portal extends MetaAgent {
     /**
      * Creates new portal with specific node name.
      * @param name 
+     * @author v8036651
      */
-    public Portal(String name) {
+    public Portal(String name) 
+    {
         super(name);
         this.routingTable = new HashMap<>();
         this.socketAgents = new ArrayList<>();
@@ -41,6 +43,7 @@ public class Portal extends MetaAgent {
     /**
      * MEthod for adding an observer to be used when handling a message.
      * @param obs 
+     * @author v8036651
      */
     public void addObserver(Observer obs)
     {
@@ -50,8 +53,10 @@ public class Portal extends MetaAgent {
      * Returns an agent that is within the routing table with the key of n.
      * @param n
      * @return 
+     * @author v8036651
      */
-    public MetaAgent getMetaAgent(String n) {
+    public MetaAgent getMetaAgent(String n) 
+    {
         return routingTable.get(n);
     }
 
@@ -59,8 +64,10 @@ public class Portal extends MetaAgent {
      * Adds a new agent to the routing table of the portal.
      * @param name
      * @param meta 
+     * @author v8036651
      */
-    public void addAgent(String name, MetaAgent meta) {
+    public void addAgent(String name, MetaAgent meta) 
+    {
         routingTable.put(name, meta);
         if(this instanceof Router || (this instanceof Portal && socketAgents.size() == 0)){
             if(meta instanceof SocketAgent){
@@ -72,8 +79,10 @@ public class Portal extends MetaAgent {
     /**
      * Removes the agent in location n from the routing table of the portal.
      * @param name 
+     * @author v8036651
      */
-    public void removeAgent(String name) {
+    public void removeAgent(String name) 
+    {
         routingTable.remove(name);
     }
 
@@ -83,9 +92,11 @@ public class Portal extends MetaAgent {
      * It reads the message Type and acts upon it.
      * @param agent
      * @param message 
+     * @author v8073331
      */
     @Override
-    public void messageHandler(MetaAgent agent, Message message) {
+    public void messageHandler(MetaAgent agent, Message message) 
+    {
         observers.notifyObservers(message);
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
             switch (message.getMessageType()) {
@@ -157,9 +168,11 @@ public class Portal extends MetaAgent {
      * Returns a boolean value,
      * This checks if the name that is being used is in use in the portals routing table.
      * @param name
-     * @return 
+     * @return boolean of if the name is accepted or not
+     * @author v8036651
      */
-    public boolean isNameAllowed(String name) {
+    public boolean isNameAllowed(String name) 
+    {
         return routingTable.get(name) == null;
     }
 

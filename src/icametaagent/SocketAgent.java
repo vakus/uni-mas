@@ -31,6 +31,8 @@ public class SocketAgent extends MetaAgent implements Runnable {
      * @param name
      * @param p
      * @param s 
+     * @author v8036651
+     * @author v8073331
      */
     public SocketAgent(String name, Portal p, Socket s) {
         super(name);
@@ -45,6 +47,7 @@ public class SocketAgent extends MetaAgent implements Runnable {
      * this adds a message to the message queue.
      * @param agent
      * @param msg 
+     * @author v8073331
      */
     @Override
     public void messageHandler(MetaAgent agent, Message msg) {
@@ -52,10 +55,8 @@ public class SocketAgent extends MetaAgent implements Runnable {
     }
 
     /**
-     * rmsg = recived message
-     * armsg = actual recived message
-     * farmsg = final actual message to be sent
-     * 
+     * Checks for incoming messages and send outgoing messages.
+     * @author v8073331
      */
     @Override
     public void run() {
@@ -67,10 +68,10 @@ public class SocketAgent extends MetaAgent implements Runnable {
 
                 
                 if(in.available() != 0){
-                    byte[] rmsg = new byte[in.available()];
+                    byte[] rmsg = new byte[in.available()];     //rmsg is a recived message in byte format.
                     in.read(rmsg);
                     
-                    String armsg = new String(rmsg);
+                    String armsg = new String(rmsg);            //armsg actual recived message in string format.
                     
                     if(armsg.equals("#")){
                         busy = false;
@@ -81,7 +82,7 @@ public class SocketAgent extends MetaAgent implements Runnable {
                         busy = false;
                         armsg = armsg.substring(1);
                         System.out.println("receiving: " + armsg);
-                        Message farmsg = Message.parseMessage(armsg);
+                        Message farmsg = Message.parseMessage(armsg);     //farmsg final actual message to be sent again as a message object.
                         portalConection.messageHandler(this, farmsg);
                         out.write("#".getBytes());
                         out.flush();

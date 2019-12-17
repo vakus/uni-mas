@@ -23,14 +23,18 @@ public class Router extends Portal implements Runnable {
      * Constructor for a router object with a super class of portal.
      * @param n
      * @throws IOException 
+     * @author v8036651
      */
-    public Router(String n) throws IOException {
+    public Router(String n) throws IOException 
+    {
         super(n);
         server = new ServerSocket(42069);
     }
 
     /**
-     * Overwrites the run method from the implements runnable.
+     * Overwrites the run method from the implements runnable,
+     * creates a new server socket to listen for new connections.
+     * @author v8073331
      */
     @Override
     public void run() {
