@@ -75,13 +75,11 @@ public class SocketAgent extends MetaAgent implements Runnable {
                     
                     if(armsg.equals("#")){
                         busy = false;
-                        System.out.println("ACK");
                         
                     }else if(armsg.startsWith("#")){
                         
                         busy = false;
                         armsg = armsg.substring(1);
-                        System.out.println("receiving: " + armsg);
                         Message farmsg = Message.parseMessage(armsg);     //farmsg final actual message to be sent again as a message object.
                         portalConection.messageHandler(this, farmsg);
                         out.write("#".getBytes());
@@ -91,14 +89,12 @@ public class SocketAgent extends MetaAgent implements Runnable {
                         
                         busy = false;
                         armsg = armsg.substring(0, armsg.length()-1);
-                        System.out.println("receiving: " + armsg);
                         Message farmsg = Message.parseMessage(armsg);
                         portalConection.messageHandler(this, farmsg);
                         out.write("#".getBytes());
                         out.flush();
                         
                     }else{
-                        System.out.println("receiving: " + armsg);
                         Message farmsg = Message.parseMessage(armsg);
                         portalConection.messageHandler(this, farmsg);
                         out.write("#".getBytes());
@@ -108,7 +104,6 @@ public class SocketAgent extends MetaAgent implements Runnable {
                 
                 if(!messageQueue.isEmpty() && !busy){
                     Message msg = messageQueue.poll();
-                    System.out.println("sending: " + msg.toString());
                     out.write(msg.toString().getBytes());
                     out.flush();
                     busy = true;
