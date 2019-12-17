@@ -51,8 +51,8 @@ public class User extends MetaAgent
      * Creates a message and sends it to the portal
      * @param recipient recipient of the message
      * @param details message details
-     * @author v8243060
      * @throws IllegalArgumentException if recipient contains "/"
+     * @author v8243060
      */
     public void sendMessage (String recipient, String details){
         if (!recipientValidation(recipient)){

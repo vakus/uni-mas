@@ -32,11 +32,12 @@ public class Message {
     private String messageDetails;
     
     /**
-     *Constructor for message class when passed parameters.
-     * @param sender
-     * @param recipeint
-     * @param type
-     * @param details
+     * Constructor for message class
+     * @param sender String name of the sender
+     * @param recipeint String name of the recipient
+     * @param type enum MessageType
+     * @param details String message details
+     * @author v8243060 
      */
     public Message(String sender, String recipeint, MessageType type, String details){
         this.sender = sender;
@@ -46,40 +47,46 @@ public class Message {
     }
 
     /**
-     *Retrieve sender.
-     * @return
+     * Retrieve sender
+     * @return String name of the sender
+     * @author v8243060
      */
     public String getSender(){
         return sender;
     }
     
     /**
-     *Retrieve recipient.
-     * @return
+     * Retrieve recipient
+     * @return String name of the recipient
+     * @author v8243060
      */
     public String getRecipient(){
         return recipient;
     }
     
     /**
-     *Retrieve message type.
-     * @return
+     * Retrieve message type
+     * @return enum MessageType
+     * @author v8243060
      */
     public MessageType getMessageType(){
         return type;
     }
     
     /**
-     *Retrieve message details.
-     * @return
+     * Retrieve message details
+     * @return String message details
+     * @author v8243060
      */
     public String getMessageDetails(){
         return messageDetails;
     }
     
     /**
-     * toString() method which allows the message to be passed between the portals.
-     * @return 
+     * toString() overridden method which allows the message to be passed
+     * between the portals
+     * @return String of all variables
+     * @author v8243060
      */
     @Override
     public String toString(){
@@ -90,6 +97,7 @@ public class Message {
      * This is to convert back from the toString() method
      * @param msg The string that should be parsed to Message
      * @return Message object created from the string
+     * @author v8243060
      */
     public static Message parseMessage(String msg){
         String[] msgArr = msg.split("/",4);
