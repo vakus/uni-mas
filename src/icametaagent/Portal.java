@@ -99,6 +99,7 @@ public class Portal extends MetaAgent {
     @Override
     public void messageHandler(MetaAgent agent, Message message) 
     {
+        
         observers.notifyObservers(message);
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
 
@@ -182,9 +183,9 @@ public class Portal extends MetaAgent {
     /**
 
      * Returns a boolean value,
-     * This checks if the metaagent name is valid and doesn't already exist
-     * @param name metaagent name to be added
-     * @return true if metaagent name allowed and doesn't already exists
+     * This checks if the MetaAgent name is valid and doesn't already exist
+     * @param name MetaAgent name to be added
+     * @return true if MetaAgent name allowed and doesn't already exists
      * @author v8243060 & v8036651
      */
     protected boolean isNameAllowed(String name) {
@@ -193,10 +194,10 @@ public class Portal extends MetaAgent {
     
     /**
      * Checks whether the message came from the correct branch/agent
-     * @param agent metaagent that send/propagated the message
+     * @param agent MetaAgent that send/propagated the message
      * @param msg message sent
-     * @return true if metaagent in the routing table for the message sender is 
-     * the same as the metaagent who sent the message
+     * @return true if MetaAgent in the routing table for the message sender is 
+     * the same as the MetaAgent who sent the message
      * @author v8243060
      */
     protected boolean isMessageOriginCorrect(MetaAgent agent, Message msg){

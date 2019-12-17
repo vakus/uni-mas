@@ -21,7 +21,8 @@ public abstract class MetaAgent{
      * @author v8036651
      */
     MetaAgent(String name) {
-        if (usernameValidation(name)){
+        if (!usernameValidation(name))
+        {
             throw new IllegalArgumentException("Invalid user name");
         }
         this.name = name;

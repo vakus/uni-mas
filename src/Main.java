@@ -2,6 +2,7 @@
 import icamessages.Message;
 import icamessages.MessageType;
 import icametaagent.*;
+import icamonitors.CMDMonitor;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
@@ -28,12 +29,17 @@ public class Main {
         Scanner keyb = new Scanner(System.in);
         System.out.println("Do you want to create router? Y/N");
         if(keyb.nextLine().trim().equalsIgnoreCase("Y")){
+            
             r1 = new Router("Router");
+            CMDMonitor m1 = new CMDMonitor(r1.getName());
+            r1.addObserver(m1);
             
             Thread t = new Thread(r1);
             t.start();
             
             p1 = new Portal("Portal-1");
+            CMDMonitor m2 = new CMDMonitor(p1.getName());
+            p1.addObserver(m2);
 
             Socket s = new Socket("127.0.0.1", 42069);
             SocketAgent a = new SocketAgent("", p1, s);
@@ -71,6 +77,8 @@ public class Main {
             //we must make connection to the router
             
             p1 = new Portal("Portal-2");
+            CMDMonitor m2 = new CMDMonitor(p1.getName());
+            p1.addObserver(m2);
             
             //System.out.println("Enter the router IP: ");
             //String ip = keyb.nextLine().trim();
