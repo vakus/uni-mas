@@ -99,7 +99,9 @@ public class Portal extends MetaAgent {
                     System.out.println("UserMessage: " + message.getMessageDetails());
                     break;
                 case ADD_PORTAL:
-
+                    if (this instanceof Portal){
+                        break;
+                    }
                     addAgent(message.getSender(), agent);
 
                     
@@ -145,6 +147,7 @@ public class Portal extends MetaAgent {
      * This checks if the metaagent name is valid and doesn't already exist
      * @param name metaagent name to be added
      * @return true if metaagent name allowed and doesn't already exists
+     * @author v8243060 & v8073331
      */
     protected boolean isNameAllowed(String name) {
         return (routingTable.get(name) == null && usernameValidation(name));
@@ -156,9 +159,9 @@ public class Portal extends MetaAgent {
      * @param msg message sent
      * @return true if metaagent in the routing table for the message sender is 
      * the same as the metaagent who sent the message
+     * @author v8243060
      */
     protected boolean isMessageOriginCorrect(MetaAgent agent, Message msg){
         return (agent.equals(this.routingTable.get(msg.getSender())));
     }
-
 }
