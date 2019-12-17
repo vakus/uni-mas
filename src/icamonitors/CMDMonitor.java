@@ -74,11 +74,10 @@ public class CMDMonitor extends Monitor
      * @param o
      * @param message 
      */
-    public void update(Observable o, Message message, String name) {
-        System.out.println(message.getSender());
-        System.out.println(message.getRecipient());
-        System.out.println("This agent is: " + name);
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Override
+    public void update(Observable o, Object message) 
+    {
+        this.ReceivedMessage((Message)message);
     }
 }
 
