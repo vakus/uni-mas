@@ -7,11 +7,10 @@ package icametaagent;
 
 import icamessages.Message;
 import icamessages.MessageType;
+import icamonitors.Monitor;
+import icamonitors.Observer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  *
@@ -25,39 +24,39 @@ public class Portal extends MetaAgent {
      * only unique.
      */
     private ArrayList<SocketAgent> socketAgents;
-    private Observable observers;
-  
+    private Observer observers;
+
     /**
      * Creates new portal with specific node name.
-     * @param name 
+     *
+     * @param name
      * @author v8036651
      */
-    public Portal(String name) 
-    {
+    public Portal(String name) {
         super(name);
         this.routingTable = new HashMap<>();
         this.socketAgents = new ArrayList<>();
-        this.observers = new Observable();
+        this.observers = new Observer();
     }
-    
-    
+
     /**
-     * MEthod for adding an observer to be used when handling a message.
-     * @param obs 
+     * Method for adding an observer to be used when handling a message.
+     *
+     * @param obs
      * @author v8036651
      */
-    public void addObserver(Observer obs)
-    {
+    public void addObserver(Monitor obs) {
         observers.addObserver(obs);
     }
+
     /**
      * Returns an agent that is within the routing table with the key of n.
+     *
      * @param name
-     * @return 
+     * @return
      * @author v8036651
      */
-    public MetaAgent getMetaAgent(String name) 
-    {
+    public MetaAgent getMetaAgent(String name) {
         return routingTable.get(name);
 
     }
@@ -70,21 +69,29 @@ public class Portal extends MetaAgent {
      * @author v8073331
      */
     public void addAgent(String name, MetaAgent meta) {
-        if(!(meta instanceof SocketAgent && this instanceof Portal && socketAgents.isEmpty())){
-            routingTable.put(name, meta);
-            if(meta instanceof SocketAgent){
-                socketAgents.add((SocketAgent) meta);
+        if(meta instanceof SocketAgent){
+            if(socketAgents.contains((SocketAgent)meta)){
+                routingTable.put(name, meta);
+            }else{
+                if(this instanceof Router || (this instanceof Portal && socketAgents.isEmpty())){
+                    socketAgents.add((SocketAgent) meta);
+                    routingTable.put(name, meta);
+                }else{
+                    System.out.println("[ERROR] Portal should not have more than one SocketAgent");
+                }
             }
+        }else{
+            routingTable.put(name, meta);
         }
     }
 
     /**
      * Removes the agent in location n from the routing table of the portal.
-     * @param name 
+     *
+     * @param name
      * @author v8036651
      */
-    public void removeAgent(String name) 
-    {
+    public void removeAgent(String name) {
         routingTable.remove(name);
     }
 
@@ -93,25 +100,24 @@ public class Portal extends MetaAgent {
      * message object, It reads the message Type and acts upon it.
      *
      * @param agent
-     * @param message 
+     * @param message
      * @author v8073331
      */
     @Override
-    public void messageHandler(MetaAgent agent, Message message) 
-    {
-        
-        observers.notifyObservers(message);
+    public void messageHandler(MetaAgent agent, Message message) {
+
+        observers.updateReceiver(message);
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
 
             synchronized (routingTable) {
                 switch (message.getMessageType()) {
                     case ADD_METAAGENT:
-                        System.out.println(this.name + "Adding " + message.toString());
                         if (isNameAllowed(message.getSender())) {
                             addAgent(message.getSender(), agent);
 
                             for (SocketAgent sa : socketAgents) {
                                 if (!sa.equals(agent)) {
+                                    observers.updateSender(message);
                                     sa.messageHandler(this, message);
                                 }
                             }
@@ -125,6 +131,7 @@ public class Portal extends MetaAgent {
 
                         for (SocketAgent sa : socketAgents) {
                             if (!sa.equals(agent)) {
+                                observers.updateSender(message);
                                 sa.messageHandler(this, message);
                             }
                         }
@@ -133,32 +140,38 @@ public class Portal extends MetaAgent {
                     case USER_MSG:
                         System.out.println("UserMessage: " + message.getMessageDetails());
                         break;
-                        
+
                     case ADD_PORTAL:
-
-                        if (this instanceof Portal){
+/*
+                        if (this instanceof Portal) {
                             break;
-                        }
-                        addAgent(message.getSender(), agent);
-
-                        for (SocketAgent sa : socketAgents) {
-                            if (!sa.equals(agent)) {
-                                sa.messageHandler(this, new Message(message.getSender(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
-                            }
-                        }
+                        }*/
 
                         String values = "";
                         for (String key : routingTable.keySet()) {
                             values += key + "\n";
                         }
                         values += this.name + "\n";
+                        
+                        Message msg = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, values);
+                        agent.messageHandler(this, msg);
+                        observers.updateSender(msg);
+                        
+                        addAgent(message.getSender(), agent);
 
-                        agent.messageHandler(this, new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, values));
+                        for (SocketAgent sa : socketAgents) {
+                            if (!sa.equals(agent)) {
+                                Message msg2 = new Message(message.getSender(), "GLOBAL", MessageType.ADD_METAAGENT, "");
+                                observers.updateSender(msg2);
+                                sa.messageHandler(this, msg2);
+                            }
+                        }
+                        
                         break;
                     case REMOVE_PORTAL:
 
                         break;
-    
+
                     case LOAD_TABLE:
 
                         String[] values2 = message.getMessageDetails().split("\n");
@@ -173,6 +186,7 @@ public class Portal extends MetaAgent {
             }
         } else {
             if (routingTable.containsKey(message.getRecipient())) {
+                observers.updateSender(message);
                 routingTable.get(message.getRecipient()).messageHandler(this, message);
             } else {
                 agent.messageHandler(this, new Message(this.getName(), message.getSender(), MessageType.ERROR, "An error occured"));
@@ -181,9 +195,10 @@ public class Portal extends MetaAgent {
     }
 
     /**
-
-     * Returns a boolean value,
-     * This checks if the MetaAgent name is valid and doesn't already exist
+     *
+     * Returns a boolean value, This checks if the MetaAgent name is valid and
+     * doesn't already exist
+     *
      * @param name MetaAgent name to be added
      * @return true if MetaAgent name allowed and doesn't already exists
      * @author v8243060 & v8036651
@@ -191,16 +206,17 @@ public class Portal extends MetaAgent {
     protected boolean isNameAllowed(String name) {
         return (routingTable.get(name) == null && usernameValidation(name));
     }
-    
+
     /**
      * Checks whether the message came from the correct branch/agent
+     *
      * @param agent MetaAgent that send/propagated the message
      * @param msg message sent
-     * @return true if MetaAgent in the routing table for the message sender is 
+     * @return true if MetaAgent in the routing table for the message sender is
      * the same as the MetaAgent who sent the message
      * @author v8243060
      */
-    protected boolean isMessageOriginCorrect(MetaAgent agent, Message msg){
+    protected boolean isMessageOriginCorrect(MetaAgent agent, Message msg) {
         return (agent.equals(this.routingTable.get(msg.getSender())));
     }
 }
