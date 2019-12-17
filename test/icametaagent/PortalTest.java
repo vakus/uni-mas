@@ -79,49 +79,6 @@ public class PortalTest {
     }
     
     /**
-     * Test of the addAgent method, of class Portal, where a socket agent is added to a portal.
-     * @throws IOException 
-     */
-    @Test
-    public void testAddSocketAgentToPortal() throws IOException{
-        Portal P1 = new Portal("P1");
-        Portal P2 = new Portal("P2");
-        Socket S1 = new Socket();
-        
-        SocketAgent SA1 = new SocketAgent("SA1", P2, S1);
-        SocketAgent SA2 = new SocketAgent("SA2", P2, S1);
-        
-        P1.addAgent("SA1", SA1);
-        
-        String expResult = "SA1";
-        String result = P1.getMetaAgent(SA1.getName()).getName();
-        assertEquals(expResult,result);
-    }
-    
-    /**
-     * Test of the addAgent method, of class Portal, where a socket agent is added to a portal.
-     * @throws IOException 
-     */
-    @Test
-    public void testAddSocketAgentToPortalWithSocketAgents() throws IOException{
-        Portal P1 = new Portal("P1");
-        Portal P2 = new Portal("P2");
-        Socket S1 = new Socket();
-        
-        SocketAgent SA1 = new SocketAgent("SA1", P2, S1);
-        SocketAgent SA2 = new SocketAgent("SA2", P2, S1);
-        SocketAgent SA3 = new SocketAgent("SA3", P1, S1);
-        SocketAgent SA4 = new SocketAgent("SA4", P1, S1);
-        SocketAgent SA5 = new SocketAgent("SA5", P1, S1);
-        
-        P1.addAgent("SA1", SA1);
-        
-        String expResult = "SA1";
-        String result = P1.getMetaAgent(SA1.getName()).getName();
-        assertEquals(expResult,result);
-    }
-    
-    /**
      * Test of removeAgent method, of class Portal.
      */
     @Test
