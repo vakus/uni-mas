@@ -6,8 +6,8 @@
 package icametaagent;
 
 import icamessages.Message;
-import icamessages.MessageType;
-import java.util.HashMap;
+import java.io.IOException;
+import java.net.Socket;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -61,6 +61,22 @@ public class PortalTest {
         assertEquals(sExpResult, sResult);
     }
 
+    /**
+     * Test of the addAgent method, of class Portal, where a socket agent is added to a portal.
+     * @throws IOException 
+     */
+    @Test
+    public void testAddSocketAgentToRouter() throws IOException{
+        Router instance = new Router("Test");
+        Socket s = new Socket();
+        SocketAgent SA1 = new SocketAgent("SA1", instance, s);
+        
+        instance.addAgent("SA1", SA1);
+        
+        String expResult = "SA1";
+        String result = instance.getMetaAgent(SA1.getName()).getName();
+        assertEquals(expResult,result);
+    }
     
     /**
      * Test of removeAgent method, of class Portal.
@@ -79,47 +95,41 @@ public class PortalTest {
         
         assertEquals(sExpResult, sResult);
     }
-    
-     /**
-     * Test of messageHandler method, of class Portal.
-     */
-    @Test
-    public void testSendMessageAsUserMessage() {
-        System.out.println("Testing the send message method");
-        Portal instance = new Portal("Test Portal");
-        User agent = new User("A1", instance);
-        User agent2 = new User("A2", instance);
-        Message message = new Message(instance.getName(), instance.getName(), MessageType.USER_MSG, "Hello");
-        
-        instance.messageHandler(instance, message);
-        
-        String expResult = "User Message " + "Hello";
-        String result = "User Message " + message.getMessageDetails();
-        
-        assertEquals(expResult, result);
-    }
-    
+
     /**
      * Test of messageHandler method, of class Portal.
      */
+    @Ignore
     @Test
-    public void testSendMessageAsErrorMessage() {
-        System.out.println("Testing the send message method");
+    public void testMessageHandler() {
+        System.out.println("messageHandler");
+        MetaAgent agent = null;
+        Message message = null;
+        Portal instance = null;
+        instance.messageHandler(agent, message);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of the isNameAllowed method, of class Portal, with an invalid name
+     */
+    @Test
+    public void testIsNameAllowedWithAValidName(){
+        System.out.println("Testing the is name allowed method");
         Portal instance = new Portal("Test Portal");
-        User agent = new User("A1", instance);
-        User agent2 = new User("A2", instance);
-        Message message = new Message(instance.getName(), instance.getName(), MessageType.ERROR, "Hello");
+        User agent1 = new User("Agent", instance);
+        User agent2 = new User("Agent2", instance);
         
-        instance.messageHandler(instance, message);
+        instance.addAgent("Agent", agent1);
         
-        String expResult = "Error:" + "Hello";
-        String result = "Error:" + message.getMessageDetails();
-        
-        assertEquals(expResult, result);
+        boolean expResult = true;
+        boolean result = instance.isNameAllowed(agent2.getName());
+        assertTrue(result == expResult);
     }
     
     /**
-     * Test of the isNameAllowed method, of class Portal.
+     * Test of the isNameAllowed method, of class Portal, with an invalid name
      */
     @Test
     public void testIsNameAllowedWithAnInvalidName(){
@@ -128,9 +138,11 @@ public class PortalTest {
         User agent1 = new User("Agent", instance);
         User agent2 = new User("Agent", instance);
         
+        instance.addAgent("Agent", agent1);
+        
         boolean expResult = false;
         boolean result = instance.isNameAllowed(agent2.getName());
-        
         assertTrue(result == expResult);
     }
+    
 }
