@@ -71,18 +71,14 @@ public class Portal extends MetaAgent {
      * @author v8073331
      */
     public void addAgent(String name, MetaAgent meta) {
-        if(meta instanceof SocketAgent){
-            if(socketAgents.contains((SocketAgent)meta)){
+        if (meta instanceof SocketAgent && !(socketAgents.contains((SocketAgent) meta))) {
+            if (this instanceof Router || socketAgents.isEmpty()) {
+                socketAgents.add((SocketAgent) meta);
                 routingTable.put(name, meta);
-            }else{
-                if(this instanceof Router || (this instanceof Portal && socketAgents.isEmpty())){
-                    socketAgents.add((SocketAgent) meta);
-                    routingTable.put(name, meta);
-                }else{
-                    System.out.println("[ERROR] Portal should not have more than one SocketAgent");
-                }
+            } else {
+                System.out.println("[ERROR] Portal should not have more than one SocketAgent");
             }
-        }else{
+        } else {
             routingTable.put(name, meta);
         }
     }
@@ -154,11 +150,11 @@ public class Portal extends MetaAgent {
                             values += key + "\n";
                         }
                         values += this.name + "\n";
-                        
+
                         Message msg = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, values);
                         agent.messageHandler(this, msg);
                         observers.updateSender(msg);
-                        
+
                         addAgent(message.getSender(), agent);
 
                         for (SocketAgent sa : socketAgents) {
@@ -168,10 +164,43 @@ public class Portal extends MetaAgent {
                                 sa.messageHandler(this, msg2);
                             }
                         }
-                        
+
                         break;
                     case REMOVE_PORTAL:
 
+                        /**
+                         * we assume that the portal was directly connected to
+                         * us. This means that this message should never be
+                         * processed by portal itself. This message should
+                         * always come from SocketAgent.
+                         */
+                        if (!(this instanceof Router) || !(agent instanceof SocketAgent)) {
+                            break;
+                        }
+
+                        socketAgents.remove((SocketAgent) agent);
+
+                        ArrayList<String> usernames = new ArrayList(routingTable.keySet());
+                        
+                        //find all clients that will be removed by this action
+                        for (String username : usernames) {
+                            if (routingTable.get(username).equals(agent)) {
+                                /**
+                                 * This agent will be removed if the portal will
+                                 * be removed
+                                 */
+                                routingTable.remove(username);
+                                Message msg3 = new Message(username, "GLOBAL", MessageType.REMOVE_METAAGENT, "");
+                                observers.updateSender(msg3);
+                                
+                                for(SocketAgent sa : socketAgents){
+                                    sa.messageHandler(this, msg3);
+                                }
+                            }
+                        }
+
+                        ((SocketAgent)agent).close();
+                        
                         break;
 
                     case LOAD_TABLE:

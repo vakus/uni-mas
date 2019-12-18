@@ -22,20 +22,20 @@ public class SocketAgent extends MetaAgent implements Runnable {
 
     protected Portal portalConection;
     protected Socket routerConnection;
-    private ArrayBlockingQueue<Message> messageQueue;
+    private final ArrayBlockingQueue<Message> messageQueue;
     private boolean busy;
 
     /**
-     * Draws from the super class of MetaAgent,
-     * Constructor for the socket agent.
-     * @param name
+     * Draws from the super class of MetaAgent, Constructor for the socket
+     * agent.
+     *
      * @param p
-     * @param s 
+     * @param s
      * @author v8036651
      * @author v8073331
      */
-    public SocketAgent(String name, Portal p, Socket s) {
-        super(name);
+    public SocketAgent(Portal p, Socket s) {
+        super("SOCKET-AGENT");
         busy = false;
         portalConection = p;
         routerConnection = s;
@@ -45,8 +45,9 @@ public class SocketAgent extends MetaAgent implements Runnable {
     /**
      * Overwrites the messageHandler method from the super class of MetaAgent,
      * this adds a message to the message queue.
+     *
      * @param agent
-     * @param msg 
+     * @param msg
      * @author v8073331
      */
     @Override
@@ -56,6 +57,7 @@ public class SocketAgent extends MetaAgent implements Runnable {
 
     /**
      * Checks for incoming messages and send outgoing messages.
+     *
      * @author v8073331
      */
     @Override
@@ -66,49 +68,65 @@ public class SocketAgent extends MetaAgent implements Runnable {
             OutputStream out = routerConnection.getOutputStream();
             while (!routerConnection.isClosed()) {
 
-                
-                if(in.available() != 0){
+                if (in.available() != 0) {
                     byte[] rmsg = new byte[in.available()];     //rmsg is a recived message in byte format.
                     in.read(rmsg);
-                    
+
                     String armsg = new String(rmsg);            //armsg actual recived message in string format.
-                    
-                    if(armsg.equals("#")){
+
+                    if (armsg.equals("#")) {
                         busy = false;
-                        
-                    }else if(armsg.startsWith("#")){
-                        
+
+                    } else if (armsg.startsWith("#")) {
+
                         busy = false;
                         armsg = armsg.substring(1);
                         Message farmsg = Message.parseMessage(armsg);     //farmsg final actual message to be sent again as a message object.
                         portalConection.messageHandler(this, farmsg);
                         out.write("#".getBytes());
                         out.flush();
-                        
-                    }else if(armsg.endsWith("#")){
-                        
+
+                    } else if (armsg.endsWith("#")) {
+
                         busy = false;
-                        armsg = armsg.substring(0, armsg.length()-1);
+                        armsg = armsg.substring(0, armsg.length() - 1);
                         Message farmsg = Message.parseMessage(armsg);
                         portalConection.messageHandler(this, farmsg);
                         out.write("#".getBytes());
                         out.flush();
-                        
-                    }else{
+
+                    } else {
                         Message farmsg = Message.parseMessage(armsg);
                         portalConection.messageHandler(this, farmsg);
                         out.write("#".getBytes());
                         out.flush();
                     }
                 }
-                
-                if(!messageQueue.isEmpty() && !busy){
+
+                if (!messageQueue.isEmpty() && !busy) {
                     Message msg = messageQueue.poll();
                     out.write(msg.toString().getBytes());
                     out.flush();
                     busy = true;
                 }
             }
+        } catch (IOException ex) {
+            Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * this function will shutdown the socket which should result in this thread
+     * stopping
+     *
+     * @author v8073331
+     */
+    public void close() {
+        try {
+            this.routerConnection.getOutputStream().flush();
+            this.routerConnection.getOutputStream().close();
+            this.routerConnection.getInputStream().close();
+            this.routerConnection.close();
         } catch (IOException ex) {
             Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
