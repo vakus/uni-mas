@@ -5,6 +5,7 @@
  */
 package icaGUI;
 
+import icametaagent.User;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -16,15 +17,14 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
  * @author v8036651
  * @author v8036651
  */
-public class ObserverGUI 
-{
+
 /**
  * 
  * @author v8077971
  */
-public class MASGUI
+public class ObserverGUI
 {
-    public MASGUI()
+    public ObserverGUI()
     {
         JFrame mainFrame;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -43,6 +43,6 @@ public class MASGUI
         clock.run();
         
     }
-}
+    }
 
-}
+

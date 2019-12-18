@@ -36,6 +36,7 @@ public class UserGUI
         
         TitleClock clock = new TitleClock(userFrame);
         clock.run();
+        userFrame.setTitle(user.getName());
     }
     
 }
