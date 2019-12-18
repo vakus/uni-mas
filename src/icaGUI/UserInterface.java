@@ -9,6 +9,7 @@ import icametaagent.User;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -19,12 +20,14 @@ import javax.swing.JTextField;
  *
  * @author v8036651
  */
-public class UserInterface 
+public class UserInterface implements ActionListener
 {
-    private final JButton send = new JButton();
+    private final JButton send = new JButton("Send");
     private final JTextArea messageText = new JTextArea();
     private final JTextField recipient = new JTextField();
-    private final Dimension buttonSize;
+    private final Dimension buttonSize = new Dimension(200,100);;
+    private final Dimension textFieldSize = new Dimension(200,100);;
+    private final Dimension textAreaSize = new Dimension(200,100);;
     private final Dimension size;
     private String messageDetails;
     private String recipientName;
@@ -47,8 +50,10 @@ public class UserInterface
         mainPanel = new JPanel();
         mainPanel.setSize(size);
         
-        buttonSize = new Dimension((int)(size.getWidth() / 4) - 1, (int)(size.getHeight() / 10) -1);
+        send.addActionListener(this);
         send.setPreferredSize(buttonSize);
+        recipient.setPreferredSize(textFieldSize);
+        messageText.setPreferredSize(textAreaSize);
         mainPanel.add(recipient);
         mainPanel.add(send);
         mainPanel.add(messageText);
@@ -56,12 +61,7 @@ public class UserInterface
     
     public void mouseClicked(MouseEvent e)
     {
-        if(e.getSource().equals(send))
-        {
-            recipientName = recipient.getText();
-            messageDetails = messageText.getText();
-            user.sendMessage(recipientName, messageDetails);
-        }
+        
     }
     
     
@@ -102,7 +102,13 @@ public class UserInterface
     
     public void actionPerformed(ActionEvent e)
     {
-        
+        if(e.getSource().equals(send))
+        {
+            recipientName = recipient.getText();
+            messageDetails = messageText.getText();
+            user.sendMessage(recipientName, messageDetails);
+            System.out.println("Sent Message");
+        }
     }
     
 }
