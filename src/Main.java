@@ -42,7 +42,7 @@ public class Main {
             p1.addObserver(m2);
 
             Socket s = new Socket("127.0.0.1", 42069);
-            SocketAgent a = new SocketAgent("", p1, s);
+            SocketAgent a = new SocketAgent(p1, s);
             
             Thread st = new Thread(a);
             st.start();
@@ -86,7 +86,7 @@ public class Main {
             //String ip = keyb.nextLine().trim();
             
             Socket s = new Socket("127.0.0.1", 42069);
-            SocketAgent sa = new SocketAgent("", p1, s);
+            SocketAgent sa = new SocketAgent(p1, s);
             
             Thread t = new Thread(sa);
             t.start();
@@ -104,6 +104,11 @@ public class Main {
             
             p1.messageHandler(a4, new Message(a4.getName(), "a1", MessageType.USER_MSG, "HELLO THERE"));
             
+            System.out.println("Press enter to start removing portal");
+            keyb.nextLine();
+            
+            
+            sa.messageHandler(p1, new Message(p1.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
         }
         
         
