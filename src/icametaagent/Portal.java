@@ -15,16 +15,18 @@ import java.util.HashMap;
 /**
  *
  * @author v8036651
+ * @author v8073331
+ * @author v8243060
  */
 public class Portal extends MetaAgent {
 
-    protected HashMap<String, MetaAgent> routingTable;
+    protected final HashMap<String, MetaAgent> routingTable;
     /**
      * This list only stores list of socketAgents which are to be sent messages
      * only unique.
      */
-    private ArrayList<SocketAgent> socketAgents;
-    private Observer observers;
+    private final ArrayList<SocketAgent> socketAgents;
+    private final Observer observers;
 
     /**
      * Creates new portal with specific node name.
@@ -142,10 +144,10 @@ public class Portal extends MetaAgent {
                         break;
 
                     case ADD_PORTAL:
-/*
-                        if (this instanceof Portal) {
+                        //portal should not be added to another instance of portal
+                        if (!(this instanceof Router)) {
                             break;
-                        }*/
+                        }
 
                         String values = "";
                         for (String key : routingTable.keySet()) {
