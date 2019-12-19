@@ -48,10 +48,9 @@ public class Main {
             //ObserverGUI start2 = new ObserverGUI();
 
             Socket s = new Socket("127.0.0.1", 42069);
-            SocketAgent a = new SocketAgent("", p1, s);
+            SocketAgent a = new SocketAgent(p1, s);
+            a.start();
             
-            Thread st = new Thread(a);
-            st.start();
             a.messageHandler(p1, new Message(p1.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
             
             
@@ -75,7 +74,7 @@ public class Main {
             keyb.nextLine();
             
             p1.messageHandler(a1, new Message("a1", "a4", MessageType.USER_MSG, "HELLO A4 FROM A1"));
-            UserGUI start = new UserGUI(new User("test",p1));
+            //UserGUI start = new UserGUI(new User("test",p1));
             try {
                 t.join();
             } catch (InterruptedException ex) {
@@ -92,10 +91,9 @@ public class Main {
             //String ip = keyb.nextLine().trim();
             
             Socket s = new Socket("127.0.0.1", 42069);
-            SocketAgent sa = new SocketAgent("", p1, s);
+            SocketAgent sa = new SocketAgent(p1, s);
+            sa.start();
             
-            Thread t = new Thread(sa);
-            t.start();
             sa.messageHandler(p1, new Message(p1.getName(), "Global", MessageType.ADD_PORTAL, ""));
             
             System.out.println("Press enter to continue");
@@ -110,6 +108,12 @@ public class Main {
             
             p1.messageHandler(a4, new Message(a4.getName(), "a1", MessageType.USER_MSG, "HELLO THERE"));
             
+            System.out.println("Press enter to start removing portal");
+            keyb.nextLine();
+            
+            
+            sa.messageHandler(p1, new Message(p1.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
+            sa.close();
         }
         
         
