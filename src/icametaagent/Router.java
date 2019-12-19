@@ -54,6 +54,16 @@ public class Router extends Portal implements Runnable {
         }
     }
     
-    
+    @Override
+    public void addAgent(String name, MetaAgent agent){
+        if(!routingTable.containsKey(name)){
+            if(agent instanceof SocketAgent){
+                socketAgents.add((SocketAgent)agent);
+            }
+            routingTable.put(name, agent);
+        }else{
+            throw new IllegalArgumentException("Username is already in routing table.");
+        }
+    }
 
 }

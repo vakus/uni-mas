@@ -25,8 +25,8 @@ public class Portal extends MetaAgent {
      * This list only stores list of socketAgents which are to be sent messages
      * only unique.
      */
-    private final ArrayList<SocketAgent> socketAgents;
-    private final Observer observers;
+    protected final ArrayList<SocketAgent> socketAgents;
+    protected final Observer observers;
 
     /**
      * Creates new portal with specific node name.
@@ -71,15 +71,19 @@ public class Portal extends MetaAgent {
      * @author v8073331
      */
     public void addAgent(String name, MetaAgent meta) {
-        if (meta instanceof SocketAgent && !(socketAgents.contains((SocketAgent) meta))) {
-            if (this instanceof Router || socketAgents.isEmpty()) {
-                socketAgents.add((SocketAgent) meta);
+        if(!(routingTable.containsKey(name))){
+            if(meta instanceof SocketAgent && !(socketAgents.contains((SocketAgent) meta))){
+                if(socketAgents.isEmpty()){
+                    socketAgents.add((SocketAgent) meta);
+                    routingTable.put(name, meta);
+                }else{
+                    throw new IllegalArgumentException("Portal can not have more than one socket connection.");
+                }
+            }else{
                 routingTable.put(name, meta);
-            } else {
-                System.out.println("[ERROR] Portal should not have more than one SocketAgent");
             }
-        } else {
-            routingTable.put(name, meta);
+        }else{
+            throw new IllegalArgumentException("Username is already in routing table.");
         }
     }
 
