@@ -74,7 +74,7 @@ public class Main {
             keyb.nextLine();
             
             p1.messageHandler(a1, new Message("a1", "a4", MessageType.USER_MSG, "HELLO A4 FROM A1"));
-            //UserGUI start = new UserGUI(new User("test",p1));
+            UserGUI start = new UserGUI(new User("test",p1));
             try {
                 t.join();
             } catch (InterruptedException ex) {
