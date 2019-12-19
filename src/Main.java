@@ -104,6 +104,12 @@ public class Main {
             
             p1.messageHandler(a4, new Message(a4.getName(), "a1", MessageType.USER_MSG, "HELLO THERE"));
             
+            System.out.println("Press enter to send invalid message");
+            keyb.nextLine();
+            
+            
+            p1.messageHandler(a4, new Message("a7", "a1", MessageType.USER_MSG, "SPOOK"));
+            
             System.out.println("Press enter to start removing portal");
             keyb.nextLine();
             
