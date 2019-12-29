@@ -1,4 +1,6 @@
 
+import icaGUI.ObserverGUI;
+import icaGUI.UserGUI;
 import icamessages.Message;
 import icamessages.MessageType;
 import icametaagent.*;
@@ -22,6 +24,8 @@ import java.util.logging.Logger;
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         
+        
+        
         Router r1;
         
         Portal p1;
@@ -40,12 +44,13 @@ public class Main {
             p1 = new Portal("Portal-1");
             CMDMonitor m2 = new CMDMonitor(p1.getName());
             p1.addObserver(m2);
+            
+            //ObserverGUI start2 = new ObserverGUI();
 
             Socket s = new Socket("127.0.0.1", 42069);
             SocketAgent a = new SocketAgent(p1, s);
+            a.start();
             
-            Thread st = new Thread(a);
-            st.start();
             a.messageHandler(p1, new Message(p1.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
             
             
@@ -69,7 +74,7 @@ public class Main {
             keyb.nextLine();
             
             p1.messageHandler(a1, new Message("a1", "a4", MessageType.USER_MSG, "HELLO A4 FROM A1"));
-            
+            UserGUI start = new UserGUI(new User("test",p1));
             try {
                 t.join();
             } catch (InterruptedException ex) {
@@ -87,9 +92,7 @@ public class Main {
             
             Socket s = new Socket("127.0.0.1", 42069);
             SocketAgent sa = new SocketAgent(p1, s);
-            
-            Thread t = new Thread(sa);
-            t.start();
+            sa.start();
             sa.messageHandler(p1, new Message(p1.getName(), "Global", MessageType.ADD_PORTAL, ""));
             
             System.out.println("Press enter to continue");
@@ -115,6 +118,7 @@ public class Main {
             
             
             sa.messageHandler(p1, new Message(p1.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
+            sa.close();
         }
         
         
