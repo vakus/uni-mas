@@ -16,23 +16,46 @@ import java.util.logging.Logger;
 /**
  *
  * @author v8036651
+ * @author v8073331
  */
 public class SocketAgent extends MetaAgent {
 
+    /**
+     * The portal which is running on the same end as this socket. This variable
+     * also may point towards a Router (extension of portal)
+     */
     protected Portal portal;
+
+    /**
+     * The class responsible for writing data to the socket and processing it.
+     */
     protected final WriteWorker writeWorker;
+    /**
+     * The class responsible for reading data from the socket and processing it.
+     */
     protected final ReadWorker readWorker;
+    /**
+     * The socket which is used to send and receive data.
+     */
     protected Socket socket;
 
+    /**
+     * Thread pointer for {@link #writeWorker}.
+     */
     private final Thread writeWorkerThread;
+
+    /**
+     * Thread pointer for {@link #readWorker}
+     */
     private final Thread readWorkerThread;
 
     /**
      * Draws from the super class of MetaAgent, Constructor for the socket
      * agent.
      *
-     * @param portal
-     * @param socket
+     * @param portal the portal which is on this side of the socket.
+     * @param socket already existing socket connection which will be sending or
+     * receiving data.
      * @author v8036651
      * @author v8073331
      */
@@ -50,17 +73,17 @@ public class SocketAgent extends MetaAgent {
     /**
      * This function starts all threads which are used by SocketAgent
      */
-    public void start(){
+    public void start() {
         readWorkerThread.start();
         writeWorkerThread.start();
     }
-    
+
     /**
-     * Overwrites the messageHandler method from the super class of MetaAgent,
-     * this adds a message to the message queue.
+     * Adds message to the {@link WriteWorker#messageQueue messageQueue} of
+     * {@link #writeWorker}
      *
-     * @param agent
-     * @param msg
+     * @param agent the agent which is sending/forwarding the message
+     * @param msg the message to be forwarded.
      * @author v8073331
      */
     @Override
@@ -69,8 +92,18 @@ public class SocketAgent extends MetaAgent {
     }
 
     /**
-     * this function will shutdown the socket which should result in this thread
-     * stopping
+     * <p>
+     * This function will shutdown the socket and the underlying threads.
+     * </p>
+     * <p>
+     * BUG: For some reason the threads did not want to be stopped in clean
+     * manner; the call to {@link ReadWorker#stop()} and
+     * {@link WriteWorker#stop()} did not result in changing value of
+     * {@link ReadWorker#running} and {@link WriteWorker#running} respectively.
+     * This resulted in threads to not exit, but consume CPU resources. For this
+     * reason for now the threads are interrupted to force crash them.
+     * {@link Thread#interrupt() see here for more information}.
+     * </p>
      *
      * @author v8073331
      */
@@ -81,7 +114,7 @@ public class SocketAgent extends MetaAgent {
         if (!readWorkerThread.getState().equals(Thread.State.TERMINATED)) {
             readWorker.stop();
             readWorkerThread.interrupt();
-            
+
             try {
                 readWorkerThread.join();
             } catch (InterruptedException ex) {
@@ -141,7 +174,15 @@ public class SocketAgent extends MetaAgent {
  */
 class ReadWorker implements Runnable {
 
+    /**
+     * The parent Socket Agent.
+     */
     private final SocketAgent agent;
+
+    /**
+     * Represents if the thread should continue to execute, or start
+     * terminating.
+     */
     volatile boolean running;
 
     ReadWorker(SocketAgent agent) {
@@ -211,6 +252,9 @@ class ReadWorker implements Runnable {
         }
     }
 
+    /**
+     * Sets {@link #running} to false to initiate thread termination.
+     */
     public void stop() {
         running = false;
     }
@@ -224,9 +268,22 @@ class ReadWorker implements Runnable {
  */
 class WriteWorker implements Runnable {
 
+    /**
+     * The parent Socket Agent.
+     */
     private final SocketAgent agent;
+    /**
+     * The queue of messages to be sent.
+     */
     private final ArrayBlockingQueue<Message> messageQueue;
+    /**
+     * Represents whatever next message can be sent or not.
+     */
     volatile boolean busy;
+    /**
+     * Represents if the thread should continue to execute, or start
+     * terminating.
+     */
     volatile boolean running;
 
     public WriteWorker(SocketAgent agent) {
@@ -261,6 +318,9 @@ class WriteWorker implements Runnable {
         messageQueue.add(msg);
     }
 
+    /**
+     * Sets {@link #running} to false to initiate thread termination.
+     */
     public void stop() {
         running = false;
     }

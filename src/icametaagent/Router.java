@@ -14,26 +14,29 @@ import java.util.logging.Logger;
 /**
  *
  * @author v8036651
+ * @author v8073331
  */
 public class Router extends Portal implements Runnable {
-    
+
     protected ServerSocket server;
 
     /**
      * Constructor for a router object with a super class of portal.
-     * @param n
-     * @throws IOException 
+     *
+     * @param name the name of the router agent
+     * @throws IOException if unable to instanciate {@link ServerSocket} on port
+     * 42069
      * @author v8036651
      */
-    public Router(String n) throws IOException 
-    {
-        super(n);
+    public Router(String name) throws IOException {
+        super(name);
         server = new ServerSocket(42069);
     }
 
     /**
-     * Overwrites the run method from the implements runnable,
-     * creates a new server socket to listen for new connections.
+     * Overwrites the run method from the implements runnable, creates a new
+     * server socket to listen for new connections.
+     *
      * @author v8073331
      */
     @Override
@@ -44,13 +47,10 @@ public class Router extends Portal implements Runnable {
                 System.out.println("Accepted connection from: " + s.getInetAddress().toString());
                 SocketAgent newAgent = new SocketAgent(this, s);
                 newAgent.start();
-                
+
             } catch (IOException ex) {
                 Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-    
-    
-
 }
