@@ -47,10 +47,8 @@ public class Router extends Portal implements Runnable {
                 Socket s = server.accept();
                 System.out.println("Accepted connection from: " + s.getInetAddress().toString());
                 SocketAgent newAgent = new SocketAgent(this, s);
-
-                Thread thread = new Thread(newAgent);
-                thread.start();
-
+                newAgent.start();
+              
             } catch (IOException ex) {
                 Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
             }
