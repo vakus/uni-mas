@@ -119,7 +119,7 @@ public class Portal extends MetaAgent {
                         if (isNameAllowed(message.getSender())) {
                             addAgent(message.getSender(), agent);
 
-                            forwardGlobal(message, agent);
+                            forwardGlobal(agent, message);
 
                         } else {
                             System.out.println("Username not allowed: " + message.getSender());
@@ -129,7 +129,7 @@ public class Portal extends MetaAgent {
                         if (isMessageOriginCorrect(agent, message)) {
                             removeAgent(message.getSender());
 
-                            forwardGlobal(message, agent);
+                            forwardGlobal(agent, message);
 
                         } else {
                             System.out.println("Invalid origin for message: " + message.toString());
@@ -210,7 +210,7 @@ public class Portal extends MetaAgent {
      * not be sent the global message as it already seen it before
      * @author v8073331
      */
-    protected void forwardGlobal(Message msg, MetaAgent source) {
+    protected void forwardGlobal(MetaAgent source, Message msg) {
         for (SocketAgent sa : socketAgents) {
             if (!sa.equals(source)) {
                 observers.updateSender(msg);
