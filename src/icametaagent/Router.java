@@ -120,13 +120,7 @@ public class Router extends Portal implements Runnable {
                          * Notify all other portals and routers of newly joining
                          * agent (portal)
                          */
-                        for (SocketAgent sa : socketAgents) {
-                            if (!sa.equals(agent)) {
-                                Message msg2 = new Message(message.getSender(), "GLOBAL", MessageType.ADD_METAAGENT, "");
-                                observers.updateSender(msg2);
-                                sa.messageHandler(this, msg2);
-                            }
-                        }
+                        forwardGlobal(this, new Message(message.getSender(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
                         break;
                     case REMOVE_PORTAL:
                         /**
@@ -163,12 +157,8 @@ public class Router extends Portal implements Runnable {
                                  * be removed
                                  */
                                 removeAgent(username);
-                                Message msg3 = new Message(username, "GLOBAL", MessageType.REMOVE_METAAGENT, "");
-                                observers.updateSender(msg3);
-
-                                for (SocketAgent sa : socketAgents) {
-                                    sa.messageHandler(this, msg3);
-                                }
+                                
+                                forwardGlobal(this, new Message(username, "GLOBAL", MessageType.REMOVE_METAAGENT, ""));
                             }
                         }
 
