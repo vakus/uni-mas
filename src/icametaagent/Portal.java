@@ -31,7 +31,7 @@ public class Portal extends MetaAgent {
     /**
      * Creates new portal with specific node name.
      *
-     * @param name
+     * @param name the node name of the portal
      * @author v8036651
      */
     public Portal(String name) {
@@ -109,7 +109,7 @@ public class Portal extends MetaAgent {
      */
     @Override
     public void messageHandler(MetaAgent agent, Message message) {
-        
+
         observers.updateReceiver(message);
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
 
@@ -119,35 +119,26 @@ public class Portal extends MetaAgent {
                         if (isNameAllowed(message.getSender())) {
                             addAgent(message.getSender(), agent);
 
-                            for (SocketAgent sa : socketAgents) {
-                                if (!sa.equals(agent)) {
-                                    observers.updateSender(message);
-                                    sa.messageHandler(this, message);
-                                }
-                            }
+                            forwardGlobal(message, agent);
 
                         } else {
                             System.out.println("Username not allowed: " + message.getSender());
                         }
                         break;
                     case REMOVE_METAAGENT:
-                        if(isMessageOriginCorrect(agent, message)){
+                        if (isMessageOriginCorrect(agent, message)) {
                             removeAgent(message.getSender());
 
-                            for (SocketAgent sa : socketAgents) {
-                                if (!sa.equals(agent)) {
-                                    observers.updateSender(message);
-                                    sa.messageHandler(this, message);
-                                }
-                            }
-                        }else{
+                            forwardGlobal(message, agent);
+
+                        } else {
                             System.out.println("Invalid origin for message: " + message.toString());
                         }
                         break;
                     case USER_MSG:
-                        if(isMessageOriginCorrect(agent, message)){
+                        if (isMessageOriginCorrect(agent, message)) {
                             System.out.println("UserMessage: " + message.getMessageDetails());
-                        }else{
+                        } else {
                             System.out.println("Invalid origin for message: " + message.toString());
                         }
                         break;
@@ -160,23 +151,23 @@ public class Portal extends MetaAgent {
                         }
                         break;
                     case ERROR:
-                        if(isMessageOriginCorrect(agent, message)){
+                        if (isMessageOriginCorrect(agent, message)) {
                             System.out.println("Error: " + message.getMessageDetails());
-                        }else{
+                        } else {
                             System.out.println("Invalid origin for message: " + message.toString());
                         }
                         break;
                 }
             }
         } else {
-            if(isMessageOriginCorrect(agent, message)){
+            if (isMessageOriginCorrect(agent, message)) {
                 if (routingTable.containsKey(message.getRecipient())) {
                     observers.updateSender(message);
                     routingTable.get(message.getRecipient()).messageHandler(this, message);
                 } else {
-                    agent.messageHandler(this, new Message(this.getName(), message.getSender(), MessageType.ERROR, "An error occured"));
+                    agent.messageHandler(this, new Message(this.getName(), message.getSender(), MessageType.ERROR, "Could not route message to " + message.getRecipient() + ": The recipient was not found"));
                 }
-            }else{
+            } else {
                 System.out.println("Invalid origin for message: " + message.toString());
             }
         }
@@ -206,5 +197,25 @@ public class Portal extends MetaAgent {
      */
     protected boolean isMessageOriginCorrect(MetaAgent agent, Message msg) {
         return (agent.equals(this.routingTable.get(msg.getSender())));
+    }
+
+    /**
+     * This function sends message to all other nodes This function may be
+     * overridden to modify the behaviour in which global messages are sent. For
+     * example portal would only send global message forward to router while
+     * router would send it to other places as well.
+     *
+     * @param msg the message to be sent
+     * @param source the location from which the message came. This node will
+     * not be sent the global message as it already seen it before
+     * @author v8073331
+     */
+    protected void forwardGlobal(Message msg, MetaAgent source) {
+        for (SocketAgent sa : socketAgents) {
+            if (!sa.equals(source)) {
+                observers.updateSender(msg);
+                sa.messageHandler(this, msg);
+            }
+        }
     }
 }
