@@ -75,6 +75,7 @@ public class Main {
             keyb.nextLine();
             
             p1.messageHandler(a1, new Message("a1", "a4", MessageType.USER_MSG, "HELLO A4 FROM A1"));
+            //ObserverGUI observer = new ObserverGUI();
             UserGUI start = new UserGUI(new User("test",p1));
             try {
                 t.join();
@@ -109,7 +110,7 @@ public class Main {
             
             
             p1.messageHandler(a4, new Message(a4.getName(), "a1", MessageType.USER_MSG, "HELLO THERE"));
-            
+            UserGUI start = new UserGUI(new User("test2",p1));
         }
         
         

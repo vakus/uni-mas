@@ -5,8 +5,6 @@
  */
 package icaGUI;
 
-import icametaagent.User;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
@@ -30,14 +28,13 @@ public class ObserverGUI
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = new Dimension((int)(screenSize.getWidth() * 0.375), (int)(screenSize.getHeight() * 0.75));
         
-        mainFrame = new JFrame("Multi-Agent System Exercise");
         ObserverInterface iFace = new ObserverInterface(frameSize);
-        mainFrame.getContentPane().add(iFace.buttonsPanel, BorderLayout.SOUTH);
+        mainFrame = new JFrame("Observer");
+        mainFrame.getContentPane().add(iFace.mainPanel);
         mainFrame.setSize(frameSize);
         mainFrame.setVisible(true);
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         mainFrame.setLocationRelativeTo(null);
-        
         
         TitleClock clock = new TitleClock(mainFrame);
         clock.run();

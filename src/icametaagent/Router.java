@@ -5,6 +5,7 @@
  */
 package icametaagent;
 
+import icaGUI.ObserverGUI;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -51,6 +52,7 @@ public class Router extends Portal implements Runnable {
             } catch (IOException ex) {
                 Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
             }
+            ObserverGUI observer = new ObserverGUI();
         }
     }
     
