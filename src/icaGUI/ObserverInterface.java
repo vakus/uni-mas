@@ -5,12 +5,9 @@
  */
 package icaGUI;
 
-import static com.sun.java.accessibility.util.AWTEventMonitor.addActionListener;
 import icamessages.Message;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -32,24 +29,33 @@ public class ObserverInterface implements ActionListener
 {
     private final Dimension buttonSize;
     private final Dimension size;
-    private final JButton addAgent = new JButton("Add Agent");
-    private final JButton addPortal = new JButton("Add Portal");
-    private final JButton addSocket = new JButton("Add Socket");
-    private final JButton addRouter = new JButton("Add Router");
+    private final JButton addAgent;
+    private final JButton addPortal;
+    private final JButton addSocket;
+    private final JButton addRouter;
     JPanel buttonsPanel; 
     
-    final String[] columnNames = {"Sender", " Intended Recipient", "Actual Recipient","Date"};
+    final String[] columnNames = {"Sender", "Intended Recipient", "Actual Recipient", "Date"};
+    
     public Object[][] data;
-    JTable record = new JTable(data,columnNames);
-    JTable apples = new JTable();
-    JScrollPane scrollPane = new JScrollPane(record);
+    JTable record;
+    JScrollPane scrollPane;
     
     final JPanel mainPanel;
     
     public ObserverInterface(Dimension d)
     {
+     
+        addAgent = new JButton("Add Agent");
+        addPortal = new JButton("Add Portal");
+        addSocket = new JButton("Add Socket");
+        addRouter = new JButton("Add Router");
         
-        data = new Object[][] {{"a1", "a2", "portal-1", "10:34"},{"a2", "a4", "portal-2", "10:35"}};
+        data = new Object[][] {};
+        
+        record = new JTable(data,columnNames);
+        
+        scrollPane = new JScrollPane(record);
         
         buttonsPanel = new JPanel(new GridLayout(2,2));
         size = d;
@@ -111,5 +117,3 @@ public class ObserverInterface implements ActionListener
         
     }
 }
-
-

@@ -40,6 +40,4 @@ public class ObserverGUI
         clock.run();
         
     }
-    }
-
-
+}

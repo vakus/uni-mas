@@ -17,45 +17,43 @@ import java.util.logging.Logger;
  * @author v8036651
  */
 public class Router extends Portal implements Runnable {
-    
+
     protected ServerSocket server;
 
     /**
      * Constructor for a router object with a super class of portal.
+     *
      * @param n
-     * @throws IOException 
+     * @throws IOException
      * @author v8036651
      */
-    public Router(String n) throws IOException 
-    {
+    public Router(String n) throws IOException {
         super(n);
         server = new ServerSocket(42069);
     }
 
     /**
-     * Overwrites the run method from the implements runnable,
-     * creates a new server socket to listen for new connections.
+     * Overwrites the run method from the implements runnable, creates a new
+     * server socket to listen for new connections.
+     *
      * @author v8073331
      */
     @Override
     public void run() {
+        ObserverGUI observer = new ObserverGUI();
         while (!server.isClosed()) {
             try {
                 Socket s = server.accept();
                 System.out.println("Accepted connection from: " + s.getInetAddress().toString());
                 SocketAgent newAgent = new SocketAgent("socket", this, s);
-                
+
                 Thread thread = new Thread(newAgent);
                 thread.start();
-                
-                
+
             } catch (IOException ex) {
                 Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
             }
-            ObserverGUI observer = new ObserverGUI();
         }
     }
-    
-    
 
 }
