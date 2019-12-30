@@ -5,144 +5,98 @@
  */
 package icaGUI;
 
-import java.awt.BorderLayout;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addActionListener;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.Serializable;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 /**
  *
  * @author v8077971
  * @author v8036651
  */
-public final class ObserverInterface implements MouseListener, ActionListener, Serializable
+//JScrollPane scrollPane = new JScrollPane(record);
+//        record.setFillsViewportHeight(true);
+//        record.setVisible(true);
+//        record.setPreferredSize(new Dimension((int)(size.getWidth() / 4) - 1, (int)(size.getHeight() / 10) -1));
+//        recordPanel.add(record);
+public class ObserverInterface implements ActionListener
 {
-    private final  JButton[] buttons = new JButton[5];
-    
-    private final String[] buttonNames = {"Add Agent", "Add Portal", "Add Socket", "Add Router"};
     private final Dimension buttonSize;
     private final Dimension size;
+    private final JButton addAgent = new JButton("Add Agent");
+    private final JButton addPortal = new JButton("Add Portal");
+    private final JButton addSocket = new JButton("Add Socket");
+    private final JButton addRouter = new JButton("Add Router");
+    JPanel buttonsPanel; 
     
-    final JPanel buttonsPanel;
+    final String[] columnNames = {"Sender", "Recipient","Date"};
+    Object[][] data = {{"A1","A2","22:00"}, {"A3","A1","23:00"}};
+    JTable record = new JTable(data,columnNames);
+    
     final JPanel mainPanel;
-    
-    
     
     public ObserverInterface(Dimension d)
     {
+        buttonsPanel = new JPanel(new GridLayout(2,2));
         size = d;
         
-        
-        
-        BorderLayout bLayout = new BorderLayout(25,25);
-        GridLayout options = new GridLayout(1,3,1,1);
-        GridLayout agentsLayout = new GridLayout(5,5,1,1);
-        
-        mainPanel = new JPanel();
+        mainPanel = new JPanel(new GridLayout(2,1));
         mainPanel.setSize(size);
         
         buttonSize = new Dimension((int)(size.getWidth() / 4) - 1, (int)(size.getHeight() / 10) -1);
+        addAgent.setPreferredSize(buttonSize);
+        addAgent.addActionListener(this);
+        addPortal.setPreferredSize(buttonSize);
+        addPortal.addActionListener(this);
+        addSocket.setPreferredSize(buttonSize);
+        addSocket.addActionListener(this);
+        addRouter.setPreferredSize(buttonSize);
+        addRouter.addActionListener(this);
         
-        buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(options);
+        mainPanel.add(record);
+        buttonsPanel.add(addAgent);
+        buttonsPanel.add(addPortal);
+        buttonsPanel.add(addSocket);
+        buttonsPanel.add(addRouter);
+        mainPanel.add(buttonsPanel);
         
-        
-        
-        loadPanels();
-    }
-    
-    
-    protected void loadPanels()
-    {
-        for(int i = 0; i < 4; i++)
-        {
-            buttons[i] = new JButton(buttonNames[i]);
-            buttons[i].setVisible(true);
-            buttons[i].setPreferredSize(buttonSize);
-            buttonsPanel.add(buttons[i]);
-            buttons[i].addActionListener(this);
-        }
-    }
-    
-    @Override
-    public void mouseClicked(MouseEvent e)
-    {
-        
-    }
-    
-    public void leftButtonClicked(MouseEvent e, int index)
-    {
-        //Required to stop Netbeans from complaining.
-    }
-    
-    public void rightButtonClicked(MouseEvent e, int index)
-    {
-        //See line 100
-    }
-    
-    public void middleButtonClicked(MouseEvent e, int index)
-    {
-        //See line 100
-    }
-    
-    @Override
-    public void mousePressed(MouseEvent e)
-    {
-        //See line 100
-    }
-    
-    @Override
-    public void mouseReleased(MouseEvent e)
-    {
-        //See Line 100
-    }
-    
-    @Override
-    public void mouseEntered(MouseEvent e)
-    {
-        //See Line 100
-    }
-    
-    @Override
-    public void mouseExited(MouseEvent e)
-    {
-        //See Line 100
     }
     
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        for(int i = 0; i < buttons.length; i++)
+        if(e.getSource().equals(addAgent))
         {
-            if(e.getSource().equals(buttons[i]))
-            {
-                switch(i)
-                {
-                    case 0:
-                        System.out.println("Add a Agent");
-                        break;
-                    case 1:
-                        System.out.println("Add a Portal");
-                        break;
-                    case 2:
-                        System.out.println("Add a socket");
-                        break;
-                    case 3:
-                        System.out.println("Add a router");
-                        break;
-                    default:
-                        System.out.println("You fucked up");
-                        break;
-                }
-            }
+            System.out.println("Add Agent");
+            System.out.println("Error - Not yet implemented.");
+        }
+        else if(e.getSource().equals(addPortal))
+        {
+            System.out.println("Add Portal");
+            System.out.println("Error - Not yet implemented.");
+        }
+        else if(e.getSource().equals(addSocket))
+        {
+            System.out.println("Add Socket");
+            System.out.println("Error - Not yet implemented.");
+        }
+        else if(e.getSource().equals(addRouter))
+        {
+            System.out.println("Add Router");
+            System.out.println("Error - Not yet implemented.");
+        }
+        else
+        {
+            System.out.println("Nothing has been selected.");
+            System.out.println("Error - Not yet implemented.");
         }
     }
 }
