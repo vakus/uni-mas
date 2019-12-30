@@ -37,7 +37,7 @@ public class SocketAgent extends MetaAgent {
      * @author v8073331
      */
     public SocketAgent(Portal portal, Socket socket) {
-        super("SOCKET-AGENT");
+        super("Socket from: " + portal.getName());
 
         this.portal = portal;
         this.socket = socket;
