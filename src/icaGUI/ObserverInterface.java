@@ -6,6 +6,7 @@
 package icaGUI;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addActionListener;
+import icamessages.Message;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -37,14 +38,19 @@ public class ObserverInterface implements ActionListener
     private final JButton addRouter = new JButton("Add Router");
     JPanel buttonsPanel; 
     
-    final String[] columnNames = {"Sender", "Recipient","Date"};
-    Object[][] data = {{"A1","A2","22:00"}, {"A3","A1","23:00"}};
+    final String[] columnNames = {"Sender", " Intended Recipient", "Actual Recipient","Date"};
+    public Object[][] data;
     JTable record = new JTable(data,columnNames);
+    JTable apples = new JTable();
+    JScrollPane scrollPane = new JScrollPane(record);
     
     final JPanel mainPanel;
     
     public ObserverInterface(Dimension d)
     {
+        
+        data = new Object[][] {{"a1", "a2", "portal-1", "10:34"},{"a2", "a4", "portal-2", "10:35"}};
+        
         buttonsPanel = new JPanel(new GridLayout(2,2));
         size = d;
         
@@ -61,7 +67,7 @@ public class ObserverInterface implements ActionListener
         addRouter.setPreferredSize(buttonSize);
         addRouter.addActionListener(this);
         
-        mainPanel.add(record);
+        mainPanel.add(scrollPane);
         buttonsPanel.add(addAgent);
         buttonsPanel.add(addPortal);
         buttonsPanel.add(addSocket);
@@ -98,6 +104,11 @@ public class ObserverInterface implements ActionListener
             System.out.println("Nothing has been selected.");
             System.out.println("Error - Not yet implemented.");
         }
+    }
+    
+    public void updateObserver(Message msg)
+    {
+        
     }
 }
 
