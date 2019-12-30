@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  */
 /**
  *
- * @author vakus
+ * @author v8073331
  */
 public class DevMain {
 
@@ -63,7 +63,7 @@ public class DevMain {
                 String portalname = keyb.nextLine();
                 Portal portal = new Portal(portalname);
                 portals.add(portal);
-            } else if (line.equalsIgnoreCase("3")) {
+            } else if (line.equalsIgnoreCase("3") && !portals.isEmpty()) {
                 //create new User Agent
                 System.out.println("Enter User Agent name: ");
                 String username = keyb.nextLine();
@@ -87,7 +87,7 @@ public class DevMain {
                             + " content of the message is ignored");
                 }
 
-            } else if (line.equalsIgnoreCase("4")) {
+            } else if (line.equalsIgnoreCase("4") && !portals.isEmpty()) {
                 //connect portal to router
                 Portal portal = choosePortal();
                 String ip = getIP();
@@ -114,10 +114,10 @@ public class DevMain {
                     Logger.getLogger(DevMain.class.getName()).log(Level.SEVERE, null, ex);
                     System.out.println("Could not create socket connection");
                 }
-            } else if (line.equalsIgnoreCase("5")) {
+            } else if (line.equalsIgnoreCase("5") && router != null) {
                 //connect router to router
                 System.out.println("Not implemented!");
-            } else if (line.equalsIgnoreCase("6")) {
+            } else if (line.equalsIgnoreCase("6") && router != null && !portals.isEmpty()) {
                 //send message
                 System.out.print("Sender: ");
                 String sender = keyb.nextLine();
@@ -140,7 +140,7 @@ public class DevMain {
 
                 forward.messageHandler(from, new Message(sender, reciever, type, content));
 
-            } else if (line.equalsIgnoreCase("7")) {
+            } else if (line.equalsIgnoreCase("7") && !portals.isEmpty()) {
                 //disconnect portal from router
                 
                 Portal portal = choosePortal();
@@ -150,7 +150,7 @@ public class DevMain {
                 agent.close();
                 socketAgents.remove(agent);
                 
-            } else if (line.equalsIgnoreCase("8")) {
+            } else if (line.equalsIgnoreCase("8") && !users.isEmpty()) {
                 //disconnect user agent
                 User user = chooseUserAgent();
                 MetaAgent forward = chooseNode();
@@ -175,16 +175,33 @@ public class DevMain {
             System.out.println("[1]\tDisconnect Router");
         }
         System.out.println("[2]\tCreate new Portal");
-        System.out.println("[3]\tCreate new User Agent");
-        System.out.println("[4]\tConnect Portal to Router");
+        if(portals.isEmpty()){
+            System.out.println("[-]\t!Must have portal first!");
+            System.out.println("[-]\t!Must have portal first!");
+        }else{
+            System.out.println("[3]\tCreate new User Agent");
+            System.out.println("[4]\tConnect Portal to Router");
+        }
         if (router != null) {
             System.out.println("[5]\tConnect Router to Router");
         } else {
-            System.out.println("[-]\t!Must have router first!");
+            System.out.println("[-]\t!Must have local router first!");
         }
-        System.out.println("[6]\tSend message");
-        System.out.println("[7]\tDisconnect Portal from Router");
-        System.out.println("[8]\tDisconnect User Agent");
+        if(router == null && portals.isEmpty()){
+            System.out.println("[-]\t!Must have local router or portal first");
+        }else{
+            System.out.println("[6]\tSend message");
+        }
+        if(portals.isEmpty()){
+            System.out.println("[-]\t!Must have portal connected to router first!");
+        }else{
+            System.out.println("[7]\tDisconnect Portal from Router");
+        }
+        if(users.isEmpty()){
+            System.out.println("[-]\t!Must have User Agent first!");
+        }else{
+            System.out.println("[8]\tDisconnect User Agent");
+        }
         System.out.println("[9]\tKill Socket Agent");
         System.out.println("[0]\tKILL AND EXIT");
     }
