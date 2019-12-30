@@ -5,6 +5,7 @@
  */
 package icametaagent;
 
+import icaGUI.ObserverInterface;
 import icamessages.Message;
 import icamessages.MessageType;
 
@@ -42,6 +43,7 @@ public class User extends MetaAgent
     {
         if(msg.getRecipient().equals(this.name)){
             System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
+            
         }else{
             connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
         }
@@ -60,6 +62,7 @@ public class User extends MetaAgent
         }
         Message msg = new Message(name, recipient, MessageType.USER_MSG, details);
         connection.messageHandler(this, msg);
+        
     }
     
 }
