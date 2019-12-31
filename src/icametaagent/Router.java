@@ -143,7 +143,7 @@ public class Router extends Portal implements Runnable {
                          * We must make a copy of the keySet, which will not be
                          * modified when we remove entries
                          */
-                        ArrayList<String> usernames = new ArrayList(routingTable.keySet());
+                        ArrayList<String> usernames = new ArrayList<>(routingTable.keySet());
 
                         /**
                          * find all clients that will be removed by this action
