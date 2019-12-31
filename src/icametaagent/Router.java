@@ -68,7 +68,7 @@ public class Router extends Portal implements Runnable {
     @Override
     public void addAgent(String name, MetaAgent agent) {
         if (!routingTable.containsKey(name)) {
-            if (agent instanceof SocketAgent) {
+            if (agent instanceof SocketAgent && !socketAgents.contains((SocketAgent)agent)) {
                 socketAgents.add((SocketAgent) agent);
             }
             routingTable.put(name, agent);
