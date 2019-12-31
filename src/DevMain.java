@@ -34,9 +34,9 @@ public class DevMain {
     public static void main(String[] args) {
         keyb = new Scanner(System.in);
 
-        portals = new ArrayList();
-        users = new ArrayList();
-        socketAgents = new ArrayList();
+        portals = new ArrayList<>();
+        users = new ArrayList<>();
+        socketAgents = new ArrayList<>();
 
         while (true) {
             createMenu();

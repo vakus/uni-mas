@@ -231,7 +231,7 @@ class WriteWorker implements Runnable {
 
     public WriteWorker(SocketAgent agent) {
         this.agent = agent;
-        messageQueue = new ArrayBlockingQueue(20);
+        messageQueue = new ArrayBlockingQueue<>(20);
         busy = false;
         running = true;
     }
