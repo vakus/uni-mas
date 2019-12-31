@@ -117,7 +117,7 @@ public class DevMain {
             } else if (line.equalsIgnoreCase("5") && router != null) {
                 //connect router to router
                 System.out.println("Not implemented!");
-            } else if (line.equalsIgnoreCase("6") && router != null && !portals.isEmpty()) {
+            } else if (line.equalsIgnoreCase("6") && (router != null || !portals.isEmpty())) {
                 //send message
                 System.out.print("Sender: ");
                 String sender = keyb.nextLine();
