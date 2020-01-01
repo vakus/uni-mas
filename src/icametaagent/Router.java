@@ -68,7 +68,7 @@ public class Router extends Portal implements Runnable {
     @Override
     public void addAgent(String name, MetaAgent agent) {
         if (!routingTable.containsKey(name)) {
-            if (agent instanceof SocketAgent) {
+            if (agent instanceof SocketAgent && !socketAgents.contains((SocketAgent)agent)) {
                 socketAgents.add((SocketAgent) agent);
             }
             routingTable.put(name, agent);
@@ -143,7 +143,7 @@ public class Router extends Portal implements Runnable {
                          * We must make a copy of the keySet, which will not be
                          * modified when we remove entries
                          */
-                        ArrayList<String> usernames = new ArrayList(routingTable.keySet());
+                        ArrayList<String> usernames = new ArrayList<>(routingTable.keySet());
 
                         /**
                          * find all clients that will be removed by this action
