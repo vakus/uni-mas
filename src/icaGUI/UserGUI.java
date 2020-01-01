@@ -18,6 +18,7 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
 public class UserGUI 
 {
     private User user;
+    private UserInterface iFace;
 
     public UserGUI(User agent) 
     {
@@ -26,7 +27,7 @@ public class UserGUI
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = new Dimension((int)(screenSize.getWidth() * 0.375), (int)(screenSize.getHeight() * 0.75));
         
-        UserInterface iFace = new UserInterface(user,frameSize);
+        iFace = new UserInterface(user,frameSize);
         userFrame = new JFrame(user.getName());
         userFrame.getContentPane().add(iFace.mainPanel);
         userFrame.setSize(frameSize);
@@ -34,8 +35,13 @@ public class UserGUI
         userFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         userFrame.setLocationRelativeTo(null);
         
-        TitleClock clock = new TitleClock(userFrame);
-        clock.run();
+        userFrame.setTitle(user.getName());
+       
     }
     
+    
+    public void recievedMessage (String sender, String details)
+    {
+        iFace.displayMessage(sender, details);
+    }
 }

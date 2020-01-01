@@ -5,6 +5,7 @@
  */
 package icaGUI;
 
+import icamessages.Message;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
@@ -22,13 +23,17 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
  */
 public class ObserverGUI
 {
+    private JFrame mainFrame;
+    private ObserverInterface iFace;
+    private Dimension frameSize;
+    private  Dimension screenSize;
+    
     public ObserverGUI()
     {
-        JFrame mainFrame;
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = new Dimension((int)(screenSize.getWidth() * 0.375), (int)(screenSize.getHeight() * 0.75));
+        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        frameSize = new Dimension((int)(screenSize.getWidth() * 0.375), (int)(screenSize.getHeight() * 0.75));
         
-        ObserverInterface iFace = new ObserverInterface(frameSize);
+        iFace = new ObserverInterface(frameSize);
         mainFrame = new JFrame("Observer");
         mainFrame.getContentPane().add(iFace.mainPanel);
         mainFrame.setSize(frameSize);
@@ -39,5 +44,10 @@ public class ObserverGUI
         TitleClock clock = new TitleClock(mainFrame);
         clock.run();
         
+    }
+    
+    public void updateTable (Message msg, String actual)
+    {
+        iFace.update(msg, actual);
     }
 }
