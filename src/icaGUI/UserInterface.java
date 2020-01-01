@@ -88,5 +88,11 @@ public class UserInterface implements ActionListener
         }
     }
     
+    public void displayMessage (String sender, String details)
+    {
+        recievedMessage.setText("A message has been recieved by "
+                + sender + " - "
+                         + details);
+    }
 }
 

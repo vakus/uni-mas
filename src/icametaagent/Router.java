@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class Router extends Portal implements Runnable {
 
     protected ServerSocket server;
-
+    public ObserverGUI observer;
     /**
      * Constructor for a router object with a super class of portal.
      *
@@ -40,7 +40,7 @@ public class Router extends Portal implements Runnable {
      */
     @Override
     public void run() {
-        ObserverGUI observer = new ObserverGUI();
+        observer = new ObserverGUI();
         while (!server.isClosed()) {
             try {
                 Socket s = server.accept();
