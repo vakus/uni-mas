@@ -48,12 +48,13 @@ public class User extends MetaAgent
         {
             System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
             GUI.recievedMessage(msg.getSender(),msg.getMessageDetails());
-            
+            Router.observer.updateTable(msg, name);
         }
         else
         {
             connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
         }
+        
     }
     
     /**
@@ -69,7 +70,6 @@ public class User extends MetaAgent
         }
         Message msg = new Message(name, recipient, MessageType.USER_MSG, details);
         connection.messageHandler(this, msg);
-        
     }
     
 }
