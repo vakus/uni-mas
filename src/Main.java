@@ -52,10 +52,9 @@ public class Main {
             //ObserverGUI start2 = new ObserverGUI();
 
             Socket s = new Socket("127.0.0.1", 42069);
-            SocketAgent a = new SocketAgent("", p1, s);
+            SocketAgent a = new SocketAgent(p1, s);
+            a.start();
             
-            Thread st = new Thread(a);
-            st.start();
             a.messageHandler(p1, new Message(p1.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
             
             
@@ -99,10 +98,8 @@ public class Main {
             //String ip = keyb.nextLine().trim();
             
             Socket s = new Socket("127.0.0.1", 42069);
-            SocketAgent sa = new SocketAgent("", p1, s);
-            
-            Thread t = new Thread(sa);
-            t.start();
+            SocketAgent sa = new SocketAgent(p1, s);
+            sa.start();
             sa.messageHandler(p1, new Message(p1.getName(), "Global", MessageType.ADD_PORTAL, ""));
             
             System.out.println("Press enter to continue");
@@ -117,9 +114,19 @@ public class Main {
             
             p1.messageHandler(a4, new Message(a4.getName(), "a1", MessageType.USER_MSG, "HELLO THERE"));
             UserGUI start = new UserGUI(new User("test2",p1));
+            
+            System.out.println("Press enter to send invalid message");
+            keyb.nextLine();
+            
+            
+            p1.messageHandler(a4, new Message("a7", "a1", MessageType.USER_MSG, "SPOOK"));
+            
+            System.out.println("Press enter to start removing portal");
+            keyb.nextLine();
+            
+            
+            sa.messageHandler(p1, new Message(p1.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
+            sa.close();
         }
-        
-        
-        
     }
 }
