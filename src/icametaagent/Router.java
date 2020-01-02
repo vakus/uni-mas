@@ -5,7 +5,6 @@
  */
 package icametaagent;
 
-import icaGUI.ObserverGUI;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,7 +18,6 @@ import java.util.logging.Logger;
 public class Router extends Portal implements Runnable {
 
     protected ServerSocket server;
-    public static ObserverGUI observer;
     /**
      * Constructor for a router object with a super class of portal.
      *
