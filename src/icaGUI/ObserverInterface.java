@@ -53,7 +53,7 @@ public class ObserverInterface implements ActionListener {
     private final JButton addRouter;
     JPanel buttonsPanel;
 
-    final String[] columnNames = {"Sender", "Intended Recipient", "Actual Recipient", "Message Type", "Date"};
+    final String[] columnNames = {"Sender", "Recipient", "Actual Recipient", "Message Type", "Date"};
     JTable record;
     JScrollPane scrollPane;
     final JPanel mainPanel;
@@ -177,8 +177,10 @@ public class ObserverInterface implements ActionListener {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
         DefaultTableModel model = (DefaultTableModel) record.getModel();
-        model.addRow(new Object[]{msg.getSender(), msg.getRecipient(), actual, msg.getMessageType(), date});
+        model.addRow(new Object[]{msg.getSender(), msg.getRecipient(), actual, msg.getMessageType(), formatter.format(date)});
         record.setModel(model);
+        //auto scroll
+        record.changeSelection(record.getRowCount()-1, 0, false, false);
     }
 
 }
