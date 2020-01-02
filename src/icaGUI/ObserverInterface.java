@@ -6,11 +6,24 @@
 package icaGUI;
 
 import icamessages.Message;
+import icametaagent.Portal;
+import icametaagent.Router;
+import icametaagent.SocketAgent;
+import icametaagent.User;
+import icamonitors.CMDMonitor;
+import icamonitors.GUIMonitor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -36,7 +49,7 @@ public class ObserverInterface implements ActionListener
     private final JButton addRouter;
     JPanel buttonsPanel; 
     
-    final String[] columnNames = {"Sender", "Intended Recipient", "Actual Recipient"};
+    final String[] columnNames = {"Sender", "Intended Recipient", "Actual Recipient", "Message Type", "Date"};
     JTable record;
     JScrollPane scrollPane;
     final JPanel mainPanel;
@@ -82,23 +95,50 @@ public class ObserverInterface implements ActionListener
     {
         if(e.getSource().equals(addAgent))
         {
-            System.out.println("Add Agent");
-            System.out.println("Error - Not yet implemented.");
+            String name =  JOptionPane.showInputDialog("Please input the name of the user: ");
+            //String portalName =  JOptionPane.showInputDialog("Please input mark for test 1: ");
+            //Requires check to see if it exists or not also none hardcoded portal
+            Portal portal = new Portal("Portal-3");
+            User agent = new User(name, portal);
+            CMDMonitor m2 = new CMDMonitor(portal.getName());
+            portal.addObserver(m2);
         }
         else if(e.getSource().equals(addPortal))
         {
-            System.out.println("Add Portal");
-            System.out.println("Error - Not yet implemented.");
+            //Not sure if it links to the router yet?
+            String portalName =  JOptionPane.showInputDialog("Please input the name of the portal: ");
+            Portal p1 = new Portal(portalName);
+            CMDMonitor m2 = new CMDMonitor(p1.getName());
+            p1.addObserver(m2);
         }
         else if(e.getSource().equals(addSocket))
         {
-            System.out.println("Add Socket");
-            System.out.println("Error - Not yet implemented.");
+            String address =  JOptionPane.showInputDialog("Please input the address for the socket: ");
+            Socket s;
+            try {
+                s = new Socket(address, 42069);
+            SocketAgent a = new SocketAgent("", new Portal("Portal-3"), s);
+                System.out.println("Created");
+            } catch (IOException ex) {
+                Logger.getLogger(ObserverInterface.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Failed");
+            }
         }
         else if(e.getSource().equals(addRouter))
         {
-            System.out.println("Add Router");
-            System.out.println("Error - Not yet implemented.");
+            try {
+                String routerName =  JOptionPane.showInputDialog("Please input the name of the router: ");
+                Router r1 = new Router(routerName);
+                CMDMonitor m1 = new CMDMonitor(r1.getName());
+                r1.addObserver(m1);
+                Thread t = new Thread(r1);
+                t.start();
+            } 
+            catch (IOException ex) 
+            {
+                Logger.getLogger(ObserverInterface.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Did not add router.");
+            }
         }
         else
         {
@@ -108,8 +148,10 @@ public class ObserverInterface implements ActionListener
     }
     public void update (Message msg, String actual)
     {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
         DefaultTableModel model = (DefaultTableModel) record.getModel();
-        model.addRow(new Object[]{msg.getSender(), msg.getRecipient(),actual});
+        model.addRow(new Object[]{msg.getSender(), msg.getRecipient(),actual, msg.getMessageType(),date});
         record.setModel(model);
     }
     
