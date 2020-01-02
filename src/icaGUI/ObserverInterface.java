@@ -49,7 +49,7 @@ public class ObserverInterface implements ActionListener
         addSocket = new JButton("Add Socket");
         addRouter = new JButton("Add Router");
         
-        record = new JTable(data,columnNames);     
+        record = new JTable(new DefaultTableModel(data,columnNames));     
         scrollPane = new JScrollPane(record);     
         buttonsPanel = new JPanel(new GridLayout(2,2));
         size = d;
@@ -110,6 +110,7 @@ public class ObserverInterface implements ActionListener
     {
         DefaultTableModel model = (DefaultTableModel) record.getModel();
         model.addRow(new Object[]{msg.getSender(), msg.getRecipient(),actual});
+        record.setModel(model);
     }
     
     

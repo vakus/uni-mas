@@ -5,6 +5,7 @@ import icamessages.Message;
 import icamessages.MessageType;
 import icametaagent.*;
 import icamonitors.CMDMonitor;
+import icamonitors.GUIMonitor;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
@@ -24,7 +25,7 @@ import java.util.logging.Logger;
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         
-        
+        ObserverGUI gui = new ObserverGUI();
         
         Router r1;
         
@@ -36,15 +37,18 @@ public class Main {
             
             r1 = new Router("Router");
             CMDMonitor m1 = new CMDMonitor(r1.getName());
+            GUIMonitor mg1 = new GUIMonitor(r1.getName(), gui);
             r1.addObserver(m1);
+            r1.addObserver(mg1);
             
             Thread t = new Thread(r1);
             t.start();
             
             p1 = new Portal("Portal-1");
             CMDMonitor m2 = new CMDMonitor(p1.getName());
+            GUIMonitor mg2 = new GUIMonitor(p1.getName(), gui);
             p1.addObserver(m2);
-            
+            p1.addObserver(mg2);
             //ObserverGUI start2 = new ObserverGUI();
 
             Socket s = new Socket("127.0.0.1", 42069);
@@ -87,7 +91,9 @@ public class Main {
             
             p1 = new Portal("Portal-2");
             CMDMonitor m2 = new CMDMonitor(p1.getName());
+            GUIMonitor mg2 = new GUIMonitor(p1.getName(), gui);
             p1.addObserver(m2);
+            p1.addObserver(mg2);
             
             //System.out.println("Enter the router IP: ");
             //String ip = keyb.nextLine().trim();

@@ -42,7 +42,7 @@ public class ObserverGUI
         mainFrame.setLocationRelativeTo(null);
         
         TitleClock clock = new TitleClock(mainFrame);
-        clock.run();
+        //clock.run();
         
     }
     
