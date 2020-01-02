@@ -35,7 +35,7 @@ public class TitleClock implements Runnable
     {
         while(myFrame.isVisible())
         {
-            myFrame.setTitle("Multi-Agent System Exercise \t\t\t"  + dateFormat.format(new Date()));
+            myFrame.setTitle(dateFormat.format(new Date()));
             
             try
             {

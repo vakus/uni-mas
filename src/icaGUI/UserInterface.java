@@ -8,10 +8,11 @@ package icaGUI;
 import icametaagent.User;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -24,15 +25,15 @@ public class UserInterface implements ActionListener
 {
     private final JButton send = new JButton("Send");
     private final JTextArea messageText = new JTextArea();
+    private final JTextArea recievedMessage = new JTextArea();
     private final JTextField recipient = new JTextField();
-    private final Dimension buttonSize = new Dimension(200,100);;
-    private final Dimension textFieldSize = new Dimension(200,100);;
-    private final Dimension textAreaSize = new Dimension(200,100);;
+    private final Dimension buttonSize = new Dimension(200,100);
+    private final Dimension textFieldSize = new Dimension(200,100);
+    private final Dimension textAreaSize = new Dimension(200,100);
     private final Dimension size;
     private String messageDetails;
     private String recipientName;
     private final User user;
-    
     
     final JPanel mainPanel;
     
@@ -45,70 +46,52 @@ public class UserInterface implements ActionListener
     {
         user = agent;
         size = d;
-        BorderLayout bLayout = new BorderLayout(25,25);
         
-        mainPanel = new JPanel();
+        mainPanel = new JPanel(new GridLayout(4,2));
         mainPanel.setSize(size);
         
         send.addActionListener(this);
         send.setPreferredSize(buttonSize);
         recipient.setPreferredSize(textFieldSize);
         messageText.setPreferredSize(textAreaSize);
+        mainPanel.add(new JLabel("Recipient:"));
         mainPanel.add(recipient);
-        mainPanel.add(send);
+        
+        mainPanel.add(new JLabel("Message:"));
         mainPanel.add(messageText);
-    }
-    
-    public void mouseClicked(MouseEvent e)
-    {
         
-    }
-    
-    
-    public void leftButtonClicked(MouseEvent e, int index)
-    {
-        //Required to stop Netbeans from complaining.
-    }
-    
-    public void rightButtonClicked(MouseEvent e, int index)
-    {
+        mainPanel.add(new JLabel());
+        mainPanel.add(send);
         
-    }
-    
-    public void middleButtonClicked(MouseEvent e, int index)
-    {
+        mainPanel.add(new JLabel("Recieved Message:"));
+        mainPanel.add(recievedMessage);
         
+        mainPanel.setName(agent.getName());
     }
     
-    public void mousePressed(MouseEvent e)
-    {
-        
-    }
-    
-    public void mouseReleased(MouseEvent e)
-    {
-        
-    }
-    
-    public void mouseEntered(MouseEvent e)
-    {
-        
-    }
-    
-    public void mouseExited(MouseEvent e)
-    {
-        
-    }
-    
+    @Override
     public void actionPerformed(ActionEvent e)
     {
         if(e.getSource().equals(send))
         {
             recipientName = recipient.getText();
-            messageDetails = messageText.getText();
-            user.sendMessage(recipientName, messageDetails);
-            System.out.println("Sent Message");
+            if (recipientName.equalsIgnoreCase("GLOBAL"))
+            {
+                System.out.println("Error - User cannot send a global message!");
+            }
+            else
+            {
+                messageDetails = messageText.getText();
+                user.sendMessage(recipientName, messageDetails);
+                System.out.println("Sent Message");
+            }
         }
     }
     
+    public void displayMessage (String sender, String details)
+    {
+        String prevMessages = recievedMessage.getText();
+        recievedMessage.setText(prevMessages + "\n A message has been recieved by " + sender + ":\n " + details);
+    }
 }
+
