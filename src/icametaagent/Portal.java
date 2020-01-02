@@ -109,7 +109,6 @@ public class Portal extends MetaAgent {
      */
     @Override
     public void messageHandler(MetaAgent agent, Message message) {
-
         observers.updateReceiver(message);
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
 

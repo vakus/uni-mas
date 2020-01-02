@@ -19,9 +19,7 @@ import java.util.logging.Logger;
  * @author v8036651
  */
 public class Router extends Portal implements Runnable {
-
     protected ServerSocket server;
-
     /**
      * Constructor for a router object with a super class of portal.
      *
@@ -48,7 +46,6 @@ public class Router extends Portal implements Runnable {
                 System.out.println("Accepted connection from: " + s.getInetAddress().toString());
                 SocketAgent newAgent = new SocketAgent(this, s);
                 newAgent.start();
-              
             } catch (IOException ex) {
                 Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
             }
