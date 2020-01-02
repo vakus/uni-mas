@@ -25,7 +25,7 @@ public class UserGUI
         user = agent;
         JFrame userFrame;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = new Dimension((int)(screenSize.getWidth() * 0.375), (int)(screenSize.getHeight() * 0.75));
+        Dimension frameSize = new Dimension((int)(screenSize.getWidth() * 0.275), (int)(screenSize.getHeight() * 0.45));
         
         iFace = new UserInterface(user,frameSize);
         userFrame = new JFrame(user.getName());

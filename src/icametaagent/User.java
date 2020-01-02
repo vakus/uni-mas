@@ -48,7 +48,6 @@ public class User extends MetaAgent
         {
             System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
             GUI.recievedMessage(msg.getSender(),msg.getMessageDetails());
-            Router.observer.updateTable(msg, name);
         }
         else
         {
