@@ -23,13 +23,14 @@ import java.util.logging.Logger;
  * @author v8073331
  */
 public class Main {
+    
     public static void main(String[] args) throws IOException, InterruptedException {
         
         ObserverGUI gui = new ObserverGUI();
         
         Router r1;
-        
         Portal p1;
+        
         
         Scanner keyb = new Scanner(System.in);
         System.out.println("Do you want to create router? Y/N");
