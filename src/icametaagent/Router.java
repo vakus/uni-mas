@@ -40,7 +40,6 @@ public class Router extends Portal implements Runnable {
      */
     @Override
     public void run() {
-        observer = new ObserverGUI();
         while (!server.isClosed()) {
             try {
                 Socket s = server.accept();

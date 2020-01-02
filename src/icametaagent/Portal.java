@@ -5,8 +5,10 @@
  */
 package icametaagent;
 
+import icaGUI.ObserverGUI;
 import icamessages.Message;
 import icamessages.MessageType;
+import static icametaagent.Router.observer;
 import icamonitors.Monitor;
 import icamonitors.Observer;
 import java.util.ArrayList;
@@ -106,6 +108,12 @@ public class Portal extends MetaAgent {
     @Override
     public void messageHandler(MetaAgent agent, Message message) {
 
+        if (observer == null)
+        {
+            observer = new ObserverGUI();
+            System.out.println("New gui made");
+        }
+        observer.updateTable(message, this.getName());
         observers.updateReceiver(message);
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
 

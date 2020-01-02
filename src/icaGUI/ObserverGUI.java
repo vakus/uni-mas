@@ -31,7 +31,7 @@ public class ObserverGUI
     public ObserverGUI()
     {
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frameSize = new Dimension((int)(screenSize.getWidth() * 0.375), (int)(screenSize.getHeight() * 0.75));
+        frameSize = new Dimension((int)(screenSize.getWidth() * 0.375), (int)(screenSize.getHeight() * 0.45));
         
         iFace = new ObserverInterface(frameSize);
         mainFrame = new JFrame("Observer");

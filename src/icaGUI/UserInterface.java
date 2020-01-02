@@ -75,7 +75,7 @@ public class UserInterface implements ActionListener
         if(e.getSource().equals(send))
         {
             recipientName = recipient.getText();
-            if (recipientName.equals("GLOBAL")||recipientName.equals("Global")||recipientName.equals("global"))
+            if (recipientName.equalsIgnoreCase("GLOBAL"))
             {
                 System.out.println("Error - User cannot send a global message!");
             }
@@ -90,9 +90,8 @@ public class UserInterface implements ActionListener
     
     public void displayMessage (String sender, String details)
     {
-        recievedMessage.setText("A message has been recieved by "
-                + sender + " - "
-                         + details);
+        String prevMessages = recievedMessage.getText();
+        recievedMessage.setText(prevMessages + "\n A message has been recieved by " + sender + ":\n " + details);
     }
 }
 
