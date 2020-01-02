@@ -11,7 +11,6 @@ import icametaagent.Router;
 import icametaagent.SocketAgent;
 import icametaagent.User;
 import icamonitors.CMDMonitor;
-import icamonitors.GUIMonitor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -117,7 +116,7 @@ public class ObserverInterface implements ActionListener
             Socket s;
             try {
                 s = new Socket(address, 42069);
-            SocketAgent a = new SocketAgent("", new Portal("Portal-3"), s);
+            SocketAgent a = new SocketAgent(new Portal("Portal-3"), s);
                 System.out.println("Created");
             } catch (IOException ex) {
                 Logger.getLogger(ObserverInterface.class.getName()).log(Level.SEVERE, null, ex);
