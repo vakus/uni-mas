@@ -5,7 +5,6 @@
  */
 package icametaagent;
 
-import icaGUI.ObserverInterface;
 import icaGUI.UserGUI;
 import icamessages.Message;
 import icamessages.MessageType;
@@ -16,7 +15,7 @@ import icamessages.MessageType;
  */
 public class User extends MetaAgent
 {
-    protected Portal connection;
+    public Portal connection;
     protected UserGUI GUI;
     
     /**
