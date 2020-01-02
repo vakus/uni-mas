@@ -1,4 +1,5 @@
 
+import icaGUI.ObserverGUI;
 import icaGUI.UserGUI;
 import icamessages.Message;
 import icamessages.MessageType;

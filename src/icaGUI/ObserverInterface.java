@@ -36,7 +36,7 @@ public class ObserverInterface implements ActionListener
     private final JButton addRouter;
     JPanel buttonsPanel; 
     
-    final String[] columnNames = {"Sender", "Intended Recipient", "Actual Recipient", "Date"};
+    final String[] columnNames = {"Sender", "Intended Recipient", "Actual Recipient"};
     JTable record;
     JScrollPane scrollPane;
     final JPanel mainPanel;
@@ -75,40 +75,7 @@ public class ObserverInterface implements ActionListener
         mainPanel.add(buttonsPanel);   
     }
     
-//    public ObserverInterface(Dimension d, Message msg)
-//    {
-//        data = data,{msg.getSender(),msg.getRecipient(),msg.getMessageDetails()};
-//        addAgent = new JButton("Add Agent");
-//        addPortal = new JButton("Add Portal");
-//        addSocket = new JButton("Add Socket");
-//        addRouter = new JButton("Add Router");
-//        
-//        record = new JTable(data,columnNames);
-//        scrollPane = new JScrollPane(record);
-//        buttonsPanel = new JPanel(new GridLayout(2,2));
-//        size = d;
-//        
-//        mainPanel = new JPanel(new GridLayout(2,1));
-//        mainPanel.setSize(size);
-//        
-//        buttonSize = new Dimension((int)(size.getWidth() / 4) - 1, (int)(size.getHeight() / 10) -1);
-//        addAgent.setPreferredSize(buttonSize);
-//        addAgent.addActionListener(this);
-//        addPortal.setPreferredSize(buttonSize);
-//        addPortal.addActionListener(this);
-//        addSocket.setPreferredSize(buttonSize);
-//        addSocket.addActionListener(this);
-//        addRouter.setPreferredSize(buttonSize);
-//        addRouter.addActionListener(this);
-//        
-//        mainPanel.add(scrollPane);
-//        buttonsPanel.add(addAgent);
-//        buttonsPanel.add(addPortal);
-//        buttonsPanel.add(addSocket);
-//        buttonsPanel.add(addRouter);
-//        mainPanel.add(buttonsPanel);
-//        
-//    }
+
     
     @Override
     public void actionPerformed(ActionEvent e)
@@ -142,7 +109,7 @@ public class ObserverInterface implements ActionListener
     public void update (Message msg, String actual)
     {
         DefaultTableModel model = (DefaultTableModel) record.getModel();
-        model.addRow(new Object[]{msg.getSender(), msg.getRecipient(),actual, "23:00"});
+        model.addRow(new Object[]{msg.getSender(), msg.getRecipient(),actual});
     }
     
     
