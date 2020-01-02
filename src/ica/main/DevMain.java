@@ -1,3 +1,5 @@
+package ica.main;
+
 
 import icamessages.Message;
 import icamessages.MessageType;
