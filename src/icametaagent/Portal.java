@@ -144,10 +144,18 @@ public class Portal extends MetaAgent {
                         break;
 
                     case LOAD_TABLE:
-
-                        String[] values2 = message.getMessageDetails().split("\n");
-                        for (String s : values2) {
-                            addAgent(s, agent);
+                        if (routingTable.isEmpty()) {
+                            String[] values2 = message.getMessageDetails().split("\n");
+                            for (String s : values2) {
+                                addAgent(s, agent);
+                            }
+                        } else {
+                            /**
+                             * We should only load the routing table if it is
+                             * empty to prevent case where one portal may have
+                             * different data than the other
+                             */
+                            System.out.println("Error: Can not load routing table, as it is not empty.");
                         }
                         break;
                     case ERROR:
