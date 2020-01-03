@@ -12,6 +12,8 @@ import icamessages.MessageType;
 /**
  *
  * @author v8036651
+ * @author v8073331
+ * @author v8243060
  */
 public class User extends MetaAgent
 {
@@ -19,25 +21,26 @@ public class User extends MetaAgent
     protected UserGUI GUI;
     
     /**
-     * Constructor for a user,
-     * Draws from the super class of MetaAgent.
-     * @param name
-     * @param p 
+     * Constructor for a user, Draws from the super class of MetaAgent.
+     *
+     * @param name the name of the user agent
+     * @param portal the link to the portal which the agent should be connected
+     * to
      * @author v8036651
      */
-    public User(String name, Portal p) 
-    {
+    public User(String name, Portal portal) {
         super(name);
-        connection = p;
+        connection = portal;
         GUI = new UserGUI(this);
     }
 
     /**
-     * Overwrites the messageHandler method,
-     * This is used to display the message or pass the message on depending on
-     * the recipient of the message.
-     * @param agent
-     * @param msg 
+     * This function is used to display incoming message. Since user agent
+     * should not forward any messages, if the recipient is invalid, an error
+     * message is sent back to the sender, and the message is discarded.
+     *
+     * @param agent the source of the message which is being received.
+     * @param msg the message to be processed.
      * @author v8073331
      */
     @Override
@@ -54,20 +57,21 @@ public class User extends MetaAgent
         }
         
     }
-    
+
     /**
      * Creates a message and sends it to the portal
+     *
      * @param recipient recipient of the message
      * @param details message details
      * @throws IllegalArgumentException if recipient contains "/"
      * @author v8243060
      */
-    public void sendMessage (String recipient, String details){
-        if (!recipientValidation(recipient)){
+    public void sendMessage(String recipient, String details) {
+        if (!recipientValidation(recipient)) {
             throw new IllegalArgumentException("Recipient name not correct");
         }
         Message msg = new Message(name, recipient, MessageType.USER_MSG, details);
         connection.messageHandler(this, msg);
     }
-    
+
 }
