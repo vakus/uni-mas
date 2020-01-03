@@ -225,17 +225,23 @@ class ReadWorker implements Runnable {
                 messageStr = messageStr.trim();
                 if (messageStr.equals("#")) {
 
-                    agent.writeWorker.busy = false;
+                    synchronized (agent.writeWorker) {
+                        agent.writeWorker.notify();
+                    }
                     continue;
 
                 } else if (messageStr.startsWith("#")) {
 
-                    agent.writeWorker.busy = false;
+                    synchronized (agent.writeWorker) {
+                        agent.writeWorker.notify();
+                    }
                     messageStr = messageStr.substring(1);
 
                 } else if (messageStr.endsWith("#")) {
 
-                    agent.writeWorker.busy = false;
+                    synchronized (agent.writeWorker) {
+                        agent.writeWorker.notify();
+                    }
                     messageStr = messageStr.substring(0, messageStr.length() - 1);
 
                 }
@@ -278,10 +284,6 @@ class WriteWorker implements Runnable {
      */
     private final ArrayBlockingQueue<Message> messageQueue;
     /**
-     * Represents whatever next message can be sent or not.
-     */
-    volatile boolean busy;
-    /**
      * Represents if the thread should continue to execute, or start
      * terminating.
      */
@@ -290,25 +292,18 @@ class WriteWorker implements Runnable {
     public WriteWorker(SocketAgent agent) {
         this.agent = agent;
         messageQueue = new ArrayBlockingQueue<>(20);
-        busy = false;
         running = true;
     }
 
     @Override
     public void run() {
         while (running) {
-            if (!busy) {
+            synchronized (agent.writeWorker) {
                 try {
                     agent.socket.getOutputStream().write(messageQueue.take().toString().getBytes());
                     agent.socket.getOutputStream().flush();
-                    busy = true;
-                } catch (IOException ex) {
-                    /**
-                     * The connection is closed no reason to keep this thread
-                     * alive.
-                     */
-                    return;
-                } catch (InterruptedException ex) {
+                    agent.writeWorker.wait();
+                } catch (IOException | InterruptedException ex) {
                     Logger.getLogger(WriteWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
