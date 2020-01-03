@@ -198,9 +198,11 @@ public class Portal extends MetaAgent {
                             /**
                              * We should only load the routing table if it is
                              * empty to prevent case where one portal may have
-                             * different data than the other
+                             * different data than the other We also can just
+                             * disconnect since the connection was unsuccessful
                              */
                             System.out.println("Error: Can not load routing table, as it is not empty.");
+                            ((SocketAgent)agent).close();
                         }
                         break;
                     case ERROR:
@@ -270,10 +272,10 @@ public class Portal extends MetaAgent {
             }
         }
     }
-    
-    public void shutdown(){
+
+    public void shutdown() {
         forwardGlobal(this, new Message(this.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
-        for(SocketAgent sa : socketAgents){
+        for (SocketAgent sa : socketAgents) {
             sa.close();
         }
     }
