@@ -243,6 +243,12 @@ public class Router extends Portal implements Runnable {
                                     Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
+                            
+                            routerAddresses.add((SocketAgent)agent);
+                            
+                            for (SocketAgent sa : routerAddresses){
+                                sa.messageHandler(this, new Message(this.name, "GLOBAL", MessageType.ADD_ROUTER, ""));
+                            }
                         } else {
                             System.out.println("Error: Router is already connected to a different network");
                         }

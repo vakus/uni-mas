@@ -118,6 +118,20 @@ public class DevMain {
                 }
             } else if (line.equalsIgnoreCase("5") && router != null) {
                 //connect router to router
+                
+                String ip = getIP();
+                try {
+                    Socket s = new Socket(ip, 42069);
+                    SocketAgent sa = new SocketAgent(router, s);
+                    sa.start();
+                    
+                    sa.messageHandler(sa, new Message(router.getName(), "GLOBAL", MessageType.REQUEST_ROUTER_ADDRESSES, ""));
+                } catch (IOException ex) {
+                    Logger.getLogger(DevMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                
+                
                 System.out.println("Not implemented!");
             } else if (line.equalsIgnoreCase("6") && (router != null || !portals.isEmpty())) {
                 //send message
