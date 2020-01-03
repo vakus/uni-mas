@@ -5,146 +5,79 @@
  */
 package icaGUI;
 
-import java.awt.BorderLayout;
+
+import ica.main.GuiMain;
+import icamessages.Message;
+import icamessages.MessageType;
+import icametaagent.Portal;
+import icametaagent.Router;
+import icametaagent.SocketAgent;
+import icametaagent.User;
+import icamonitors.CMDMonitor;
+import icamonitors.GUIMonitor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.Serializable;
+import java.io.IOException;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
-import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author v8077971
  * @author v8036651
+ * @author v8073331
  */
-public final class ObserverInterface implements MouseListener, ActionListener, Serializable
-{
-    private final  JButton[] buttons = new JButton[5];
-    
-    private final String[] buttonNames = {"Add Agent", "Add Portal", "Add Socket", "Add Router"};
-    private final Dimension buttonSize;
+//JScrollPane scrollPane = new JScrollPane(record);
+//        record.setFillsViewportHeight(true);
+//        record.setVisible(true);
+//        record.setPreferredSize(new Dimension((int)(size.getWidth() / 4) - 1, (int)(size.getHeight() / 10) -1));
+//        recordPanel.add(record);
+public class ObserverInterface {
+
     private final Dimension size;
-    
-    final JPanel buttonsPanel;
+    JPanel buttonsPanel;
+
+    final String[] columnNames = {"Sender", "Recipient", "Actual Recipient", "Message Type", "Date"};
+    JTable record;
+    JScrollPane scrollPane;
     final JPanel mainPanel;
-    
-    
-    
-    public ObserverInterface(Dimension d)
-    {
+    public Object[][] data = new Object[][]{};
+
+    private Portal portal;
+    private Router router;
+
+    public ObserverInterface(Dimension d) {
+
+        record = new JTable(new DefaultTableModel(data, columnNames));
+        scrollPane = new JScrollPane(record);
         size = d;
-        
-        
-        
-        BorderLayout bLayout = new BorderLayout(25,25);
-        GridLayout options = new GridLayout(1,3,1,1);
-        GridLayout agentsLayout = new GridLayout(5,5,1,1);
-        
-        mainPanel = new JPanel();
+
+        mainPanel = new JPanel(new GridLayout(1, 1));
         mainPanel.setSize(size);
-        
-        buttonSize = new Dimension((int)(size.getWidth() / 4) - 1, (int)(size.getHeight() / 10) -1);
-        
-        buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(options);
-        
-        
-        
-        loadPanels();
+
+
+        mainPanel.add(scrollPane);
     }
-    
-    
-    protected void loadPanels()
-    {
-        for(int i = 0; i < 4; i++)
-        {
-            buttons[i] = new JButton(buttonNames[i]);
-            buttons[i].setVisible(true);
-            buttons[i].setPreferredSize(buttonSize);
-            buttonsPanel.add(buttons[i]);
-            buttons[i].addActionListener(this);
-        }
+
+    public void update(Message msg, String actual) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        DefaultTableModel model = (DefaultTableModel) record.getModel();
+        model.addRow(new Object[]{msg.getSender(), msg.getRecipient(), actual, msg.getMessageType(), formatter.format(date)});
+        record.setModel(model);
+        //auto scroll
+        record.changeSelection(record.getRowCount()-1, 0, false, false);
     }
-    
-    @Override
-    public void mouseClicked(MouseEvent e)
-    {
-        
-    }
-    
-    public void leftButtonClicked(MouseEvent e, int index)
-    {
-        //Required to stop Netbeans from complaining.
-    }
-    
-    public void rightButtonClicked(MouseEvent e, int index)
-    {
-        //See line 100
-    }
-    
-    public void middleButtonClicked(MouseEvent e, int index)
-    {
-        //See line 100
-    }
-    
-    @Override
-    public void mousePressed(MouseEvent e)
-    {
-        //See line 100
-    }
-    
-    @Override
-    public void mouseReleased(MouseEvent e)
-    {
-        //See Line 100
-    }
-    
-    @Override
-    public void mouseEntered(MouseEvent e)
-    {
-        //See Line 100
-    }
-    
-    @Override
-    public void mouseExited(MouseEvent e)
-    {
-        //See Line 100
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
-        for(int i = 0; i < buttons.length; i++)
-        {
-            if(e.getSource().equals(buttons[i]))
-            {
-                switch(i)
-                {
-                    case 0:
-                        System.out.println("Add a Agent");
-                        break;
-                    case 1:
-                        System.out.println("Add a Portal");
-                        break;
-                    case 2:
-                        System.out.println("Add a socket");
-                        break;
-                    case 3:
-                        System.out.println("Add a router");
-                        break;
-                    default:
-                        System.out.println("You fucked up");
-                        break;
-                }
-            }
-        }
-    }
+
 }
-
-

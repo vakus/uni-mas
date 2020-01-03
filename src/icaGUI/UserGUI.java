@@ -5,11 +5,14 @@
  */
 package icaGUI;
 
+import icamessages.Message;
+import icamessages.MessageType;
 import icametaagent.User;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JFrame;
-import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 /**
  *
@@ -18,25 +21,61 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
 public class UserGUI 
 {
     private User user;
+    private UserInterface iFace;
 
     public UserGUI(User agent) 
     {
         user = agent;
         JFrame userFrame;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = new Dimension((int)(screenSize.getWidth() * 0.375), (int)(screenSize.getHeight() * 0.75));
+        Dimension frameSize = new Dimension((int)(screenSize.getWidth() * 0.275), (int)(screenSize.getHeight() * 0.45));
         
-        UserInterface iFace = new UserInterface(user,frameSize);
+        iFace = new UserInterface(user,frameSize);
         userFrame = new JFrame(user.getName());
         userFrame.getContentPane().add(iFace.mainPanel);
         userFrame.setSize(frameSize);
         userFrame.setVisible(true);
-        userFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        userFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        userFrame.addWindowListener(new WindowListener(){
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                user.connection.messageHandler(user, new Message(user.getName(), "GLOBAL", MessageType.REMOVE_METAAGENT, ""));
+                userFrame.setVisible(false);
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
+        });
         userFrame.setLocationRelativeTo(null);
         
-        TitleClock clock = new TitleClock(userFrame);
-        clock.run();
         userFrame.setTitle(user.getName());
+       
     }
     
+    
+    public void recievedMessage (String sender, String details)
+    {
+        iFace.displayMessage(sender, details);
+    }
 }
