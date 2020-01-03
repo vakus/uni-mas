@@ -96,7 +96,7 @@ public class ObserverGUI {
                 SocketAgent a = new SocketAgent(GuiMain.router, s);
                 a.start();
 
-                a.messageHandler(GuiMain.router, new Message(GuiMain.router.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
+                a.messageHandler(GuiMain.router, new Message(GuiMain.router.getName(), "GLOBAL", MessageType.REQUEST_ROUTER_ADDRESSES, ""));
             } catch (IOException ex) {
                 Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, "Could not connect router", "Error", JOptionPane.ERROR_MESSAGE);
