@@ -35,7 +35,7 @@ public class Message {
      * Constructor for message class
      * @param sender String name of the sender
      * @param recipeint String name of the recipient
-     * @param type enum MessageType
+     * @param type {@link MessageType} representing type of the message
      * @param details String message details
      * @author v8243060 
      */
@@ -47,7 +47,7 @@ public class Message {
     }
 
     /**
-     * Retrieve sender
+     * Retrieve sender of the message
      * @return String name of the sender
      * @author v8243060
      */
@@ -56,7 +56,7 @@ public class Message {
     }
     
     /**
-     * Retrieve recipient
+     * Retrieve recipient of the message
      * @return String name of the recipient
      * @author v8243060
      */
@@ -66,7 +66,7 @@ public class Message {
     
     /**
      * Retrieve message type
-     * @return enum MessageType
+     * @return {@link MessageType} enum representing the type of the message
      * @author v8243060
      */
     public MessageType getMessageType(){
@@ -94,7 +94,7 @@ public class Message {
     }
     
     /**
-     * This is to convert back from the toString() method
+     * Converts message back from the toString() method
      * @param msg The string that should be parsed to Message
      * @return Message object created from the string
      * @author v8243060
