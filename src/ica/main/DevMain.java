@@ -130,9 +130,7 @@ public class DevMain {
                     Logger.getLogger(DevMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
-                
-                
-                System.out.println("Not implemented!");
+                System.out.println("Connecting...");
             } else if (line.equalsIgnoreCase("6") && (router != null || !portals.isEmpty())) {
                 //send message
                 System.out.print("Sender: ");
