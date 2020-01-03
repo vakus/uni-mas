@@ -22,7 +22,7 @@ public class Observer {
      * @param observers
      * @author v8036651
      */
-    public Observer(ArrayList observers) {
+    public Observer(ArrayList<Monitor> observers) {
         this.observers = observers;
     }
 
@@ -36,7 +36,7 @@ public class Observer {
      * @return
      * @author v8036651
      */
-    public ArrayList getObservers() {
+    public ArrayList<Monitor> getObservers() {
         return observers;
     }
 
@@ -46,7 +46,7 @@ public class Observer {
      * @param observers
      * @author v8036651
      */
-    public void setObservers(ArrayList observers) {
+    public void setObservers(ArrayList<Monitor> observers) {
         this.observers = observers;
     }
 
