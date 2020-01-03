@@ -18,7 +18,6 @@ import icamonitors.GUIMonitor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -97,7 +96,7 @@ public class ObserverGUI {
                 SocketAgent a = new SocketAgent(GuiMain.router, s);
                 a.start();
 
-                a.messageHandler(GuiMain.router, new Message(GuiMain.router.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
+                a.messageHandler(GuiMain.router, new Message(GuiMain.router.getName(), "GLOBAL", MessageType.REQUEST_ROUTER_ADDRESSES, ""));
             } catch (IOException ex) {
                 Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, "Could not connect router", "Error", JOptionPane.ERROR_MESSAGE);
@@ -181,7 +180,7 @@ public class ObserverGUI {
 
     }
 
-    public void updateTable(Message msg, String actual) {
-        iFace.update(msg, actual);
+    public void updateTable(Message msg, String direction, String actualRecipient, String actualSender) {
+        iFace.update(msg, direction, actualRecipient, actualSender);
     }
 }

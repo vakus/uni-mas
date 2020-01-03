@@ -155,7 +155,7 @@ public class Portal extends MetaAgent {
      */
     @Override
     public void messageHandler(MetaAgent agent, Message message) {
-        observers.updateReceiver(message);
+        observers.updateReceiver(message, agent.getName());
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
 
             synchronized (routingTable) {
@@ -217,7 +217,7 @@ public class Portal extends MetaAgent {
         } else {
             if (isMessageOriginCorrect(agent, message)) {
                 if (routingTable.containsKey(message.getRecipient())) {
-                    observers.updateSender(message);
+                    observers.updateSender(message, agent.getName());
                     routingTable.get(message.getRecipient()).messageHandler(this, message);
                 } else {
                     agent.messageHandler(this, new Message(this.getName(), message.getSender(), MessageType.ERROR, "Could not route message to " + message.getRecipient() + ": The recipient was not found"));
@@ -267,7 +267,7 @@ public class Portal extends MetaAgent {
     protected void forwardGlobal(MetaAgent source, Message msg) {
         for (SocketAgent sa : socketAgents) {
             if (!sa.equals(source)) {
-                observers.updateSender(msg);
+                observers.updateSender(msg, source.getName());
                 sa.messageHandler(this, msg);
             }
         }

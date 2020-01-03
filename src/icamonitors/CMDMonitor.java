@@ -6,7 +6,6 @@
 package icamonitors;
 
 import icamessages.Message;
-import java.util.Observable;
 
 /**
  *
@@ -30,11 +29,12 @@ public class CMDMonitor extends Monitor
      * Method to output to the command line showing the name of the sender, the
      * name of the recipient, the actual recipient, the message type and the
      * message details when a message is received.
+     * @param actualSender
      * @parm message
      * @author v8036651
      */
     @Override
-    public void ReceivedMessage (Message message)
+    public void ReceivedMessage (Message message, String actualSender)
     {
         System.out.println("+==========================================+");
         System.out.println("|This message was received from:           |");
@@ -55,11 +55,12 @@ public class CMDMonitor extends Monitor
      * Method to output to the command line showing the name of the sender, the
      * name of the intended sender, the intended recipient, the message type and the
      * message details when a message is sent.
+     * @param actualSender
      * @parm message
      * @author v8036651
      */
     @Override
-    public void SentMessage (Message message)
+    public void SentMessage (Message message, String actualSender)
     {
         System.out.println("+==========================================+");
         System.out.println("|This message was sent from:               |");
@@ -75,24 +76,4 @@ public class CMDMonitor extends Monitor
         System.out.println("+==========================================+");
         System.out.println("");
     }
-
-    /**
-     * Update method which shows the sender and recipient then the agent it is attached to.
-     * @param o
-     * @param message 
-     * @author v8036651
-     */
-    @Override
-    public void update(Observable o, Object message) 
-    {
-        System.out.println("Hello world");
-        this.ReceivedMessage((Message)message);
-    }
 }
-
-//1234567890
-//1234567890
-//1234567890
-//1234567890
-//1234
-//PrintF length 44
