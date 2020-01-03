@@ -42,6 +42,7 @@ public class Router extends Portal implements Runnable {
     public Router(String name) throws IOException {
         super(name);
         server = new ServerSocket(42069);
+        routerAddresses = new ArrayList<>();
     }
 
     /**
@@ -194,11 +195,6 @@ public class Router extends Portal implements Runnable {
                         Message msgPRT = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, partialRoutingValues);
                         agent.messageHandler(this, msgPRT);
                         observers.updateSender(msgPRT);
-                        
-                        /**
-                         * Add the router to our routing table
-                         */
-                        addAgent(message.getSender(), agent);
 
                         /**
                          * Notify all other portals and routers of newly joining
@@ -210,6 +206,11 @@ public class Router extends Portal implements Runnable {
                             }
                         }
                         
+                        /**
+                         * Add the router to our routing table
+                         */
+                        addAgent(message.getSender(), agent);
+                        
                         break;
                         
                     case REQUEST_ROUTER_ADDRESSES:
@@ -218,7 +219,7 @@ public class Router extends Portal implements Runnable {
                          */
                         String addresses = "";
                         for (SocketAgent address : routerAddresses) {
-                            addresses += address.socket.getInetAddress().getHostAddress();
+                            addresses += address.socket.getInetAddress().getHostAddress() + "\n";
                         }
 
                         /**
@@ -233,14 +234,16 @@ public class Router extends Portal implements Runnable {
                     case LOAD_ADDRESSES:
                         if (routerAddresses.isEmpty()) {
                             String[] values = message.getMessageDetails().split("\n");
-                            for (String address : values) {
-                                try {
-                                    Socket s = new Socket(address, 42069);
-                                    SocketAgent sA = new SocketAgent(this, s);
-                                    sA.start();
-                                    routerAddresses.add(sA);
-                                } catch (IOException ex) {
-                                    Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
+                            if (!message.getMessageDetails().isEmpty()){
+                                for (String address : values) {
+                                    try {
+                                            Socket s = new Socket(address, 42069);
+                                            SocketAgent sA = new SocketAgent(this, s);
+                                            sA.start();
+                                            routerAddresses.add(sA);
+                                    } catch (IOException ex) {
+                                        Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 }
                             }
                             
