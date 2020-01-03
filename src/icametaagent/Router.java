@@ -255,6 +255,7 @@ public class Router extends Portal implements Runnable {
                         } else {
                             System.out.println("Error: Router is already connected to a different network");
                         }
+                        break;
                     case LOAD_TABLE:
                         String[] values2 = message.getMessageDetails().split("\n");
                         for (String s : values2) {
