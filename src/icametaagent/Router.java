@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author v8036651
+ * @author v8073331
  * @author V8243060
  */
 public class Router extends Portal implements Runnable {
@@ -37,7 +38,8 @@ public class Router extends Portal implements Runnable {
      * Constructor for a router object with a super class of portal.
      *
      * @param name the name of the Router Agent
-     * @throws IOException if the serverSocket instance can not be created
+     * @throws IOException if unable to instanciate {@link ServerSocket} on port
+     * 42069
      * @author v8036651
      */
     public Router(String name) throws IOException {
