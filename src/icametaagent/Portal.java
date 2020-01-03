@@ -14,24 +14,30 @@ import java.util.HashMap;
 
 /**
  *
- * @author v8036651
  * @author v8073331
+ * @author v8036651
  * @author v8243060
  */
 public class Portal extends MetaAgent {
 
+    /**
+     * The routing table for all known meta agents.
+     */
     protected final HashMap<String, MetaAgent> routingTable;
     /**
      * This list only stores list of socketAgents which are to be sent messages
      * only unique.
      */
-    protected final ArrayList<SocketAgent> socketAgents;
-    protected final Observer observers;
+    private final ArrayList<SocketAgent> socketAgents;
+    /**
+     * List of all {@link Monitor} which are observing this node.
+     */
+    private final Observer observers;
 
     /**
      * Creates new portal with specific node name.
      *
-     * @param name the node name of the portal
+     * @param name the name of the portal to be created.
      * @author v8036651
      */
     public Portal(String name) {
@@ -44,7 +50,7 @@ public class Portal extends MetaAgent {
     /**
      * Method for adding an observer to be used when handling a message.
      *
-     * @param obs
+     * @param obs the observer which should be added.
      * @author v8036651
      */
     public void addObserver(Monitor obs) {
@@ -52,10 +58,13 @@ public class Portal extends MetaAgent {
     }
 
     /**
-     * Returns an agent that is within the routing table with the key of n.
+     * Returns the next node which would be used to forward message to meta
+     * agent represented by name. The meta agent which is returned is not
+     * necessarily the meta agent which is represented by name.
      *
-     * @param name
-     * @return
+     * @param name name of the meta agent which we want to find.
+     * @return {@link MetaAgent} which represents the next node in link to meta
+     * Agent represented by name. Returns null if no meta agent found.
      * @author v8036651
      */
     public MetaAgent getMetaAgent(String name) {
@@ -67,7 +76,7 @@ public class Portal extends MetaAgent {
      * Adds a new agent to the routing table of the portal.
      *
      * @param name the name of the agent to be added
-     * @param meta the agent to which forward messages for this username
+     * @param meta the {@link MetaAgent} which the messages should be forwarded to.
      * @throws IllegalArgumentException if name is already in routingTable. Also
      * thrown if portal already has a socket connection.
      * @author v8073331
@@ -92,7 +101,7 @@ public class Portal extends MetaAgent {
     /**
      * Removes the agent in location n from the routing table of the portal.
      *
-     * @param name
+     * @param name the name of the {@link MetaAgent} to be removed.
      * @author v8036651
      */
     public void removeAgent(String name) {
@@ -100,11 +109,48 @@ public class Portal extends MetaAgent {
     }
 
     /**
-     * Method that is drawn from super class, This is the method that handles a
-     * message object, It reads the message Type and acts upon it.
+     * Recieves and processes the message.
+     * <p>
+     * First all monitors are being notified of the received message. If the
+     * message recipient is either the name of this portal or is "GLOBAL" (case
+     * in-sensitive) then the message is processed. If the message recipient
+     * isn't this portal's name nor "GLOBAL", then the source is checked if the
+     * source of the message is correct (see
+     * {@link #isMessageOriginCorrect(icametaagent.MetaAgent, icamessages.Message) isMessageOriginCorrect}).
+     * If the source is correct then message is sent forward to the correct
+     * recipient. If the recipient can not be found in routing table, the
+     * message is discarded, and message is sent from the portal that the
+     * recipient could not be found and that message was not received. If the
+     * sender origin is invalid then the message is discarded.
+     * </p>
+     * <p>
+     * If the message recipient is this portal name or "GLOBAL", then the
+     * message will be processed. Following message types are processed by
+     * portal:
+     * <ul>
+     * <li>{@link MessageType#ADD_METAAGENT}</li>
+     * <li>{@link MessageType#REMOVE_METAAGENT}*</li>
+     * <li>{@link MessageType#USER_MSG}*</li>
+     * <li>{@link MessageType#LOAD_TABLE}</li>
+     * <li>{@link MessageType#ERROR}*</li>
+     * </ul>
+     * * those messages are checked for correct origin before processing.
+     * </p>
+     * <p>
+     * Some messages are not processed and ignored by portal (e.g.
+     * {@link MessageType#ADD_PORTAL}) as they are not intended to be processed
+     * by portal, but by extensions of it such as Router.
+     * </p>
+     * <p>
+     * When the message is being processed (not forwarded), the
+     * {@link #routingTable routingTable} is thread locked, as changes may occur
+     * while processing messages. The table is not locked when the function is
+     * only forwarding messages in order to optimise performance when only
+     * forwarding messages.
+     * </p>
      *
-     * @param agent
-     * @param message
+     * @param agent the source from which the message is being sent
+     * @param message the message which is being received.
      * @author v8073331
      */
     @Override
@@ -152,9 +198,11 @@ public class Portal extends MetaAgent {
                             /**
                              * We should only load the routing table if it is
                              * empty to prevent case where one portal may have
-                             * different data than the other
+                             * different data than the other We also can just
+                             * disconnect since the connection was unsuccessful
                              */
                             System.out.println("Error: Can not load routing table, as it is not empty.");
+                            ((SocketAgent)agent).close();
                         }
                         break;
                     case ERROR:
@@ -181,12 +229,11 @@ public class Portal extends MetaAgent {
     }
 
     /**
-     *
-     * Returns a boolean value, This checks if the MetaAgent name is valid and
-     * doesn't already exist
+     * Checks whatever the agent name is allowed. This function checks if the
+     * agent name is not already in use and if the username is valid.
      *
      * @param name MetaAgent name to be added
-     * @return true if MetaAgent name allowed and doesn't already exists
+     * @return true if MetaAgent name is allowed and doesn't already exists
      * @author v8243060 & v8036651
      */
     protected boolean isNameAllowed(String name) {
@@ -225,10 +272,10 @@ public class Portal extends MetaAgent {
             }
         }
     }
-    
-    public void shutdown(){
+
+    public void shutdown() {
         forwardGlobal(this, new Message(this.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
-        for(SocketAgent sa : socketAgents){
+        for (SocketAgent sa : socketAgents) {
             sa.close();
         }
     }
