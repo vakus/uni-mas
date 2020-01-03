@@ -6,7 +6,7 @@
 package icamessages;
 
 /**
- *
+ * This enum represents a type of a message.
  * @author v8243060
  */
 public enum MessageType {

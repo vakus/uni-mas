@@ -17,7 +17,7 @@ public abstract class MetaAgent{
 
     /**
      * Constructor for a new MetaAgent.
-     * @param name 
+     * @param name the name of the node to be created
      * @author v8036651
      */
     MetaAgent(String name) {
@@ -40,8 +40,8 @@ public abstract class MetaAgent{
     
     /**
      * Abstract method that is overwritten by subclasses for handling a message.
-     * @param agent
-     * @param msg 
+     * @param agent source of the message which is being sent
+     * @param msg the message which is being sent
      * @author v8036651
      */
     public abstract void messageHandler(MetaAgent agent, Message msg);
