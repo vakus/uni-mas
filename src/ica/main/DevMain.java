@@ -118,7 +118,22 @@ public class DevMain {
                 }
             } else if (line.equalsIgnoreCase("5") && router != null) {
                 //connect router to router
-                System.out.println("Not implemented!");
+                
+                String ip = getIP();
+                try {
+                    Socket s = new Socket(ip, 42069);
+                    SocketAgent sa = new SocketAgent(router, s);
+                    sa.start();
+                    
+                    if(askYN("Do you want to auto request router addresses", true)){
+                        sa.messageHandler(sa, new Message(router.getName(), "GLOBAL", MessageType.REQUEST_ROUTER_ADDRESSES, ""));
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(DevMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                
+                
             } else if (line.equalsIgnoreCase("6") && (router != null || !portals.isEmpty())) {
                 //send message
                 System.out.print("Sender: ");
@@ -300,6 +315,9 @@ public class DevMain {
             System.out.println("[4] ADD_PORTAL");
             System.out.println("[5] REMOVE_PORTAL");
             System.out.println("[6] LOAD_TABLE");
+            System.out.println("[7] ADD_ROUTER");
+            System.out.println("[8] LOAD_ADDRESSES");
+            System.out.println("[9] REQUEST_ROUTER_ADDRESSES");
 
             while (!keyb.hasNextInt()) {
                 keyb.nextLine();
@@ -322,6 +340,12 @@ public class DevMain {
                     return MessageType.REMOVE_PORTAL;
                 case 6:
                     return MessageType.LOAD_TABLE;
+                case 7:
+                    return MessageType.ADD_ROUTER;
+                case 8:
+                    return MessageType.LOAD_ADDRESSES;
+                case 9:
+                    return MessageType.REQUEST_ROUTER_ADDRESSES;
             }
         }
     }
