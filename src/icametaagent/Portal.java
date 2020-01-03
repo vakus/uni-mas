@@ -23,16 +23,16 @@ public class Portal extends MetaAgent {
     /**
      * The routing table for all known meta agents.
      */
-    protected HashMap<String, MetaAgent> routingTable;
+    protected final HashMap<String, MetaAgent> routingTable;
     /**
      * This list only stores list of socketAgents which are to be sent messages
      * only unique.
      */
-    private ArrayList<SocketAgent> socketAgents;
+    private final ArrayList<SocketAgent> socketAgents;
     /**
      * List of all {@link Monitor} which are observing this node.
      */
-    private Observer observers;
+    private final Observer observers;
 
     /**
      * Creates new portal with specific node name.
@@ -75,24 +75,26 @@ public class Portal extends MetaAgent {
     /**
      * Adds a new agent to the routing table of the portal.
      *
-     * @param name the name of the meta agent to be added.
-     * @param meta the {@link MetaAgent} which should be added to the table.
+     * @param name the name of the agent to be added
+     * @param meta the {@link MetaAgent} which the messages should be forwarded to.
+     * @throws IllegalArgumentException if name is already in routingTable. Also
+     * thrown if portal already has a socket connection.
      * @author v8073331
      */
     public void addAgent(String name, MetaAgent meta) {
-        if (meta instanceof SocketAgent) {
-            if (socketAgents.contains((SocketAgent) meta)) {
-                routingTable.put(name, meta);
-            } else {
-                if (this instanceof Router || (this instanceof Portal && socketAgents.isEmpty())) {
+        if (!(routingTable.containsKey(name))) {
+            if (meta instanceof SocketAgent && !(socketAgents.contains((SocketAgent) meta))) {
+                if (socketAgents.isEmpty()) {
                     socketAgents.add((SocketAgent) meta);
                     routingTable.put(name, meta);
                 } else {
-                    System.out.println("[ERROR] Portal should not have more than one SocketAgent");
+                    throw new IllegalArgumentException("Portal can not have more than one socket connection.");
                 }
+            } else {
+                routingTable.put(name, meta);
             }
         } else {
-            routingTable.put(name, meta);
+            throw new IllegalArgumentException("Username is already in routing table.");
         }
     }
 
@@ -153,7 +155,6 @@ public class Portal extends MetaAgent {
      */
     @Override
     public void messageHandler(MetaAgent agent, Message message) {
-
         observers.updateReceiver(message);
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
 
@@ -163,81 +164,64 @@ public class Portal extends MetaAgent {
                         if (isNameAllowed(message.getSender())) {
                             addAgent(message.getSender(), agent);
 
-                            for (SocketAgent sa : socketAgents) {
-                                if (!sa.equals(agent)) {
-                                    observers.updateSender(message);
-                                    sa.messageHandler(this, message);
-                                }
-                            }
+                            forwardGlobal(agent, message);
 
                         } else {
                             System.out.println("Username not allowed: " + message.getSender());
                         }
                         break;
                     case REMOVE_METAAGENT:
-                        removeAgent(message.getSender());
+                        if (isMessageOriginCorrect(agent, message)) {
+                            removeAgent(message.getSender());
 
-                        for (SocketAgent sa : socketAgents) {
-                            if (!sa.equals(agent)) {
-                                observers.updateSender(message);
-                                sa.messageHandler(this, message);
-                            }
+                            forwardGlobal(agent, message);
+
+                        } else {
+                            System.out.println("Invalid origin for message: " + message.toString());
                         }
-
                         break;
                     case USER_MSG:
-                        System.out.println("UserMessage: " + message.getMessageDetails());
-                        break;
-
-                    case ADD_PORTAL:
-                        /*
-                        if (this instanceof Portal) {
-                            break;
-                        }*/
-
-                        String values = "";
-                        for (String key : routingTable.keySet()) {
-                            values += key + "\n";
+                        if (isMessageOriginCorrect(agent, message)) {
+                            System.out.println("UserMessage: " + message.getMessageDetails());
+                        } else {
+                            System.out.println("Invalid origin for message: " + message.toString());
                         }
-                        values += this.name + "\n";
-
-                        Message msg = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, values);
-                        agent.messageHandler(this, msg);
-                        observers.updateSender(msg);
-
-                        addAgent(message.getSender(), agent);
-
-                        for (SocketAgent sa : socketAgents) {
-                            if (!sa.equals(agent)) {
-                                Message msg2 = new Message(message.getSender(), "GLOBAL", MessageType.ADD_METAAGENT, "");
-                                observers.updateSender(msg2);
-                                sa.messageHandler(this, msg2);
-                            }
-                        }
-
-                        break;
-                    case REMOVE_PORTAL:
-
                         break;
 
                     case LOAD_TABLE:
-
-                        String[] values2 = message.getMessageDetails().split("\n");
-                        for (String s : values2) {
-                            addAgent(s, agent);
+                        if (routingTable.isEmpty()) {
+                            String[] values2 = message.getMessageDetails().split("\n");
+                            for (String s : values2) {
+                                addAgent(s, agent);
+                            }
+                        } else {
+                            /**
+                             * We should only load the routing table if it is
+                             * empty to prevent case where one portal may have
+                             * different data than the other
+                             */
+                            System.out.println("Error: Can not load routing table, as it is not empty.");
                         }
                         break;
-                    default:
-                        System.out.println("Error:" + message.getMessageDetails());
+                    case ERROR:
+                        if (isMessageOriginCorrect(agent, message)) {
+                            System.out.println("Error: " + message.getMessageDetails());
+                        } else {
+                            System.out.println("Invalid origin for message: " + message.toString());
+                        }
                         break;
                 }
             }
         } else {
-            if (routingTable.containsKey(message.getRecipient())) {
-                observers.updateSender(message);
-                routingTable.get(message.getRecipient()).messageHandler(this, message);
+            if (isMessageOriginCorrect(agent, message)) {
+                if (routingTable.containsKey(message.getRecipient())) {
+                    observers.updateSender(message);
+                    routingTable.get(message.getRecipient()).messageHandler(this, message);
+                } else {
+                    agent.messageHandler(this, new Message(this.getName(), message.getSender(), MessageType.ERROR, "Could not route message to " + message.getRecipient() + ": The recipient was not found"));
+                }
             } else {
-                agent.messageHandler(this, new Message(this.getName(), message.getSender(), MessageType.ERROR, "An error occured"));
+                System.out.println("Invalid origin for message: " + message.toString());
             }
         }
     }
@@ -265,5 +249,32 @@ public class Portal extends MetaAgent {
      */
     protected boolean isMessageOriginCorrect(MetaAgent agent, Message msg) {
         return (agent.equals(this.routingTable.get(msg.getSender())));
+    }
+
+    /**
+     * This function sends message to all other nodes This function may be
+     * overridden to modify the behaviour in which global messages are sent. For
+     * example portal would only send global message forward to router while
+     * router would send it to other places as well.
+     *
+     * @param msg the message to be sent
+     * @param source the location from which the message came. This node will
+     * not be sent the global message as it already seen it before
+     * @author v8073331
+     */
+    protected void forwardGlobal(MetaAgent source, Message msg) {
+        for (SocketAgent sa : socketAgents) {
+            if (!sa.equals(source)) {
+                observers.updateSender(msg);
+                sa.messageHandler(this, msg);
+            }
+        }
+    }
+    
+    public void shutdown(){
+        forwardGlobal(this, new Message(this.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
+        for(SocketAgent sa : socketAgents){
+            sa.close();
+        }
     }
 }

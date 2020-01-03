@@ -60,7 +60,7 @@ public class SocketAgent extends MetaAgent {
      * @author v8073331
      */
     public SocketAgent(Portal portal, Socket socket) {
-        super("SOCKET-AGENT");
+        super("Socket from: " + portal.getName());
 
         this.portal = portal;
         this.socket = socket;
@@ -288,7 +288,7 @@ class WriteWorker implements Runnable {
 
     public WriteWorker(SocketAgent agent) {
         this.agent = agent;
-        messageQueue = new ArrayBlockingQueue(20);
+        messageQueue = new ArrayBlockingQueue<>(20);
         busy = false;
         running = true;
     }

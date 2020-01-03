@@ -5,6 +5,7 @@
  */
 package icametaagent;
 
+import icaGUI.UserGUI;
 import icamessages.Message;
 import icamessages.MessageType;
 
@@ -14,10 +15,11 @@ import icamessages.MessageType;
  * @author v8073331
  * @author v8243060
  */
-public class User extends MetaAgent {
-
-    protected Portal connection;
-
+public class User extends MetaAgent
+{
+    public Portal connection;
+    protected UserGUI GUI;
+    
     /**
      * Constructor for a user, Draws from the super class of MetaAgent.
      *
@@ -29,6 +31,7 @@ public class User extends MetaAgent {
     public User(String name, Portal portal) {
         super(name);
         connection = portal;
+        GUI = new UserGUI(this);
     }
 
     /**
@@ -41,12 +44,18 @@ public class User extends MetaAgent {
      * @author v8073331
      */
     @Override
-    public void messageHandler(MetaAgent agent, Message msg) {
-        if (msg.getRecipient().equals(this.name)) {
+    public void messageHandler(MetaAgent agent, Message msg) 
+    {
+        if(msg.getRecipient().equals(this.name))
+        {
             System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
-        } else {
+            GUI.recievedMessage(msg.getSender(),msg.getMessageDetails());
+        }
+        else
+        {
             connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
         }
+        
     }
 
     /**
