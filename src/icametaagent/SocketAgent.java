@@ -217,6 +217,7 @@ class ReadWorker implements Runnable {
                      * The connection was closed, there is no reason to keep
                      * this thread alive.
                      */
+                    agent.writeWorker.running = false;
                     return;
                 }
 
