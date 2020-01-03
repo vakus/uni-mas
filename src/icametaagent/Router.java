@@ -96,7 +96,6 @@ public class Router extends Portal implements Runnable {
      */
     @Override
     public void messageHandler(MetaAgent agent, Message message) {
-        super.messageHandler(agent, message);
         if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
             synchronized (routingTable) {
                 switch (message.getMessageType()) {
@@ -210,6 +209,7 @@ public class Router extends Portal implements Runnable {
                          * Add the router to our routing table
                          */
                         addAgent(message.getSender(), agent);
+                        routerAddresses.add((SocketAgent)agent);
                         
                         break;
                         
@@ -255,8 +255,18 @@ public class Router extends Portal implements Runnable {
                         } else {
                             System.out.println("Error: Router is already connected to a different network");
                         }
+                    case LOAD_TABLE:
+                        String[] values2 = message.getMessageDetails().split("\n");
+                        for (String s : values2) {
+                            addAgent(s, agent);
+                        }
+                        break;
+                    default:
+                        super.messageHandler(agent, message);
                 }
             }
+        }else{
+            super.messageHandler(agent, message);
         }
     }
 }
