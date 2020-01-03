@@ -176,6 +176,7 @@ class ReadWorker implements Runnable {
                      * The connection was closed, there is no reason to keep
                      * this thread alive.
                      */
+                    agent.writeWorker.running = false;
                     return;
                 }
 
@@ -226,7 +227,7 @@ class WriteWorker implements Runnable {
 
     private final SocketAgent agent;
     private final ArrayBlockingQueue<Message> messageQueue;
-    volatile boolean busy;
+    volatile Boolean busy;
     volatile boolean running;
 
     public WriteWorker(SocketAgent agent) {
