@@ -119,7 +119,7 @@ public class Router extends Portal implements Runnable {
                          */
                         Message msgRT = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, routingValues);
                         agent.messageHandler(this, msgRT);
-                        observers.updateSender(msgRT);
+                        observers.updateSender(msgRT, agent.getName());
 
                         /**
                          * Add the portal to our routing table
@@ -196,7 +196,7 @@ public class Router extends Portal implements Runnable {
                          */
                         Message msgPRT = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, partialRoutingValues);
                         agent.messageHandler(this, msgPRT);
-                        observers.updateSender(msgPRT);
+                        observers.updateSender(msgPRT, agent.getName());
 
                         /**
                          * Notify portals of this router agent (router)
@@ -230,7 +230,7 @@ public class Router extends Portal implements Runnable {
                          */
                         Message msgRA = new Message(this.name, message.getSender(), MessageType.LOAD_ADDRESSES, addresses);
                         agent.messageHandler(this, msgRA);
-                        observers.updateSender(msgRA);
+                        observers.updateSender(msgRA, agent.getName());
 
                         break;
 
