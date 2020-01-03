@@ -2,6 +2,7 @@ package ica.main;
 
 
 import icaGUI.ObserverGUI;
+import icametaagent.Router;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,6 +17,7 @@ import icaGUI.ObserverGUI;
 public class GuiMain {
     
     public static ObserverGUI gui;
+    public static Router router;
     
     public static void main(String[] args) {
         gui = new ObserverGUI();

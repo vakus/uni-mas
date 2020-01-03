@@ -225,4 +225,11 @@ public class Portal extends MetaAgent {
             }
         }
     }
+    
+    public void shutdown(){
+        forwardGlobal(this, new Message(this.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
+        for(SocketAgent sa : socketAgents){
+            sa.close();
+        }
+    }
 }
