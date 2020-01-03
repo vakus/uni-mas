@@ -7,7 +7,6 @@ package icamonitors;
 
 import icaGUI.ObserverGUI;
 import icamessages.Message;
-import java.util.Observable;
 
 /**
  *
@@ -24,18 +23,12 @@ public class GUIMonitor extends Monitor {
     }
 
     @Override
-    public void ReceivedMessage(Message message) {
-        gui.updateTable(message, agentName);
+    public void ReceivedMessage(Message message, String actualReciever) {
+        gui.updateTable(message, "RECV", this.agentName, actualReciever);
     }
 
     @Override
-    public void SentMessage(Message message) {
-        gui.updateTable(message, agentName);
+    public void SentMessage(Message message, String actualReciever) {
+        gui.updateTable(message, "SEND", this.agentName, actualReciever);
     }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }

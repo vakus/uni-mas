@@ -6,27 +6,11 @@
 package icaGUI;
 
 
-import ica.main.GuiMain;
 import icamessages.Message;
-import icamessages.MessageType;
-import icametaagent.Portal;
-import icametaagent.Router;
-import icametaagent.SocketAgent;
-import icametaagent.User;
-import icamonitors.CMDMonitor;
-import icamonitors.GUIMonitor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -48,17 +32,18 @@ public class ObserverInterface {
     private final Dimension size;
     JPanel buttonsPanel;
 
-    final String[] columnNames = {"Sender", "Recipient", "Actual Recipient", "Message Type", "Date"};
+    final String[] columnNames = {"No", "Direction", "Sender", "Actual Sender", "Recipient", "Actual Recipient", "Message Type", "Date", "Content"};
     JTable record;
     JScrollPane scrollPane;
     final JPanel mainPanel;
     public Object[][] data = new Object[][]{};
+    private long msgcnt;
 
-    private Portal portal;
-    private Router router;
 
     public ObserverInterface(Dimension d) {
 
+        
+        msgcnt = 0;
         record = new JTable(new DefaultTableModel(data, columnNames));
         scrollPane = new JScrollPane(record);
         size = d;
@@ -70,11 +55,17 @@ public class ObserverInterface {
         mainPanel.add(scrollPane);
     }
 
-    public void update(Message msg, String actual) {
+    public void update(Message msg, String direction, String actualRecipient, String actualSender) {
+        msgcnt += 1;
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
         DefaultTableModel model = (DefaultTableModel) record.getModel();
-        model.addRow(new Object[]{msg.getSender(), msg.getRecipient(), actual, msg.getMessageType(), formatter.format(date)});
+        
+        if(model.getRowCount() > 500){
+            model.removeRow(0);
+        }
+        
+        model.addRow(new Object[]{msgcnt, direction, msg.getSender(), actualSender, msg.getRecipient(), actualRecipient, msg.getMessageType(), formatter.format(date), msg.getMessageDetails()});
         record.setModel(model);
         //auto scroll
         record.changeSelection(record.getRowCount()-1, 0, false, false);
