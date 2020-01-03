@@ -28,11 +28,11 @@ public class Portal extends MetaAgent {
      * This list only stores list of socketAgents which are to be sent messages
      * only unique.
      */
-    private final ArrayList<SocketAgent> socketAgents;
+    protected final ArrayList<SocketAgent> socketAgents;
     /**
      * List of all {@link Monitor} which are observing this node.
      */
-    private final Observer observers;
+    protected final Observer observers;
 
     /**
      * Creates new portal with specific node name.
