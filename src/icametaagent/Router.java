@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author v8036651
+ * @author V8243060
  */
 public class Router extends Portal implements Runnable {
 
@@ -93,6 +94,7 @@ public class Router extends Portal implements Runnable {
      * @param agent
      * @param message
      * @author v8073331
+     * @author V8243060
      */
     @Override
     public void messageHandler(MetaAgent agent, Message message) {
@@ -116,7 +118,7 @@ public class Router extends Portal implements Runnable {
                         Message msgRT = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, routingValues);
                         agent.messageHandler(this, msgRT);
                         observers.updateSender(msgRT);
-                        
+
                         /**
                          * Add the portal to our routing table
                          */
@@ -127,7 +129,7 @@ public class Router extends Portal implements Runnable {
                          * agent (portal)
                          */
                         forwardGlobal(this, new Message(message.getSender(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
-                        
+
                         break;
 
                     case REMOVE_PORTAL:
@@ -176,43 +178,42 @@ public class Router extends Portal implements Runnable {
 
                     case ADD_ROUTER:
                         /**
-                         * Create list of all agents assigned to this router 
-                         * only
+                         * Create list of all agents assigned to this router
                          */
                         String partialRoutingValues = "";
                         for (String key : routingTable.keySet()) {
-                            if (routingTable.get(key) instanceof SocketAgent && !routerAddresses.contains((SocketAgent)routingTable.get(key))){
+                            if (routingTable.get(key) instanceof SocketAgent && !routerAddresses.contains((SocketAgent) routingTable.get(key))) {
                                 partialRoutingValues += key + "\n";
                             }
                         }
                         partialRoutingValues += this.name + "\n";
 
                         /**
-                         * Respond with list of the agents we have to sync
-                         * routingTable of newly joining portal
+                         * Respond with list of the agents we have to sync to
+                         * the routingTable of newly joining router
                          */
                         Message msgPRT = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, partialRoutingValues);
                         agent.messageHandler(this, msgPRT);
                         observers.updateSender(msgPRT);
 
                         /**
-                         * Notify all other portals and routers of newly joining
-                         * agent (router)
+                         * Notify portals of this router agent (router)
                          */
-                        for (String key : routingTable.keySet()){
-                            if (routingTable.get(key) instanceof SocketAgent && !routerAddresses.contains((SocketAgent)routingTable.get(key))){
-                                ((MetaAgent)routingTable.get(key)).messageHandler(agent, new Message(message.getSender(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
+                        for (String key : routingTable.keySet()) {
+                            if (routingTable.get(key) instanceof SocketAgent && !routerAddresses.contains((SocketAgent) routingTable.get(key))) {
+                                ((MetaAgent) routingTable.get(key)).messageHandler(agent, new Message(message.getSender(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
                             }
                         }
-                        
+
                         /**
-                         * Add the router to our routing table
+                         * Add the router to our routing table and to the
+                         * addresses table
                          */
                         addAgent(message.getSender(), agent);
-                        routerAddresses.add((SocketAgent)agent);
-                        
+                        routerAddresses.add((SocketAgent) agent);
+
                         break;
-                        
+
                     case REQUEST_ROUTER_ADDRESSES:
                         /**
                          * Create a list of all router addresses
@@ -228,35 +229,52 @@ public class Router extends Portal implements Runnable {
                         Message msgRA = new Message(this.name, message.getSender(), MessageType.LOAD_ADDRESSES, addresses);
                         agent.messageHandler(this, msgRA);
                         observers.updateSender(msgRA);
-                        
+
                         break;
-                        
+
                     case LOAD_ADDRESSES:
+                        /**
+                         * Checks whether router address table is empty to
+                         * prevent merging two networks
+                         */
                         if (routerAddresses.isEmpty()) {
                             String[] values = message.getMessageDetails().split("\n");
-                            if (!message.getMessageDetails().isEmpty()){
+                            /**
+                             * checks whether the message details are empty to
+                             * prevent creation of empty sockets
+                             */
+                            if (!message.getMessageDetails().isEmpty()) {
                                 for (String address : values) {
                                     try {
-                                            Socket s = new Socket(address, 42069);
-                                            SocketAgent sA = new SocketAgent(this, s);
-                                            sA.start();
-                                            routerAddresses.add(sA);
+                                        Socket s = new Socket(address, 42069);
+                                        SocketAgent sA = new SocketAgent(this, s);
+                                        sA.start();
+                                        routerAddresses.add(sA);
                                     } catch (IOException ex) {
                                         Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 }
                             }
-                            
-                            routerAddresses.add((SocketAgent)agent);
-                            
-                            for (SocketAgent sa : routerAddresses){
+
+                            routerAddresses.add((SocketAgent) agent);
+
+                            /**
+                             * Sends the add router message to every other
+                             * router in the network
+                             */
+                            for (SocketAgent sa : routerAddresses) {
                                 sa.messageHandler(this, new Message(this.name, "GLOBAL", MessageType.ADD_ROUTER, ""));
                             }
                         } else {
                             System.out.println("Error: Router is already connected to a different network");
                         }
                         break;
+
                     case LOAD_TABLE:
+                        /**
+                         * Merges two routing tables this one and one carried by
+                         * the message
+                         */
                         String[] values2 = message.getMessageDetails().split("\n");
                         for (String s : values2) {
                             addAgent(s, agent);
@@ -266,7 +284,7 @@ public class Router extends Portal implements Runnable {
                         super.messageHandler(agent, message);
                 }
             }
-        }else{
+        } else {
             super.messageHandler(agent, message);
         }
     }
