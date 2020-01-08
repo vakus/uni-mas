@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TitleClock.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ICAmessages&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">ica.GUI</a> &gt; <span class="el_source">TitleClock.java</span></div><h1>TitleClock.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ica.GUI;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JFrame;
+
+/**
+ *
+ * @author v8077971
+ * @author v8036651
+ */
+
+public class TitleClock implements Runnable 
+{
+    private final JFrame myFrame;
+    private final Thread timeThread;
+<span class="nc" id="L23">    private final DateFormat dateFormat = new SimpleDateFormat(&quot;dd/MM/yyyy HH:mm:ss&quot;);</span>
+    
+<span class="nc" id="L25">    private final Date date = new Date();</span>
+    
+    public TitleClock(JFrame f)
+<span class="nc" id="L28">    {</span>
+<span class="nc" id="L29">        myFrame = f;</span>
+<span class="nc" id="L30">        timeThread = new Thread(this);</span>
+<span class="nc" id="L31">        timeThread.start();</span>
+<span class="nc" id="L32">    }</span>
+    
+    public void run()
+    {
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        while(myFrame.isVisible())</span>
+        {
+<span class="nc" id="L38">            myFrame.setTitle(dateFormat.format(new Date()));</span>
+            
+            try
+            {
+<span class="nc" id="L42">                Thread.sleep(1000);</span>
+            }
+<span class="nc" id="L44">            catch (InterruptedException ex)</span>
+            {
+                
+<span class="nc" id="L47">            }</span>
+        }
+<span class="nc" id="L49">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

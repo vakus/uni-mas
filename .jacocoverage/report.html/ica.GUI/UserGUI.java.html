@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>UserGUI.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ICAmessages&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">ica.GUI</a> &gt; <span class="el_source">UserGUI.java</span></div><h1>UserGUI.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ica.GUI;
+
+import ica.messages.Message;
+import ica.messages.MessageType;
+import ica.metaagent.User;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import javax.swing.JFrame;
+
+/**
+ *
+ * @author v8036651
+ */
+public class UserGUI 
+{
+    private User user;
+    private UserInterface iFace;
+
+    public UserGUI(User agent) 
+<span class="fc" id="L27">    {</span>
+<span class="fc" id="L28">        user = agent;</span>
+        JFrame userFrame;
+<span class="fc" id="L30">        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();</span>
+<span class="fc" id="L31">        Dimension frameSize = new Dimension((int)(screenSize.getWidth() * 0.275), (int)(screenSize.getHeight() * 0.45));</span>
+        
+<span class="fc" id="L33">        iFace = new UserInterface(user,frameSize);</span>
+<span class="fc" id="L34">        userFrame = new JFrame(user.getName());</span>
+<span class="fc" id="L35">        userFrame.getContentPane().add(iFace.mainPanel);</span>
+<span class="fc" id="L36">        userFrame.setSize(frameSize);</span>
+<span class="fc" id="L37">        userFrame.setVisible(true);</span>
+<span class="fc" id="L38">        userFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);</span>
+<span class="fc" id="L39">        userFrame.addWindowListener(new WindowListener(){</span>
+            @Override
+            public void windowOpened(WindowEvent e) {
+<span class="fc" id="L42">            }</span>
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+<span class="nc" id="L46">                user.connection.messageHandler(user, new Message(user.getName(), &quot;GLOBAL&quot;, MessageType.REMOVE_METAAGENT, &quot;&quot;));</span>
+<span class="nc" id="L47">                userFrame.setVisible(false);</span>
+<span class="nc" id="L48">            }</span>
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+<span class="nc" id="L52">            }</span>
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+<span class="nc" id="L56">            }</span>
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+<span class="nc" id="L60">            }</span>
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+<span class="fc" id="L64">            }</span>
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+<span class="fc" id="L68">            }</span>
+        });
+<span class="fc" id="L70">        userFrame.setLocationRelativeTo(null);</span>
+        
+<span class="fc" id="L72">        userFrame.setTitle(user.getName());</span>
+       
+<span class="fc" id="L74">    }</span>
+    
+    
+    public void recievedMessage (String sender, String details)
+    {
+<span class="fc" id="L79">        iFace.displayMessage(sender, details);</span>
+<span class="fc" id="L80">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
