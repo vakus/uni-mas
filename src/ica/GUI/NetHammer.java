@@ -39,19 +39,22 @@ public class NetHammer extends JDialog {
     private JSpinner number_agent_offset;
     private JSpinner number_agent;
     private JSpinner number_messages;
+    private JSpinner number_agents_total;
     private boolean cancelled;
 
     public NetHammer() {
 
+        setModal(true);
+        
         cancelled = true;
 
         setLayout(new GridBagLayout());
 
         text_ip = new JTextField();
         number_portal = new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
-        number_portal_offset = new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
+        number_portal_offset = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
         number_agent = new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
-        number_agent_offset = new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
+        number_agent_offset = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
         number_messages = new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
 
         GridBagConstraints constraints = new GridBagConstraints();
@@ -108,7 +111,8 @@ public class NetHammer extends JDialog {
 
         constraints.gridx = 2;
         add(number_messages, constraints);
-
+        
+        
         constraints.gridx = 1;
         constraints.gridy = 8;
         JButton btn_ok = new JButton("Initiate NetHammer");
@@ -150,6 +154,10 @@ public class NetHammer extends JDialog {
 
     public int getAgentsOffset() {
         return (int) number_agent_offset.getValue();
+    }
+    
+    public int getMessages(){
+        return (int) number_messages.getValue();
     }
 
     public boolean isCancelled() {
