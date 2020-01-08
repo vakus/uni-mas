@@ -74,7 +74,7 @@ public class ObserverGUI {
                 GuiMain.router = new Router(routerName);
                 CMDMonitor m1 = new CMDMonitor(GuiMain.router.getName());
                 GUIMonitor mg1 = new GUIMonitor(GuiMain.router.getName(), GuiMain.gui);
-                //GuiMain.router.addObserver(m1);
+                GuiMain.router.addObserver(m1);
                 GuiMain.router.addObserver(mg1);
                 Thread t = new Thread(GuiMain.router);
                 t.start();
