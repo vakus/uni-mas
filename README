@@ -24,6 +24,8 @@ The Portals and Routers are capable of running completly without a GUI, which al
 
 The Portals will also accept custom classes which extend MetaAgent class. As a result it is possible to use our Meta Agent System as a part of another application, and use it to forward messages between remote systems.
 
+The application is using strings to send data over network, which allows for easy implementation in another programming language.
+
 ## NetHammer
 
 Our application also comes with NetHammer extension, which aims to stress test a network of routers. This allows to test the time it takes for each messages to be delivered between agents, when network is flooded with hundreds or thousands of messages.
