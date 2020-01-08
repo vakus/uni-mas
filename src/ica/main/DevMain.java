@@ -1,13 +1,13 @@
 package ica.main;
 
 
-import icamessages.Message;
-import icamessages.MessageType;
-import icametaagent.MetaAgent;
-import icametaagent.Portal;
-import icametaagent.Router;
-import icametaagent.SocketAgent;
-import icametaagent.User;
+import ica.messages.Message;
+import ica.messages.MessageType;
+import ica.metaagent.MetaAgent;
+import ica.metaagent.Portal;
+import ica.metaagent.Router;
+import ica.metaagent.SocketAgent;
+import ica.metaagent.User;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;

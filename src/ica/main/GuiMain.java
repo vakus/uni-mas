@@ -1,8 +1,8 @@
 package ica.main;
 
 
-import icaGUI.ObserverGUI;
-import icametaagent.Router;
+import ica.GUI.ObserverGUI;
+import ica.metaagent.Router;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

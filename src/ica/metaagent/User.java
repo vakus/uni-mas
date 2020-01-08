@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package icametaagent;
+package ica.metaagent;
 
-import icaGUI.UserGUI;
-import icamessages.Message;
-import icamessages.MessageType;
+import ica.GUI.UserGUI;
+import ica.messages.Message;
+import ica.messages.MessageType;
 
 /**
  *

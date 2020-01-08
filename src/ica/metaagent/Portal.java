@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package icametaagent;
+package ica.metaagent;
 
-import icamessages.Message;
-import icamessages.MessageType;
-import icamonitors.Monitor;
-import icamonitors.Observer;
+import ica.messages.Message;
+import ica.messages.MessageType;
+import ica.monitors.Monitor;
+import ica.monitors.Observer;
 import java.util.ArrayList;
 import java.util.HashMap;
 

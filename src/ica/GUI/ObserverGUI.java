@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package icaGUI;
+package ica.GUI;
 
 import com.sun.glass.events.KeyEvent;
 import ica.main.GuiMain;
-import icamessages.Message;
-import icamessages.MessageType;
-import icametaagent.Portal;
-import icametaagent.Router;
-import icametaagent.SocketAgent;
-import icametaagent.User;
-import icamonitors.CMDMonitor;
-import icamonitors.GUIMonitor;
+import ica.messages.Message;
+import ica.messages.MessageType;
+import ica.metaagent.Portal;
+import ica.metaagent.Router;
+import ica.metaagent.SocketAgent;
+import ica.metaagent.User;
+import ica.monitors.CMDMonitor;
+import ica.monitors.GUIMonitor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;

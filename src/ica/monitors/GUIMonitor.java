@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package icamonitors;
+package ica.monitors;
 
-import icaGUI.ObserverGUI;
-import icamessages.Message;
+import ica.GUI.ObserverGUI;
+import ica.messages.Message;
 
 /**
  *
