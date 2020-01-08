@@ -51,31 +51,31 @@ public class NetHammerUser extends MetaAgent {
         }
     }
 
-    public long getAverageTime(){
+    public long getAverageTime() {
         int all = 0;
-        for(Long l : times){
+        for (Long l : times) {
             all += l;
         }
         return (!times.isEmpty()) ? all / times.size() : 0;
     }
 
-    public long getMinTime(){
+    public long getMinTime() {
         long lowest = Long.MAX_VALUE;
-        for(Long l : times){
-            if(l < lowest){
+        for (Long l : times) {
+            if (l < lowest) {
                 lowest = l;
             }
         }
         return lowest;
     }
 
-    public long getMaxTime(){
+    public long getMaxTime() {
         long longest = Long.MIN_VALUE;
-        for(Long l : times){
-            if(l > longest){
+        for (Long l : times) {
+            if (l > longest) {
                 longest = l;
             }
         }
         return longest;
     }
-} 
+}

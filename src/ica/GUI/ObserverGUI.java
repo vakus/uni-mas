@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -199,7 +198,7 @@ public class ObserverGUI {
                         sA.messageHandler(portal, new Message(portal.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
 
                         portals[x] = portal;
-                        
+
                         try {
                             Thread.sleep(500);
                         } catch (InterruptedException ex) {
@@ -232,12 +231,10 @@ public class ObserverGUI {
                 } catch (InterruptedException ex) {
                     Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 int numberOfAgentsTotal = 0;
                 ArrayList<String> keyList = new ArrayList<>(portals[0].getRoutingTable().keySet());
-                
-                
-                
+
                 for (int x = 0; x < keyList.size(); x++) {
                     if (keyList.get(x).startsWith("a-")) {
                         numberOfAgentsTotal++;
@@ -247,7 +244,7 @@ public class ObserverGUI {
                 for (int x = 0; x < hammer.getAgents() * hammer.getPortals(); x++) {
                     for (int y = 0; y < hammer.getMessages(); y++) {
                         int randUser = rand.nextInt(numberOfAgentsTotal);
-                        
+
                         users[x].connection.messageHandler(users[x], new Message(users[x].getName(), ("a-" + randUser), MessageType.USER_MSG, String.valueOf(System.currentTimeMillis())));
                     }
                 }
@@ -256,20 +253,20 @@ public class ObserverGUI {
                 } catch (InterruptedException ex) {
                     Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                for(int x = 0; x < portals.length; x++){
+
+                for (int x = 0; x < portals.length; x++) {
                     portals[x].shutdown();
                 }
-                
+
                 //calculate the results and display them
                 long min = Long.MAX_VALUE;
                 long max = Long.MIN_VALUE;
                 long averageTotal = 0;
-                for(int x = 0; x < users.length; x++){
-                    if(users[x].getMaxTime() > max){
+                for (int x = 0; x < users.length; x++) {
+                    if (users[x].getMaxTime() > max) {
                         max = users[x].getMaxTime();
                     }
-                    if(users[x].getMinTime() < min){
+                    if (users[x].getMinTime() < min) {
                         min = users[x].getMinTime();
                     }
                     averageTotal += users[x].getAverageTime();

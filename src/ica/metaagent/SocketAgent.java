@@ -118,7 +118,7 @@ public class SocketAgent extends MetaAgent {
             try {
                 readWorkerThread.join();
             } catch (InterruptedException ex) {
-                //Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -132,7 +132,7 @@ public class SocketAgent extends MetaAgent {
             try {
                 writeWorkerThread.join();
             } catch (InterruptedException ex) {
-                //Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -143,7 +143,7 @@ public class SocketAgent extends MetaAgent {
             socket.getOutputStream().flush();
             socket.getOutputStream().close();
         } catch (IOException ex) {
-            //Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         /**
@@ -152,7 +152,7 @@ public class SocketAgent extends MetaAgent {
         try {
             socket.getInputStream().close();
         } catch (IOException ex) {
-            //Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         /**
@@ -161,7 +161,7 @@ public class SocketAgent extends MetaAgent {
         try {
             socket.close();
         } catch (IOException ex) {
-            //Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
@@ -254,7 +254,7 @@ class ReadWorker implements Runnable {
 
             }
         } catch (IOException ex) {
-            //Logger.getLogger(ReadWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReadWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -303,7 +303,7 @@ class WriteWorker implements Runnable {
                     agent.socket.getOutputStream().flush();
                     agent.writeWorker.wait();
                 } catch (IOException | InterruptedException ex) {
-                    //Logger.getLogger(WriteWorker.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(WriteWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

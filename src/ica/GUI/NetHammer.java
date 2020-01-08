@@ -24,8 +24,8 @@ import javax.swing.SpinnerNumberModel;
  */
 public class NetHammer extends JDialog {
 
-    private static final String DISCLAIMER = 
-            "<html>You are about to run NetHammer stress test on the network.<br/>"
+    private static final String DISCLAIMER
+            = "<html>You are about to run NetHammer stress test on the network.<br/>"
             + "This may result in heavy CPU and bandwidth usage.<br/>"
             + "It is adviced to use NetHammer on networks without any Portals "
             + "or Agents, as NetHammer can not test those.<br/>"
@@ -48,7 +48,7 @@ public class NetHammer extends JDialog {
 
         setTitle("NetHammer");
         setModal(true);
-        
+
         cancelled = true;
 
         setLayout(new GridBagLayout());
@@ -114,8 +114,7 @@ public class NetHammer extends JDialog {
 
         constraints.gridx = 2;
         add(number_messages, constraints);
-        
-        
+
         constraints.gridx = 1;
         constraints.gridy = 8;
         JButton btn_ok = new JButton("Initiate NetHammer");
@@ -132,7 +131,6 @@ public class NetHammer extends JDialog {
             setVisible(false);
         });
         add(btn_cancel, constraints);
-
 
         setSize(800, 600);
         setLocationRelativeTo(null);
@@ -158,8 +156,8 @@ public class NetHammer extends JDialog {
     public int getAgentsOffset() {
         return (int) number_agent_offset.getValue();
     }
-    
-    public int getMessages(){
+
+    public int getMessages() {
         return (int) number_messages.getValue();
     }
 
