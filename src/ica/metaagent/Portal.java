@@ -236,7 +236,7 @@ public class Portal extends MetaAgent {
      * @return true if MetaAgent name is allowed and doesn't already exists
      * @author v8243060 & v8036651
      */
-    protected boolean isNameAllowed(String name) {
+    public boolean isNameAllowed(String name) {
         return (routingTable.get(name) == null && usernameValidation(name));
     }
 
