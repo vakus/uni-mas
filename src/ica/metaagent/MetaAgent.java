@@ -12,6 +12,8 @@ package ica.metaagent;
 import ica.messages.Message;
 
 /**
+ * This is the abstract super class for all meta agents with classes that are
+ * used through but should not be called directly.
  *
  * @author v8036651
  */
@@ -20,7 +22,8 @@ public abstract class MetaAgent {
     protected final String name;
 
     /**
-     * Constructor for a new MetaAgent.
+     * Constructor for a new MetaAgent, this constructor should never be called
+     * directly.
      *
      * @param name the name of the node to be created
      * @author v8036651
@@ -54,8 +57,8 @@ public abstract class MetaAgent {
     /**
      * Validates whether the user name is allowed
      *
-     * @param name metaagent name to be used
-     * @return true if metaagent name allowed
+     * @param name metaAgent name to be used
+     * @return true if metaAgent name allowed
      * @author v8243060
      */
     protected boolean usernameValidation(String name) {
