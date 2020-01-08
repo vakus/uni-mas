@@ -151,10 +151,16 @@ public class ObserverGUI {
             portalsAddAgent.setMnemonic(KeyEvent.VK_A);
             portalsAddAgent.addActionListener((ActionEvent e1) -> {
                 String name = JOptionPane.showInputDialog("Please input the name of the user: ");
-                User agent = new User(name, portal);
-
-                portal.messageHandler(agent, new Message(agent.getName(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
-            });
+                //Add check here
+                if (portal.isNameAllowed(name))
+                {
+                    User agent = new User(name, portal);
+                    portal.messageHandler(agent, new Message(agent.getName(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Could not create agent as one already exists with that name.", "Error", JOptionPane.ERROR_MESSAGE);
+                }            });
             portalsMenu.add(portalsAddAgent);
 
             JMenuItem portalsStop = new JMenuItem("Stop Portal");
