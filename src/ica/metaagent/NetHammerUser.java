@@ -51,6 +51,12 @@ public class NetHammerUser extends MetaAgent {
         }
     }
 
+    /**
+     * Returns the Average time that it took NetHammer to submit all messages in
+     * milliseconds.
+     *
+     * @return average time for all messages in milliseconds
+     */
     public long getAverageTime() {
         int all = 0;
         for (Long l : times) {
@@ -59,6 +65,12 @@ public class NetHammerUser extends MetaAgent {
         return (!times.isEmpty()) ? all / times.size() : 0;
     }
 
+    /**
+     * Returns the Minimum time that it took NetHammer to submit all messages in
+     * milliseconds.
+     *
+     * @return minimum time for fastest message in milliseconds.
+     */
     public long getMinTime() {
         long lowest = Long.MAX_VALUE;
         for (Long l : times) {
@@ -69,6 +81,12 @@ public class NetHammerUser extends MetaAgent {
         return lowest;
     }
 
+    /**
+     * Returns the Maximum time that it took NetHammer to submit the slowest
+     * message in milliseconds.
+     *
+     * @return maximum time for slowest message in milliseconds.
+     */
     public long getMaxTime() {
         long longest = Long.MIN_VALUE;
         for (Long l : times) {
