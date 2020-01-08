@@ -14,35 +14,28 @@ import javax.swing.JFrame;
  *
  * @author v8077971
  */
+public class TitleClock implements Runnable {
 
-public class TitleClock implements Runnable 
-{
     private final JFrame myFrame;
     private final Thread timeThread;
     private final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    
+
     private final Date date = new Date();
-    
-    public TitleClock(JFrame f)
-    {
+
+    public TitleClock(JFrame f) {
         myFrame = f;
         timeThread = new Thread(this);
         timeThread.start();
     }
-    
-    public void run()
-    {
-        while(myFrame.isVisible())
-        {
+
+    public void run() {
+        while (myFrame.isVisible()) {
             myFrame.setTitle(dateFormat.format(new Date()));
-            
-            try
-            {
+
+            try {
                 Thread.sleep(1000);
-            }
-            catch (InterruptedException ex)
-            {
-                
+            } catch (InterruptedException ex) {
+
             }
         }
     }

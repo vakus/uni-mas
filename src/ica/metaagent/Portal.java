@@ -78,7 +78,8 @@ public class Portal extends MetaAgent {
      * Adds a new agent to the routing table of the portal.
      *
      * @param name the name of the agent to be added
-     * @param meta the {@link MetaAgent} which the messages should be forwarded to.
+     * @param meta the {@link MetaAgent} which the messages should be forwarded
+     * to.
      * @throws IllegalArgumentException if name is already in routingTable. Also
      * thrown if portal already has a socket connection.
      * @author v8073331
@@ -204,7 +205,7 @@ public class Portal extends MetaAgent {
                              * disconnect since the connection was unsuccessful
                              */
                             System.out.println("Error: Can not load routing table, as it is not empty.");
-                            ((SocketAgent)agent).close();
+                            ((SocketAgent) agent).close();
                         }
                         break;
                     case ERROR:
@@ -281,8 +282,8 @@ public class Portal extends MetaAgent {
             sa.close();
         }
     }
-    
-    public Map<String, MetaAgent> getRoutingTable(){
+
+    public Map<String, MetaAgent> getRoutingTable() {
         return Collections.unmodifiableMap(routingTable);
     }
 }
