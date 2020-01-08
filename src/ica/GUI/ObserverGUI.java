@@ -9,6 +9,7 @@ import com.sun.glass.events.KeyEvent;
 import ica.main.GuiMain;
 import ica.messages.Message;
 import ica.messages.MessageType;
+import ica.metaagent.NetHammerUser;
 import ica.metaagent.Portal;
 import ica.metaagent.Router;
 import ica.metaagent.SocketAgent;
@@ -20,6 +21,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -71,7 +75,7 @@ public class ObserverGUI {
                 GuiMain.router = new Router(routerName);
                 CMDMonitor m1 = new CMDMonitor(GuiMain.router.getName());
                 GUIMonitor mg1 = new GUIMonitor(GuiMain.router.getName(), GuiMain.gui);
-                GuiMain.router.addObserver(m1);
+                //GuiMain.router.addObserver(m1);
                 GuiMain.router.addObserver(mg1);
                 Thread t = new Thread(GuiMain.router);
                 t.start();
@@ -176,24 +180,75 @@ public class ObserverGUI {
         JMenu menuNetHammer = new JMenu("NetHammer");
         menuNetHammer.setMnemonic(KeyEvent.VK_N);
 
-
         JMenuItem netHammerStart = new JMenuItem("Start NetHammer");
         netHammerStart.setMnemonic(KeyEvent.VK_S);
         netHammerStart.addActionListener((ActionEvent e) -> {
             NetHammer hammer = new NetHammer();
+            System.out.println("Here");
+            if (!hammer.isCancelled()) {
 
-            if(!hammer.isCancelled()){
+                Portal[] portals = new Portal[hammer.getPortals()];
+                try {
+                    for (int x = 0; x < hammer.getPortals(); x++) {
 
+                        Portal portal = new Portal("p-" + (x + hammer.getPortalsOffset()));
+                        Socket socket = new Socket(hammer.getIP(), 42069);
+                        SocketAgent sA = new SocketAgent(portal, socket);
+                        sA.start();
+
+                        sA.messageHandler(portal, new Message(portal.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
+
+                        portals[x] = portal;
+                    }
+
+                } catch (IOException ex) {
+                    Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(mainFrame, "Initialisation of NetHammer was unsuccessful", "NetHammer", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                NetHammerUser[] users = new NetHammerUser[hammer.getAgents() * hammer.getPortals()];
+
+                for (int x = 0; x < hammer.getPortals(); x++) {
+                    for (int y = 0; y < hammer.getAgents(); y++) {
+                        NetHammerUser user = new NetHammerUser("a-" + ((x * hammer.getAgents()) + y + hammer.getAgentsOffset()), portals[x]);
+
+                        portals[x].messageHandler(user, new Message(user.getName(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
+
+                        users[x * hammer.getAgents() + y] = user;
+                    }
+                }
+
+                Random rand = new Random();
+
+                int numberOfAgentsTotal = 0;
+                ArrayList<String> keyList = new ArrayList<>(portals[0].getRoutingTable().keySet());
+                
+                for (int x = 0; x < keyList.size(); x++) {
+                    if (keyList.get(x).startsWith("a-")) {
+                        numberOfAgentsTotal++;
+                    }
+                }
+
+                for (int x = 0; x < hammer.getAgents() * hammer.getPortals(); x++) {
+                    for (int y = 0; y < hammer.getMessages(); y++) {
+                        int randUser = rand.nextInt(numberOfAgentsTotal);
+                        
+                        users[x].connection.messageHandler(users[x], new Message(users[x].getName(), ("a-" + randUser), MessageType.USER_MSG, String.valueOf(System.currentTimeMillis())));
+                    }
+                }
+                try {
+                    Thread.sleep(60000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
         menuNetHammer.add(netHammerStart);
 
-
         menubar.add(menuNetHammer);
 
-
-        
         mainFrame.setJMenuBar(menubar);
 
         new TitleClock(mainFrame);
