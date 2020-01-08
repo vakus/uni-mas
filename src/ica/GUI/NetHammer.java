@@ -37,12 +37,13 @@ public class NetHammer extends JDialog {
             + "After running NetHammer, the program may appear to hang for few "
             + "seconds.</html>";
 
-    private JTextField text_ip;
-    private JSpinner number_portal_offset;
-    private JSpinner number_portal;
-    private JSpinner number_agent_offset;
-    private JSpinner number_agent;
-    private JSpinner number_messages;
+    private final JTextField text_ip;
+    private final JSpinner number_portal_offset;
+    private final JSpinner number_portal;
+    private final JSpinner number_agent_offset;
+    private final JSpinner number_agent;
+    private final JSpinner number_messages;
+    private final JSpinner timeout;
     private boolean cancelled;
 
     public NetHammer() {
@@ -60,6 +61,7 @@ public class NetHammer extends JDialog {
         number_agent = new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
         number_agent_offset = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
         number_messages = new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
+        timeout = new JSpinner(new SpinnerNumberModel(10, 1, 3600, 1));
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 1;
@@ -118,6 +120,13 @@ public class NetHammer extends JDialog {
 
         constraints.gridx = 1;
         constraints.gridy = 8;
+        add(new JLabel("Time in seconds to wait after messages were sent:"), constraints);
+
+        constraints.gridx = 2;
+        add(timeout, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 9;
         JButton btn_ok = new JButton("Initiate NetHammer");
         btn_ok.setForeground(Color.RED);
         btn_ok.addActionListener((ActionEvent e) -> {
@@ -199,12 +208,23 @@ public class NetHammer extends JDialog {
     }
 
     /**
+     * Returns the time in seconds to wait after the messages were sent. Before
+     * relaying on this data, check that the message was not cancelled via
+     * {@link #isCancelled}
+     *
+     * @return The time in seconds to wait after submitting all messages.
+     */
+    public int getTimeout() {
+        return (int) timeout.getValue();
+    }
+
+    /**
      * Returns whatever the user have cancelled the event by closing the window
      * or pressing the "Cancel" button. If the test is supposed to still run and
      * the user entered valid values then this function should return false.
      *
-     * @return {@code True} if user exited dialogue, or pressed cancel. {@code False} if user
-     * wants to continue with the test
+     * @return {@code True} if user exited dialogue, or pressed cancel.
+     * {@code False} if user wants to continue with the test
      */
     public boolean isCancelled() {
         return cancelled;

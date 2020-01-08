@@ -183,7 +183,6 @@ public class ObserverGUI {
         netHammerStart.setMnemonic(KeyEvent.VK_S);
         netHammerStart.addActionListener((ActionEvent e) -> {
             NetHammer hammer = new NetHammer();
-            System.out.println("Here");
             if (!hammer.isCancelled()) {
 
                 Portal[] portals = new Portal[hammer.getPortals()];
@@ -226,11 +225,7 @@ public class ObserverGUI {
 
                 Random rand = new Random();
 
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                JOptionPane.showMessageDialog(mainFrame, "NetHammer stress test ready. Press OK when you are ready to send messages", "NetHammer", JOptionPane.INFORMATION_MESSAGE);
 
                 int numberOfAgentsTotal = 0;
                 ArrayList<String> keyList = new ArrayList<>(portals[0].getRoutingTable().keySet());
@@ -249,7 +244,7 @@ public class ObserverGUI {
                     }
                 }
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(hammer.getTimeout() * 1000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
