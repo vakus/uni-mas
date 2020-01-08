@@ -49,7 +49,7 @@ public class User extends MetaAgent
         if(msg.getRecipient().equals(this.name))
         {
             System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
-            GUI.recievedMessage(msg.getSender(),msg.getMessageDetails());
+            GUI.recivedMessage(msg.getSender(),msg.getMessageDetails());
         }
         else
         {
