@@ -1,4 +1,8 @@
 /*
+ * This package is used for monitoring what is being sent across the network in 
+ * different ways, it adds observers to each MetaAgent when they are created which 
+ * refer back to the observers that are defined.
+ *
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
