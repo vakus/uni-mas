@@ -1,4 +1,8 @@
 /*
+ * This is the package that holds all the meta agents that are used throught 
+ * the program, all of the emta agents draw from the super class of MetaAgent 
+ * which is an abstract class.
+ *
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -59,7 +63,8 @@ public class User extends MetaAgent
     }
 
     /**
-     * Creates a message and sends it to the portal
+     * Creates a message and sends it to the portal but checks if the desired 
+     * recipient is allowed first, therefore denying global messages to users.
      *
      * @param recipient recipient of the message
      * @param details message details

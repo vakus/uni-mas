@@ -1,4 +1,8 @@
 /*
+ * This is the package that holds all the meta agents that are used throught 
+ * the program, all of the emta agents draw from the super class of MetaAgent 
+ * which is an abstract class.
+ *
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -38,7 +42,7 @@ public class Router extends Portal implements Runnable {
      * Constructor for a router object with a super class of portal.
      *
      * @param name the name of the Router Agent
-     * @throws IOException if unable to instanciate {@link ServerSocket} on port
+     * @throws IOException if unable to instantiate {@link ServerSocket} on port
      * 42069
      * @author v8036651
      */
@@ -58,9 +62,9 @@ public class Router extends Portal implements Runnable {
     public void run() {
         while (!server.isClosed()) {
             try {
-                Socket s = server.accept();
-                System.out.println("Accepted connection from: " + s.getInetAddress().toString());
-                SocketAgent newAgent = new SocketAgent(this, s);
+                Socket socket = server.accept();
+                System.out.println("Accepted connection from: " + socket.getInetAddress().toString());
+                SocketAgent newAgent = new SocketAgent(this, socket);
                 newAgent.start();
             } catch (IOException ex) {
                 Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
@@ -91,7 +95,9 @@ public class Router extends Portal implements Runnable {
     }
 
     /**
-     *
+     * A method that is called when a message is received by this object, it
+     * decides what to do with the message next by finding if the target
+     * recipient is on the network or not.
      *
      * @param agent
      * @param message
@@ -117,9 +123,9 @@ public class Router extends Portal implements Runnable {
                          * Respond with list of the agents we have to sync
                          * routingTable of newly joining portal
                          */
-                        Message msgRT = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, routingValues);
-                        agent.messageHandler(this, msgRT);
-                        observers.updateSender(msgRT, agent.getName());
+                        Message msgRoutingTable = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, routingValues);
+                        agent.messageHandler(this, msgRoutingTable);
+                        observers.updateSender(msgRoutingTable, agent.getName());
 
                         /**
                          * Add the portal to our routing table
@@ -194,9 +200,9 @@ public class Router extends Portal implements Runnable {
                          * Respond with list of the agents we have to sync to
                          * the routingTable of newly joining router
                          */
-                        Message msgPRT = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, partialRoutingValues);
-                        agent.messageHandler(this, msgPRT);
-                        observers.updateSender(msgPRT, agent.getName());
+                        Message msgPartialRotingTable = new Message(this.name, message.getSender(), MessageType.LOAD_TABLE, partialRoutingValues);
+                        agent.messageHandler(this, msgPartialRotingTable);
+                        observers.updateSender(msgPartialRotingTable, agent.getName());
 
                         /**
                          * Notify portals of this router agent (router)
@@ -228,9 +234,9 @@ public class Router extends Portal implements Runnable {
                         /**
                          * Respond with list of the router addresses
                          */
-                        Message msgRA = new Message(this.name, message.getSender(), MessageType.LOAD_ADDRESSES, addresses);
-                        agent.messageHandler(this, msgRA);
-                        observers.updateSender(msgRA, agent.getName());
+                        Message msgRoutingAddresses = new Message(this.name, message.getSender(), MessageType.LOAD_ADDRESSES, addresses);
+                        agent.messageHandler(this, msgRoutingAddresses);
+                        observers.updateSender(msgRoutingAddresses, agent.getName());
 
                         break;
 
@@ -249,9 +255,9 @@ public class Router extends Portal implements Runnable {
                                 for (String address : values) {
                                     try {
                                         Socket s = new Socket(address, 42069);
-                                        SocketAgent sA = new SocketAgent(this, s);
-                                        sA.start();
-                                        routerAddresses.add(sA);
+                                        SocketAgent socketAgent = new SocketAgent(this, s);
+                                        socketAgent.start();
+                                        routerAddresses.add(socketAgent);
                                     } catch (IOException ex) {
                                         Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
                                     }
@@ -264,8 +270,8 @@ public class Router extends Portal implements Runnable {
                              * Sends the add router message to every other
                              * router in the network
                              */
-                            for (SocketAgent sa : routerAddresses) {
-                                sa.messageHandler(this, new Message(this.name, "GLOBAL", MessageType.ADD_ROUTER, ""));
+                            for (SocketAgent socketAgent : routerAddresses) {
+                                socketAgent.messageHandler(this, new Message(this.name, "GLOBAL", MessageType.ADD_ROUTER, ""));
                             }
                         } else {
                             System.out.println("Error: Router is already connected to a different network");
@@ -277,9 +283,9 @@ public class Router extends Portal implements Runnable {
                          * Merges two routing tables this one and one carried by
                          * the message
                          */
-                        String[] values2 = message.getMessageDetails().split("\n");
-                        for (String s : values2) {
-                            addAgent(s, agent);
+                        String[] namesArray = message.getMessageDetails().split("\n");
+                        for (String stringName : namesArray) {
+                            addAgent(stringName, agent);
                         }
                         break;
                     default:
