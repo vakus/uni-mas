@@ -14,16 +14,18 @@ import ica.messages.Message;
 import ica.messages.MessageType;
 
 /**
+ * This class is for the user to interact with, it loads the GUI and has all the
+ * methods that are needed for the user.
  *
  * @author v8036651
  * @author v8073331
  * @author v8243060
  */
-public class User extends MetaAgent
-{
+public class User extends MetaAgent {
+
     public Portal connection;
     protected UserGUI GUI;
-    
+
     /**
      * Constructor for a user, Draws from the super class of MetaAgent.
      *
@@ -48,22 +50,18 @@ public class User extends MetaAgent
      * @author v8073331
      */
     @Override
-    public void messageHandler(MetaAgent agent, Message msg) 
-    {
-        if(msg.getRecipient().equals(this.name))
-        {
+    public void messageHandler(MetaAgent agent, Message msg) {
+        if (msg.getRecipient().equals(this.name)) {
             System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
-            GUI.recivedMessage(msg.getSender(),msg.getMessageDetails());
-        }
-        else
-        {
+            GUI.recivedMessage(msg.getSender(), msg.getMessageDetails());
+        } else {
             connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
         }
-        
+
     }
 
     /**
-     * Creates a message and sends it to the portal but checks if the desired 
+     * Creates a message and sends it to the portal but checks if the desired
      * recipient is allowed first, therefore denying global messages to users.
      *
      * @param recipient recipient of the message
@@ -71,8 +69,8 @@ public class User extends MetaAgent
      * @throws IllegalArgumentException if recipient contains "/"
      * @author v8243060
      */
-    public void sendMessage (String recipient, String details){
-        if (!recipientValidation(recipient) || recipient.equalsIgnoreCase("global")){
+    public void sendMessage(String recipient, String details) {
+        if (!recipientValidation(recipient) || recipient.equalsIgnoreCase("global")) {
 
             throw new IllegalArgumentException("Recipient name not correct");
         }
