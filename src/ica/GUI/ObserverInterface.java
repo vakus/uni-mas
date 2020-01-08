@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package icaGUI;
+package ica.GUI;
 
 
-import icamessages.Message;
+import ica.messages.Message;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.text.SimpleDateFormat;

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package icametaagent;
+package ica.metaagent;
 
-import icamessages.Message;
-import icamessages.MessageType;
+import ica.messages.Message;
+import ica.messages.MessageType;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
