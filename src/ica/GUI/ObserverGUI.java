@@ -173,11 +173,30 @@ public class ObserverGUI {
 
         menubar.add(menuPortal);
 
+        JMenu menuNetHammer = new JMenu("NetHammer");
+        menuNetHammer.setMnemonic(KeyEvent.VK_N);
+
+
+        JMenuItem netHammerStart = new JMenuItem("Start NetHammer");
+        netHammerStart.setMnemonic(KeyEvent.VK_S);
+        netHammerStart.addActionListener((ActionEvent e) -> {
+            NetHammer hammer = new NetHammer();
+
+            if(!hammer.isCancelled()){
+
+            }
+        });
+
+        menuNetHammer.add(netHammerStart);
+
+
+        menubar.add(menuNetHammer);
+
+
+        
         mainFrame.setJMenuBar(menubar);
 
-        TitleClock clock = new TitleClock(mainFrame);
-        //clock.run();
-
+        new TitleClock(mainFrame);
     }
 
     public void updateTable(Message msg, String direction, String actualRecipient, String actualSender) {

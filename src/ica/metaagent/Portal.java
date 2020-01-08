@@ -10,7 +10,9 @@ import ica.messages.MessageType;
 import ica.monitors.Monitor;
 import ica.monitors.Observer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -278,5 +280,9 @@ public class Portal extends MetaAgent {
         for (SocketAgent sa : socketAgents) {
             sa.close();
         }
+    }
+    
+    public Map<String, MetaAgent> getRoutingTable(){
+        return Collections.unmodifiableMap(routingTable);
     }
 }

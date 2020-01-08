@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 /**
  *
  * @author v8077971
- * @author v8036651
  */
 
 public class TitleClock implements Runnable 
