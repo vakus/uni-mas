@@ -275,7 +275,7 @@ public class Portal extends MetaAgent {
      * @author v8073331
      */
     protected void forwardGlobal(MetaAgent source, Message msg) {
-        socketAgents.stream().filter((sa) -> (!sa.equals(source))).forEachOrdered((sa) -> {
+        socketAgents.stream().filter((socketAgent) -> (!socketAgent.equals(source))).forEachOrdered((sa) -> {
             observers.updateSender(msg, source.getName());
             sa.messageHandler(this, msg);
         });

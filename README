@@ -1,1 +1,20 @@
+This multi agent system (MAS) is allows the user to create multiple routers that 
+can all communicate with each other in a full mesh network structure. It allows 
+the addition of portals to each router and then agents to each of these portals. 
+This MAS does not allow portal to portal connections or user agent to user agent 
+directly due to the strain on these agents.
+This MAS is laid out using an graphical user interface (GUI) and allows the user
+to add agents portals and routers through this GUI. This MAS allows connection
+across devices as well through connection to a router and when creating a portal 
+asks for the IP address to connect to the router.
 
+
+
+We had some changes we would have made to this MAS however due to time 
+constraints we chose to not add these. Another reason we chose to not add them 
+is due to rea;lising we can only add so much for the submission and we would add
+improvements in future updates.
+Improvements we would make, Time permitting:
+1)
+2)
+3)
