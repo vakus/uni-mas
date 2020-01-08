@@ -13,6 +13,9 @@ import ica.GUI.ObserverGUI;
 import ica.messages.Message;
 
 /**
+ * This class is designed to to display the data about a message, including
+ * where it was sent, who it was sent from and what the type and data of the
+ * message is in a GUI..
  *
  * @author v8036651
  * @author v8073331
@@ -20,17 +23,41 @@ import ica.messages.Message;
 public class GUIMonitor extends Monitor {
 
     private ObserverGUI gui;
-    
+
+    /**
+     * This is the constructor for the GUI monitor and must receive a name so it
+     * can be referenced later on and take s observer GUI as a parameter so it
+     * can link the changes it is passed to the JTable that is logging all the
+     * network traffic.
+     *
+     * @param name
+     * @param gui
+     */
     public GUIMonitor(String name, ObserverGUI gui) {
         super(name);
         this.gui = gui;
     }
 
+    /**
+     * This method is overridden due to it having to update table of the GUI
+     * that has been passed to it meaning that it must call another method that
+     * is not called in its super class.
+     *
+     * @param message
+     * @param actualReciever
+     */
     @Override
     public void ReceivedMessage(Message message, String actualReciever) {
         gui.updateTable(message, "RECV", this.agentName, actualReciever);
     }
 
+    /**
+     * Send message is overridden because it must update the JTable in the
+     * observer GUI as well unlike in its super class.
+     *
+     * @param message
+     * @param actualReciever
+     */
     @Override
     public void SentMessage(Message message, String actualReciever) {
         gui.updateTable(message, "SEND", this.agentName, actualReciever);

@@ -13,6 +13,9 @@ import ica.messages.Message;
 import java.util.ArrayList;
 
 /**
+ * This class is for the observer, this registers a change in an object and
+ * reports it back to the monitor depending on what the change is allowing the
+ * monitor to be updated.
  *
  * @author v8036651
  */
@@ -21,7 +24,8 @@ public class Observer {
     private ArrayList<Monitor> observers;
 
     /**
-     * Constructor for the observer object.
+     * Constructor for the observer object, this is used when it is being passed
+     * an array of observers that are pre defined.
      *
      * @param observers
      * @author v8036651
@@ -30,6 +34,9 @@ public class Observer {
         this.observers = observers;
     }
 
+    /**
+     * constructor for an observer when not passed any observers already.
+     */
     public Observer() {
         this.observers = new ArrayList<>();
     }
@@ -91,7 +98,7 @@ public class Observer {
      * @author v8036651
      * @author v8073331
      */
-    public void updateReceiver(Message msg,  String actualSender) {
+    public void updateReceiver(Message msg, String actualSender) {
         observers.forEach((Monitor o) -> {
             try {
                 o.ReceivedMessage(msg, actualSender);
