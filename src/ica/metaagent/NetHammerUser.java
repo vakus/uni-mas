@@ -30,6 +30,7 @@ public class NetHammerUser extends MetaAgent {
     public NetHammerUser(String name, Portal portal) {
         super(name);
         connection = portal;
+        times = new ArrayList<>();
     }
 
     /**
@@ -43,10 +44,10 @@ public class NetHammerUser extends MetaAgent {
      */
     @Override
     public void messageHandler(MetaAgent agent, Message msg) {
-        if (msg.getRecipient().equals(this.name)) {
+        if (msg.getRecipient().equals(this.name) && msg.getMessageType().equals(MessageType.USER_MSG)) {
             times.add(System.currentTimeMillis() - Long.decode(msg.getMessageDetails()));
         } else {
-            connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
+            System.out.println("Error: " + msg.getMessageDetails());
         }
     }
 
@@ -55,7 +56,7 @@ public class NetHammerUser extends MetaAgent {
         for(Long l : times){
             all += l;
         }
-        return all / times.size();
+        return (!times.isEmpty()) ? all / times.size() : 0;
     }
 
     public long getMinTime(){

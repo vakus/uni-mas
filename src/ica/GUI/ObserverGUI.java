@@ -199,6 +199,12 @@ public class ObserverGUI {
                         sA.messageHandler(portal, new Message(portal.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
 
                         portals[x] = portal;
+                        
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
 
                 } catch (IOException ex) {
@@ -221,8 +227,16 @@ public class ObserverGUI {
 
                 Random rand = new Random();
 
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
                 int numberOfAgentsTotal = 0;
                 ArrayList<String> keyList = new ArrayList<>(portals[0].getRoutingTable().keySet());
+                
+                
                 
                 for (int x = 0; x < keyList.size(); x++) {
                     if (keyList.get(x).startsWith("a-")) {
@@ -238,10 +252,29 @@ public class ObserverGUI {
                     }
                 }
                 try {
-                    Thread.sleep(60000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
+                for(int x = 0; x < portals.length; x++){
+                    portals[x].shutdown();
+                }
+                
+                //calculate the results and display them
+                long min = Long.MAX_VALUE;
+                long max = Long.MIN_VALUE;
+                long averageTotal = 0;
+                for(int x = 0; x < users.length; x++){
+                    if(users[x].getMaxTime() > max){
+                        max = users[x].getMaxTime();
+                    }
+                    if(users[x].getMinTime() < min){
+                        min = users[x].getMinTime();
+                    }
+                    averageTotal += users[x].getAverageTime();
+                }
+                JOptionPane.showMessageDialog(mainFrame, "NetHammer Results:\nMin: " + min + "ms\nMax: " + max + "ms\nAverage: " + (averageTotal / users.length) + "ms", "NetHammer Result", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 

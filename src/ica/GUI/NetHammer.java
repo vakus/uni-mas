@@ -31,7 +31,9 @@ public class NetHammer extends JDialog {
             + "or Agents, as NetHammer can not test those.<br/>"
             + "ONLY RUN NETHAMMER ON AUTHORIZED AND NON-CRITICAL NETWORKS AS IT"
             + " MAY CAUSE DENIAL OF SERVICE.<br/>"
-            + "IT IS ILLEGAL TO RUN NETHAMMER ON UN-AUTHORIZED NETWORKS.</html>";
+            + "IT IS ILLEGAL TO RUN NETHAMMER ON UN-AUTHORIZED NETWORKS.<br/>"
+            + "After running NetHammer, the program may appear to hang for few "
+            + "seconds.</html>";
 
     private JTextField text_ip;
     private JSpinner number_portal_offset;
@@ -44,6 +46,7 @@ public class NetHammer extends JDialog {
 
     public NetHammer() {
 
+        setTitle("NetHammer");
         setModal(true);
         
         cancelled = true;
