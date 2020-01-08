@@ -19,6 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 /**
+ * This class is used to create dialogue which asks for data when NetHammer is
+ * ran.
  *
  * @author v8073331
  */
@@ -41,7 +43,6 @@ public class NetHammer extends JDialog {
     private JSpinner number_agent_offset;
     private JSpinner number_agent;
     private JSpinner number_messages;
-    private JSpinner number_agents_total;
     private boolean cancelled;
 
     public NetHammer() {
@@ -53,7 +54,7 @@ public class NetHammer extends JDialog {
 
         setLayout(new GridBagLayout());
 
-        text_ip = new JTextField();
+        text_ip = new JTextField("127.0.0.1");
         number_portal = new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
         number_portal_offset = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
         number_agent = new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
@@ -137,30 +138,74 @@ public class NetHammer extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Returns IP entered by user. Before relaying on this data, check that the
+     * message was not cancelled via {@link #isCancelled}.
+     *
+     * @return The IP address entered by user or default "127.0.0.1".
+     */
     public String getIP() {
         return text_ip.getText();
     }
 
+    /**
+     * Returns the Offset to be used by portals creator. Before relaying on this
+     * data, check that the message was not cancelled via {@link #isCancelled}.
+     *
+     * @return The Offset for portal number.
+     */
     public int getPortalsOffset() {
         return (int) number_portal_offset.getValue();
     }
 
+    /**
+     * Returns the number of portals to be created. Before relaying on this
+     * data, check that the message was not cancelled via {@link #isCancelled}.
+     *
+     * @return The number of portals to be created.
+     */
     public int getPortals() {
         return (int) number_portal.getValue();
     }
 
+    /**
+     * Returns the number of agents to be created. Before relaying on this data,
+     * check that the message was not cancelled via {@link #isCancelled}
+     *
+     * @return The number of agents to be created
+     */
     public int getAgents() {
         return (int) number_agent.getValue();
     }
 
+    /**
+     * Returns the offset to be used by agents creator. Before relaying on this
+     * data, check that the message was not cancelled via {@link #isCancelled}
+     *
+     * @return The offset for agent number.
+     */
     public int getAgentsOffset() {
         return (int) number_agent_offset.getValue();
     }
 
+    /**
+     * Returns the number of messages to be send. Before relaying on this data,
+     * check that the message was not cancelled via {@link #isCancelled}
+     *
+     * @return The number of message to be sent.
+     */
     public int getMessages() {
         return (int) number_messages.getValue();
     }
 
+    /**
+     * Returns whatever the user have cancelled the event by closing the window
+     * or pressing the "Cancel" button. If the test is supposed to still run and
+     * the user entered valid values then this function should return false.
+     *
+     * @return {@code True} if user exited dialogue, or pressed cancel. {@code False} if user
+     * wants to continue with the test
+     */
     public boolean isCancelled() {
         return cancelled;
     }
