@@ -163,4 +163,31 @@ public class RouterTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     * Test of messageHandler method, of class Router.
+     * @throws java.io.IOException
+     */
+    @Test
+    public void testMessageHandlerToAddPortalWithAgents() throws IOException {
+        System.out.println("messageHandler");
+        Router instance = new Router("R1");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p);
+        Portal p2 = new Portal("P2");
+        p.addAgent(u.getName(), u);
+        
+        
+        Message message = new Message(p.getName(), instance.getName(), MessageType.ADD_PORTAL, "");
+        instance.messageHandler(p, message);
+        
+        message = new Message(p2.getName(), instance.getName(), MessageType.ADD_PORTAL, "");
+        instance.messageHandler(p2, message);
+        
+        String expResult = "P1";
+        String result = instance.getMetaAgent(p2.getName()).getName();
+        
+        instance.shutdown();
+        
+        assertEquals(expResult, result);
+    }
 }

@@ -218,7 +218,7 @@ public class PortalTest {
         Message message = new Message(u.getName(), "global", MessageType.REQUEST_ROUTER_ADDRESSES, "Test");
         p.messageHandler(u, message);
         
-        String expResult = "Error"+System.getProperty("line.separator");
+        String expResult = "Message (ERROR): Could not process the message: Invalid message type"+System.getProperty("line.separator");
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
