@@ -2,10 +2,6 @@
  * This is the package that holds all the meta agents that are used throught 
  * the program, all of the emta agents draw from the super class of MetaAgent 
  * which is an abstract class.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package ica.metaagent;
 
