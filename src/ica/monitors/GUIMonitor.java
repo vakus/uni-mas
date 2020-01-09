@@ -43,8 +43,8 @@ public class GUIMonitor extends Monitor {
      * @param actualReciever the name of the node which is sending the message.
      */
     @Override
-    public void ReceivedMessage(Message message, String actualReciever) {
-        gui.updateTable(message, "RECV", this.agentName, actualReciever);
+    public void ReceivedMessage(Message msg, String actualSender) {
+        gui.updateTable(msg, "RECV", this.agentName, actualSender);
     }
 
     /**
@@ -55,7 +55,7 @@ public class GUIMonitor extends Monitor {
      * @param actualReciever the name of the node which is sending the message.
      */
     @Override
-    public void SentMessage(Message message, String actualReciever) {
-        gui.updateTable(message, "SEND", this.agentName, actualReciever);
+    public void SentMessage(Message msg, String actualReciever) {
+        gui.updateTable(msg, "SEND", this.agentName, actualReciever);
     }
 }

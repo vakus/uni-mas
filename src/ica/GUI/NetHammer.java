@@ -38,7 +38,7 @@ public class NetHammer extends JDialog {
             + "IT IS ILLEGAL TO RUN NETHAMMER ON UN-AUTHORIZED NETWORKS.<br/>"
             + "After running NetHammer, the program may appear to hang for few "
             + "seconds.</html>";
-
+    
     private final JTextField text_ip;
     private final JSpinner number_portal_offset;
     private final JSpinner number_portal;
