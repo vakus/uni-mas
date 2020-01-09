@@ -10,7 +10,9 @@ import ica.messages.MessageType;
 import ica.monitors.Monitor;
 import ica.monitors.Observer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -76,7 +78,8 @@ public class Portal extends MetaAgent {
      * Adds a new agent to the routing table of the portal.
      *
      * @param name the name of the agent to be added
-     * @param meta the {@link MetaAgent} which the messages should be forwarded to.
+     * @param meta the {@link MetaAgent} which the messages should be forwarded
+     * to.
      * @throws IllegalArgumentException if name is already in routingTable. Also
      * thrown if portal already has a socket connection.
      * @author v8073331
@@ -127,6 +130,7 @@ public class Portal extends MetaAgent {
      * If the message recipient is this portal name or "GLOBAL", then the
      * message will be processed. Following message types are processed by
      * portal:
+     * </p>
      * <ul>
      * <li>{@link MessageType#ADD_METAAGENT}</li>
      * <li>{@link MessageType#REMOVE_METAAGENT}*</li>
@@ -134,6 +138,7 @@ public class Portal extends MetaAgent {
      * <li>{@link MessageType#LOAD_TABLE}</li>
      * <li>{@link MessageType#ERROR}*</li>
      * </ul>
+     * <p>
      * * those messages are checked for correct origin before processing.
      * </p>
      * <p>
@@ -202,7 +207,7 @@ public class Portal extends MetaAgent {
                              * disconnect since the connection was unsuccessful
                              */
                             System.out.println("Error: Can not load routing table, as it is not empty.");
-                            ((SocketAgent)agent).close();
+                            ((SocketAgent) agent).close();
                         }
                         break;
                     case ERROR:
@@ -278,5 +283,13 @@ public class Portal extends MetaAgent {
         for (SocketAgent sa : socketAgents) {
             sa.close();
         }
+    }
+
+    /**
+     * Returns copy of routing Table which is unmodifiable
+     * @return unmodifiable copy of routing table
+     */
+    public Map<String, MetaAgent> getRoutingTable() {
+        return Collections.unmodifiableMap(routingTable);
     }
 }
