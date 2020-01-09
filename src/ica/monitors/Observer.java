@@ -64,15 +64,15 @@ public class Observer {
     /**
      * adds observer into the list
      *
-     * @param obs observer to add
+     * @param observer observer to add
      * @author v8073331
      */
-    public void addObserver(Monitor obs) {
-        this.observers.add(obs);
+    public void addObserver(Monitor observer) {
+        this.observers.add(observer);
     }
 
     /**
-     * Updates all the monitors that are in use when called, this is done upon
+     * Updates all the monitors thate in use when called, this is done upon
      * sending a message.
      *
      * @param msg
