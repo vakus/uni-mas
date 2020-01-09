@@ -1,4 +1,8 @@
 /*
+ * This is the package that holds all the meta agents that are used throught 
+ * the program, all of the emta agents draw from the super class of MetaAgent 
+ * which is an abstract class.
+ *
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -14,6 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * This class is used to create the socket agents that connect portals and
+ * routers.
  *
  * @author v8036651
  * @author v8073331
@@ -185,11 +191,21 @@ class ReadWorker implements Runnable {
      */
     volatile boolean running;
 
+    /**
+     * Constructor for the ReadWorker which is used to read the data from the
+     * socket, this runs in its own thread.
+     *
+     * @param agent
+     */
     ReadWorker(SocketAgent agent) {
         this.agent = agent;
         running = true;
     }
 
+    /**
+     * This is the run method for the ReadWorker however this should not be
+     * called directly by other classes.
+     */
     @Override
     public void run() {
 
@@ -288,12 +304,22 @@ class WriteWorker implements Runnable {
      */
     volatile boolean running;
 
+    /**
+     * Constructor for the WriteWorker, this is used to write data to the socket
+     * agents.
+     *
+     * @param agent
+     */
     public WriteWorker(SocketAgent agent) {
         this.agent = agent;
         messageQueue = new ArrayBlockingQueue<>(100);
         running = true;
     }
 
+    /**
+     * Run method for the WriteWorker which writes to a socket agent but this
+     * method should not be called directly in other classes.
+     */
     @Override
     public void run() {
         while (running) {
@@ -309,6 +335,11 @@ class WriteWorker implements Runnable {
         }
     }
 
+    /**
+     * Queues a message in the socket agent.
+     *
+     * @param msg
+     */
     public void queueMessage(Message msg) {
         messageQueue.add(msg);
     }
