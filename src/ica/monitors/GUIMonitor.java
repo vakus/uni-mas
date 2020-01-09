@@ -1,8 +1,3 @@
-/**
- * This package is used for monitoring what is being sent across the network in
- * different ways, it adds observers to each MetaAgent when they are created which
- * refer back to the observers that are defined.
- */
 package ica.monitors;
 
 import ica.GUI.ObserverGUI;
@@ -39,8 +34,8 @@ public class GUIMonitor extends Monitor {
      * that has been passed to it meaning that it must call another method that
      * is not called in its super class.
      *
-     * @param message the message which was sent.
-     * @param actualReciever the name of the node which is sending the message.
+     * @param msg the message which was sent.
+     * @param actualSender the name of the node which is sending the message.
      */
     @Override
     public void ReceivedMessage(Message msg, String actualSender) {
@@ -51,7 +46,7 @@ public class GUIMonitor extends Monitor {
      * Send message is overridden because it must update the JTable in the
      * observer GUI as well unlike in its super class.
      *
-     * @param message the message which was sent.
+     * @param msg the message which was sent.
      * @param actualReciever the name of the node which is sending the message.
      */
     @Override

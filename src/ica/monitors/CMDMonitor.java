@@ -1,8 +1,3 @@
-/**
- * This package is used for monitoring what is being sent across the network in
- * different ways, it adds observers to each MetaAgent when they are created which
- * refer back to the observers that are defined.
- */
 package ica.monitors;
 
 import ica.messages.Message;
@@ -34,7 +29,7 @@ public class CMDMonitor extends Monitor {
      * message details when a message is received.
      *
      * @param actualSender the name of the node which forwarded the message.
-     * @param message the message which was sent.
+     * @param msg the message which was sent.
      * @author v8036651
      */
     @Override
@@ -59,8 +54,8 @@ public class CMDMonitor extends Monitor {
      * name of the intended sender, the intended recipient, the message type and
      * the message details when a message is sent.
      *
-     * @param actualSender the name of the node which is sending the message.
-     * @param message the message which is being sent.
+     * @param actualReceiver the name of the node which is sending the message.
+     * @param msg the message which is being sent.
      * @author v8036651
      */
     @Override
