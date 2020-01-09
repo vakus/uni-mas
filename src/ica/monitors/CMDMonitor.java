@@ -1,11 +1,7 @@
-/*
- * This package is used for monitoring what is being sent across the network in 
- * different ways, it adds observers to each MetaAgent when they are created which 
+/**
+ * This package is used for monitoring what is being sent across the network in
+ * different ways, it adds observers to each MetaAgent when they are created which
  * refer back to the observers that are defined.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package ica.monitors;
 
@@ -25,7 +21,7 @@ public class CMDMonitor extends Monitor {
      * on, this is to compare the intended recipient and the actual, requires a
      * message to be passed for the output.
      *
-     * @param name
+     * @param name the name of the agent which is being monitored
      * @author v8036651
      */
     public CMDMonitor(String name) {
@@ -37,8 +33,8 @@ public class CMDMonitor extends Monitor {
      * name of the recipient, the actual recipient, the message type and the
      * message details when a message is received.
      *
-     * @param actualSender
-     * @parm message
+     * @param actualSender the name of the node which forwarded the message.
+     * @param message the message which was sent.
      * @author v8036651
      */
     @Override
@@ -63,8 +59,8 @@ public class CMDMonitor extends Monitor {
      * name of the intended sender, the intended recipient, the message type and
      * the message details when a message is sent.
      *
-     * @param actualSender
-     * @parm message
+     * @param actualSender the name of the node which is sending the message.
+     * @param message the message which is being sent.
      * @author v8036651
      */
     @Override

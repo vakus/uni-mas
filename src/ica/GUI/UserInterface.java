@@ -1,14 +1,10 @@
-/*
-This package holds all the different graphical user interface (GUI) calsses.
- * It is called by the main run methods can has calsses that are passed as parameters
+/**
+ * This package holds all the different graphical user interface (GUI) classes.
+ * It is called by the main run methods can has classes that are passed as parameters
  * to the constructors of other packages. These classes describe the layout for the
  * observer GUI and the layout for the user interface. The methods in these classes
  * are used to help update the GUI's and to display messages. These methods are called
  * within methods of different classes and packages.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package ica.GUI;
 
@@ -38,7 +34,6 @@ public class UserInterface implements ActionListener {
     private final Dimension buttonSize = new Dimension(200, 100);
     private final Dimension textFieldSize = new Dimension(200, 100);
     private final Dimension textAreaSize = new Dimension(200, 100);
-    private final Dimension size;
     private String messageDetails;
     private String recipientName;
     private final User user;
@@ -49,15 +44,12 @@ public class UserInterface implements ActionListener {
      * This is the constructor for the userInterface class, it outlines how the
      * interface for the GUI will be laid out and what will be on it.
      *
-     * @param agent
-     * @param dimension
+     * @param agent the user agent which is being attached to this GUI.
      */
-    public UserInterface(User agent, Dimension dimension) {
+    public UserInterface(User agent) {
         user = agent;
-        size = dimension;
 
         mainPanel = new JPanel(new GridLayout(4, 2));
-        mainPanel.setSize(size);
 
         send.addActionListener(this);
         send.setPreferredSize(buttonSize);
@@ -82,7 +74,7 @@ public class UserInterface implements ActionListener {
      * A method that is not called directly at any point in the program but
      * takes place when the send button is clicked.
      *
-     * @param event
+     * @param event the action event passed by event
      */
     @Override
     public void actionPerformed(ActionEvent event) {
@@ -102,8 +94,8 @@ public class UserInterface implements ActionListener {
      * This method is called when a message is received by a user agent and is
      * used to display what the contents of the message was.
      *
-     * @param sender
-     * @param details
+     * @param sender the sender of the message being received.
+     * @param details the content of the message being received.
      */
     public void displayMessage(String sender, String details) {
         String prevMessages = recievedMessage.getText();

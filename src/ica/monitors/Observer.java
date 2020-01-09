@@ -1,11 +1,7 @@
-/*
- * This package is used for monitoring what is being sent across the network in 
- * different ways, it adds observers to each MetaAgent when they are created which 
+/**
+ * This package is used for monitoring what is being sent across the network in
+ * different ways, it adds observers to each MetaAgent when they are created which
  * refer back to the observers that are defined.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package ica.monitors;
 
@@ -27,7 +23,7 @@ public class Observer {
      * Constructor for the observer object, this is used when it is being passed
      * an array of observers that are pre defined.
      *
-     * @param observers
+     * @param observers list of already existing observers to be used.
      * @author v8036651
      */
     public Observer(ArrayList<Monitor> observers) {
@@ -44,7 +40,7 @@ public class Observer {
     /**
      * Getter for the array list of observers.
      *
-     * @return
+     * @return list of observers which monitoring the node.
      * @author v8036651
      */
     public ArrayList<Monitor> getObservers() {
@@ -54,7 +50,7 @@ public class Observer {
     /**
      * Setter for the array list of observers.
      *
-     * @param observers
+     * @param observers list of observers to be monitoring the node.
      * @author v8036651
      */
     public void setObservers(ArrayList<Monitor> observers) {
@@ -75,8 +71,8 @@ public class Observer {
      * Updates all the monitors that are in use when called, this is done upon
      * sending a message.
      *
-     * @param msg
-     * @param actualSender
+     * @param msg message which is being send
+     * @param actualSender the name of the node which the node is being sent to
      * @author v8036651
      * @author v8073331
      */
@@ -93,8 +89,8 @@ public class Observer {
      * Updates all the monitors that are in use when called, this is done upon
      * receiving a message.
      *
-     * @param msg
-     * @param actualSender
+     * @param msg the message which is being send
+     * @param actualSender the name of the node which the message came from
      * @author v8036651
      * @author v8073331
      */

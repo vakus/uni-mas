@@ -1,11 +1,7 @@
-/*
- * This package is used for monitoring what is being sent across the network in 
- * different ways, it adds observers to each MetaAgent when they are created which 
+/**
+ * This package is used for monitoring what is being sent across the network in
+ * different ways, it adds observers to each MetaAgent when they are created which
  * refer back to the observers that are defined.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package ica.monitors;
 
@@ -15,32 +11,35 @@ import ica.messages.Message;
  *
  * @author v8036651
  */
-public abstract class Monitor
-{
+public abstract class Monitor {
+
     protected String agentName;
+
     /**
-     * Constructor for the abstract class of monitor,
-     * This is abstract because it will be extended by both GUIMonitor and CMDMonitor.
-     * @param name 
+     * Constructor for the abstract class of monitor, This is abstract because
+     * it will be extended by both GUIMonitor and CMDMonitor.
+     *
+     * @param name the name of the node being monitored
      */
-    public Monitor(String name) 
-    {
+    public Monitor(String name) {
         agentName = name;
     }
-    
+
     /**
-     * Abstract method that will be overwritten that will do something based on 
+     * Abstract method that will be overwritten that will do something based on
      * which class it is called from when a message is received.
-     * @param message
-     * @param actualSender
+     *
+     * @param message the message which was sent.
+     * @param actualSender the name of the node which forwarded the message.
      */
-    public abstract void ReceivedMessage (Message message, String actualSender);
-    
+    public abstract void ReceivedMessage(Message message, String actualSender);
+
     /**
-     * Abstract method that will be overwritten that will do something based on 
+     * Abstract method that will be overwritten that will do something based on
      * which class it is called from when a message is sent.
-     * @param message
-     * @param actualSender
+     *
+     * @param message the message which was sent.
+     * @param actualReciever the name of the node which is sending the message.
      */
-    public abstract void SentMessage (Message message,  String actualSender);
+    public abstract void SentMessage(Message message, String actualReciever);
 }
