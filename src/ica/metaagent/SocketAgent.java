@@ -117,11 +117,11 @@ public class SocketAgent extends MetaAgent {
             readWorker.stop();
             readWorkerThread.interrupt();
 
-            try {
+            /*try {
                 readWorkerThread.join();
             } catch (InterruptedException ex) {
                 Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
         }
 
         /**
@@ -131,11 +131,11 @@ public class SocketAgent extends MetaAgent {
             writeWorker.stop();
             writeWorkerThread.interrupt();
 
-            try {
+            /*try {
                 writeWorkerThread.join();
             } catch (InterruptedException ex) {
                 Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
         }
 
         /**
