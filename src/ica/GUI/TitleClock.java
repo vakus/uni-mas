@@ -39,8 +39,6 @@ public class TitleClock implements Runnable {
      */
     public TitleClock(JFrame frame) {
         myFrame = frame;
-    public TitleClock(JFrame f) {
-        myFrame = f;
         timeThread = new Thread(this);
         timeThread.start();
     }
