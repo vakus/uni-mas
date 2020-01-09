@@ -21,7 +21,6 @@ import javax.swing.JFrame;
  * Clock that runs in its own thread to be used on the GUI panels.
  *
  * @author v8077971
- * @author v8073331
  */
 public class TitleClock implements Runnable {
 
@@ -36,10 +35,12 @@ public class TitleClock implements Runnable {
      * for the observer GUI that allows a real time clock to run at the same
      * time.
      *
-     * @param frame
+     * @param frame the frame which is being updated
      */
     public TitleClock(JFrame frame) {
         myFrame = frame;
+    public TitleClock(JFrame f) {
+        myFrame = f;
         timeThread = new Thread(this);
         timeThread.start();
     }

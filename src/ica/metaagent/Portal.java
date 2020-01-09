@@ -14,7 +14,9 @@ import ica.messages.MessageType;
 import ica.monitors.Monitor;
 import ica.monitors.Observer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class is where all methods that are used by the portal are defined and
@@ -137,6 +139,7 @@ public class Portal extends MetaAgent {
      * If the message recipient is this portal name or "GLOBAL", then the
      * message will be processed. Following message types are processed by
      * portal:
+     * </p>
      * <ul>
      * <li>{@link MessageType#ADD_METAAGENT}</li>
      * <li>{@link MessageType#REMOVE_METAAGENT}*</li>
@@ -144,6 +147,7 @@ public class Portal extends MetaAgent {
      * <li>{@link MessageType#LOAD_TABLE}</li>
      * <li>{@link MessageType#ERROR}*</li>
      * </ul>
+     * <p>
      * * those messages are checked for correct origin before processing.
      * </p>
      * <p>
@@ -290,5 +294,13 @@ public class Portal extends MetaAgent {
         socketAgents.forEach((socketAgent) -> {
             socketAgent.close();
         });
+    }
+
+    /**
+     * Returns copy of routing Table which is unmodifiable
+     * @return unmodifiable copy of routing table
+     */
+    public Map<String, MetaAgent> getRoutingTable() {
+        return Collections.unmodifiableMap(routingTable);
     }
 }
