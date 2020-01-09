@@ -292,9 +292,13 @@ public class Router extends Portal implements Runnable {
             super.messageHandler(agent, message);
         }
     }
-    
+
+    /**
+     * Method that turns off a Router and disconnects it from the other routers
+     * and portals. It also stops listening for new connections
+     */
     @Override
-    public void shutdown(){
+    public void shutdown() {
         super.shutdown();
         try {
             server.close();
