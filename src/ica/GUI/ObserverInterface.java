@@ -28,14 +28,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ObserverInterface {
 
-    JPanel buttonsPanel;
+    public JPanel buttonsPanel;
 
-    final String[] columnNames = {"No", "Direction", "Sender", "Actual Sender", "Recipient", "Actual Recipient", "Message Type", "Date", "Content"};
-    JTable record;
-    JScrollPane scrollPane;
-    final JPanel mainPanel;
+    public final String[] columnNames = {"No", "Direction", "Sender", "Actual Sender", "Recipient", "Actual Recipient", "Message Type", "Date", "Content"};
+    public JTable record;
+    public JScrollPane scrollPane;
+    public final JPanel mainPanel;
     public Object[][] data = new Object[][]{};
-    private long msgcnt;
+    private long msgCount;
 
     /**
      * Constructor to create the interface for the observer, the main part to
@@ -46,7 +46,7 @@ public class ObserverInterface {
      */
     public ObserverInterface() {
 
-        msgcnt = 0;
+        msgCount = 0;
         record = new JTable(new DefaultTableModel(data, columnNames));
         scrollPane = new JScrollPane(record);
 
@@ -68,7 +68,7 @@ public class ObserverInterface {
      * @author v8036651
      */
     public void update(Message msg, String direction, String actualRecipient, String actualSender) {
-        msgcnt += 1;
+        msgCount += 1;
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
         DefaultTableModel model = (DefaultTableModel) record.getModel();
@@ -77,7 +77,7 @@ public class ObserverInterface {
             model.removeRow(0);
         }
 
-        model.addRow(new Object[]{msgcnt, direction, msg.getSender(), actualSender, msg.getRecipient(), actualRecipient, msg.getMessageType(), formatter.format(date), msg.getMessageDetails()});
+        model.addRow(new Object[]{msgCount, direction, msg.getSender(), actualSender, msg.getRecipient(), actualRecipient, msg.getMessageType(), formatter.format(date), msg.getMessageDetails()});
         record.setModel(model);
         //auto scroll
         record.changeSelection(record.getRowCount() - 1, 0, false, false);

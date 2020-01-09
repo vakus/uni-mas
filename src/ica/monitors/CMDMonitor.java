@@ -38,18 +38,18 @@ public class CMDMonitor extends Monitor {
      * @author v8036651
      */
     @Override
-    public void ReceivedMessage(Message message, String actualSender) {
+    public void ReceivedMessage(Message msg, String actualSender) {
         System.out.println("+==========================================+");
         System.out.println("|This message was received from:           |");
-        System.out.printf("|%42s|\n", message.getSender());
+        System.out.printf("|%42s|\n", msg.getSender());
         System.out.println("|This message was received by:             |");
         System.out.printf("|%42s|\n", agentName);
         System.out.println("|This message was meant to be received by: |");
-        System.out.printf("|%42s|\n", message.getRecipient());
+        System.out.printf("|%42s|\n", msg.getRecipient());
         System.out.println("|This message type is:                     |");
-        System.out.printf("|%42s|\n", message.getMessageType());
+        System.out.printf("|%42s|\n", msg.getMessageType());
         System.out.println("|The contents of the message is:           |");
-        System.out.printf("|%42s|\n", message.getMessageDetails());
+        System.out.printf("|%42s|\n", msg.getMessageDetails());
         System.out.println("+==========================================+");
         System.out.println("");
     }
@@ -64,18 +64,18 @@ public class CMDMonitor extends Monitor {
      * @author v8036651
      */
     @Override
-    public void SentMessage(Message message, String actualSender) {
+    public void SentMessage(Message msg, String actualReceiver) {
         System.out.println("+==========================================+");
         System.out.println("|This message was sent from:               |");
         System.out.printf("|%42s|\n", agentName);
         System.out.println("|This message is meant to be sent from:    |");
-        System.out.printf("|%42s|\n", message.getSender());
+        System.out.printf("|%42s|\n", msg.getSender());
         System.out.println("|This message is meant to be received by:  |");
-        System.out.printf("|%42s|\n", message.getRecipient());
+        System.out.printf("|%42s|\n", msg.getRecipient());
         System.out.println("|This message type is:                     |");
-        System.out.printf("|%42s|\n", message.getMessageType());
+        System.out.printf("|%42s|\n", msg.getMessageType());
         System.out.println("|The contents of the message is:           |");
-        System.out.printf("|%42s|\n", message.getMessageDetails());
+        System.out.printf("|%42s|\n", msg.getMessageDetails());
         System.out.println("+==========================================+");
         System.out.println("");
     }
