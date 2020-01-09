@@ -72,7 +72,8 @@ public class Observer {
      * sending a message.
      *
      * @param msg message which is being send
-     * @param actualSender the name of the node which the node is being sent to
+     * @param actualSender the name of the node which the message is being sent
+     * to
      * @author v8036651
      * @author v8073331
      */

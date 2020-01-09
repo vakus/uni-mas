@@ -222,6 +222,10 @@ public class Portal extends MetaAgent {
                             System.out.println("Invalid origin for message: " + message.toString());
                         }
                         break;
+                    default:
+                        Message msg = new Message(this.name, message.getSender(), MessageType.ERROR, "Could not process the message: Invalid message type");
+                        observers.updateSender(msg, agent.getName());
+                        agent.messageHandler(this, msg);
                 }
             }
         } else {
@@ -230,7 +234,9 @@ public class Portal extends MetaAgent {
                     observers.updateSender(message, agent.getName());
                     routingTable.get(message.getRecipient()).messageHandler(this, message);
                 } else {
-                    agent.messageHandler(this, new Message(this.getName(), message.getSender(), MessageType.ERROR, "Could not route message to " + message.getRecipient() + ": The recipient was not found"));
+                    Message msg = new Message(this.getName(), message.getSender(), MessageType.ERROR, "Could not route message to " + message.getRecipient() + ": The recipient was not found");
+                    observers.updateSender(msg, agent.getName());
+                    agent.messageHandler(this, msg);
                 }
             } else {
                 System.out.println("Invalid origin for message: " + message.toString());
