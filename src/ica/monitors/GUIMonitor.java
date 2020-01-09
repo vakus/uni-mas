@@ -1,11 +1,7 @@
-/*
- * This package is used for monitoring what is being sent across the network in 
- * different ways, it adds observers to each MetaAgent when they are created which 
+/**
+ * This package is used for monitoring what is being sent across the network in
+ * different ways, it adds observers to each MetaAgent when they are created which
  * refer back to the observers that are defined.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package ica.monitors;
 
@@ -30,8 +26,8 @@ public class GUIMonitor extends Monitor {
      * can link the changes it is passed to the JTable that is logging all the
      * network traffic.
      *
-     * @param name
-     * @param gui
+     * @param name the name of the agent which is being monitored
+     * @param gui the link to the GUI element
      */
     public GUIMonitor(String name, ObserverGUI gui) {
         super(name);
@@ -43,23 +39,23 @@ public class GUIMonitor extends Monitor {
      * that has been passed to it meaning that it must call another method that
      * is not called in its super class.
      *
-     * @param message
-     * @param actualReciever
+     * @param message the message which was sent.
+     * @param actualReciever the name of the node which is sending the message.
      */
     @Override
-    public void ReceivedMessage(Message message, String actualReciever) {
-        gui.updateTable(message, "RECV", this.agentName, actualReciever);
+    public void ReceivedMessage(Message msg, String actualSender) {
+        gui.updateTable(msg, "RECV", this.agentName, actualSender);
     }
 
     /**
      * Send message is overridden because it must update the JTable in the
      * observer GUI as well unlike in its super class.
      *
-     * @param message
-     * @param actualReciever
+     * @param message the message which was sent.
+     * @param actualReciever the name of the node which is sending the message.
      */
     @Override
-    public void SentMessage(Message message, String actualReciever) {
-        gui.updateTable(message, "SEND", this.agentName, actualReciever);
+    public void SentMessage(Message msg, String actualReciever) {
+        gui.updateTable(msg, "SEND", this.agentName, actualReciever);
     }
 }

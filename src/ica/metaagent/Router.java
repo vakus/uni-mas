@@ -2,10 +2,6 @@
  * This is the package that holds all the meta agents that are used throught 
  * the program, all of the emta agents draw from the super class of MetaAgent 
  * which is an abstract class.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package ica.metaagent;
 
@@ -99,8 +95,8 @@ public class Router extends Portal implements Runnable {
      * decides what to do with the message next by finding if the target
      * recipient is on the network or not.
      *
-     * @param agent
-     * @param message
+     * @param agent the agent which is forwarding the message
+     * @param message message which is being recieved
      * @author v8073331
      * @author V8243060
      */
@@ -296,9 +292,13 @@ public class Router extends Portal implements Runnable {
             super.messageHandler(agent, message);
         }
     }
-    
+
+    /**
+     * Method that turns off a Router and disconnects it from the other routers
+     * and portals. It also stops listening for new connections
+     */
     @Override
-    public void shutdown(){
+    public void shutdown() {
         super.shutdown();
         try {
             server.close();
