@@ -1,4 +1,11 @@
 /*
+This package holds all the different graphical user interface (GUI) calsses.
+ * It is called by the main run methods can has calsses that are passed as parameters
+ * to the constructors of other packages. These classes describe the layout for the
+ * observer GUI and the layout for the user interface. The methods in these classes
+ * are used to help update the GUI's and to display messages. These methods are called
+ * within methods of different classes and packages.
+ *
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -15,67 +22,85 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
 /**
+ * This is the user GUI class, the purpose of this class is to build the GUI
+ * that is used by a user of the program to send messages to other users.
  *
  * @author v8036651
  */
-public class UserGUI 
-{
+public class UserGUI {
+
     private User user;
     private UserInterface iFace;
 
-    public UserGUI(User agent) 
-    {
+    /**
+     * Constructor for the user GUI class which requires an agent to be passed,
+     * this is a user agent and is passed as to allow the send message and other
+     * methods that are defined in the user agent class.
+     *
+     * @param agent
+     */
+    public UserGUI(User agent) {
         user = agent;
         JFrame userFrame;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = new Dimension((int)(screenSize.getWidth() * 0.275), (int)(screenSize.getHeight() * 0.45));
-        
-        iFace = new UserInterface(user,frameSize);
+        Dimension frameSize = new Dimension((int) (screenSize.getWidth() * 0.275), (int) (screenSize.getHeight() * 0.45));
+
+        iFace = new UserInterface(user, frameSize);
         userFrame = new JFrame(user.getName());
         userFrame.getContentPane().add(iFace.mainPanel);
         userFrame.setSize(frameSize);
         userFrame.setVisible(true);
         userFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        userFrame.addWindowListener(new WindowListener(){
+
+        /**
+         * A lot of the methods here are used as part of the window listener and
+         * the override methods are required.
+         */
+        userFrame.addWindowListener(new WindowListener() {
             @Override
-            public void windowOpened(WindowEvent e) {
+            public void windowOpened(WindowEvent event) {
             }
 
             @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosing(WindowEvent event) {
                 user.connection.messageHandler(user, new Message(user.getName(), "GLOBAL", MessageType.REMOVE_METAAGENT, ""));
                 userFrame.setVisible(false);
             }
 
             @Override
-            public void windowClosed(WindowEvent e) {
+            public void windowClosed(WindowEvent event) {
             }
 
             @Override
-            public void windowIconified(WindowEvent e) {
+            public void windowIconified(WindowEvent event) {
             }
 
             @Override
-            public void windowDeiconified(WindowEvent e) {
+            public void windowDeiconified(WindowEvent event) {
             }
 
             @Override
-            public void windowActivated(WindowEvent e) {
+            public void windowActivated(WindowEvent event) {
             }
 
             @Override
-            public void windowDeactivated(WindowEvent e) {
+            public void windowDeactivated(WindowEvent event) {
             }
         });
         userFrame.setLocationRelativeTo(null);
-        
+
         userFrame.setTitle(user.getName());
-       
     }
-    
-    
-    public void recievedMessage (String sender, String details)
-    {
+
+    /**
+     * This method is called when a message is received by a user agent and
+     * calls the update method from the suer interface which updates the JTable
+     * with the new message details.
+     *
+     * @param sender
+     * @param details
+     */
+    public void recivedMessage(String sender, String details) {
         iFace.displayMessage(sender, details);
     }
 }
