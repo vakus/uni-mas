@@ -63,7 +63,7 @@ public class Observer {
     }
 
     /**
-     * Updates all the monitors thate in use when called, this is done upon
+     * Updates all the monitors that are in use when called, this is done upon
      * sending a message.
      *
      * @param msg message which is being send
