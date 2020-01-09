@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -148,7 +149,7 @@ public class RouterTest {
      */
     @Test
     public void testMessageHandlerToAddPortal() throws IOException {
-        System.out.println("messageHandler");
+        System.out.println("Testing the message handler to add a portal");
         Router instance = new Router("R1");
         Portal p = new Portal("P1");
         
@@ -164,30 +165,173 @@ public class RouterTest {
     }
     
     /**
-     * Test of messageHandler method, of class Router.
+     * Test of messageHandler method, of class Router, to remove a portal
      * @throws java.io.IOException
      */
     @Test
-    public void testMessageHandlerToAddPortalWithAgents() throws IOException {
-        System.out.println("messageHandler");
+    public void testMessageHandlerToRemovePortal() throws IOException {
+        System.out.println("Testing the message handler to remove a portal using socket agents");
         Router instance = new Router("R1");
         Portal p = new Portal("P1");
-        User u = new User("U1", p);
-        Portal p2 = new Portal("P2");
-        p.addAgent(u.getName(), u);
+        Socket s = new Socket();
+        SocketAgent sa = new SocketAgent(p, s);
+        
+        p.addAgent("SA", sa);
+        
+        Message message = new Message(sa.getName(), instance.getName(), MessageType.ADD_PORTAL, "");
+        instance.messageHandler(sa, message);
         
         
-        Message message = new Message(p.getName(), instance.getName(), MessageType.ADD_PORTAL, "");
-        instance.messageHandler(p, message);
+        message = new Message(sa.getName(), instance.getName(), MessageType.REMOVE_PORTAL, "");
+        instance.messageHandler(sa, message);
         
-        message = new Message(p2.getName(), instance.getName(), MessageType.ADD_PORTAL, "");
-        instance.messageHandler(p2, message);
-        
-        String expResult = "P1";
-        String result = instance.getMetaAgent(p2.getName()).getName();
+        String expResult = "{}";
+        String result = instance.getRoutingTable().toString();
         
         instance.shutdown();
         
         assertEquals(expResult, result);
     }
+    
+    /**
+     * Test of messageHandler method, of class Router, to remove a portal
+     * @throws java.io.IOException
+     */
+    @Test
+    public void testMessageHandlerToRemovePortalWithoutSocketAgents() throws IOException {
+        System.out.println("Testing the message handler method without using socket agents");
+        Router instance = new Router("R1");
+        Portal p = new Portal("P1");
+        
+        Message message = new Message(p.getName(), instance.getName(), MessageType.ADD_PORTAL, "");
+        instance.messageHandler(p, message);
+        
+        
+        message = new Message(p.getName(), instance.getName(), MessageType.REMOVE_PORTAL, "");
+        instance.messageHandler(p, message);
+        
+        String expResult = "{P1="+p.toString()+"}";
+        String result = instance.getRoutingTable().toString();
+        
+        instance.shutdown();
+        
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of messageHandler method, of class Router, to remove a portal
+     * @throws java.io.IOException
+     */
+    @Test
+    public void testMessageHandlerToRemovePortalWithInvalidOrigin() throws IOException {
+        System.out.println("Testing the message handler method with invalid origin");
+        Router instance = new Router("R1");
+        Portal p = new Portal("P1");
+        
+        Message message = new Message(p.getName(), instance.getName(), MessageType.REMOVE_PORTAL, "");
+        instance.messageHandler(p, message);
+        
+        String expResult = "{}";
+        String result = instance.getRoutingTable().toString();
+        
+        instance.shutdown();
+        
+        assertEquals(expResult, result);
+    }
+    
+    
+    /**
+     * Test of messageHandler method, of class Router, to add a router
+     * This cannot be done at the moment as it requires two computers.
+     * @throws java.io.IOException
+     */
+    @Ignore
+    @Test
+    public void testMessageHandlerToAddRouter() throws IOException {
+        System.out.println("Testing the message handler method to add a router");
+        Router instance = new Router("R1");
+        Portal p = new Portal("P1");
+        
+        Message message = new Message(p.getName(), instance.getName(), MessageType.ADD_ROUTER, "");
+        instance.messageHandler(p, message);
+        
+        String expResult = "{}";
+        String result = instance.getRoutingTable().toString();
+        
+        instance.shutdown();
+        
+        assertTrue(false);
+    }
+    
+    /**
+     * Test of messageHandler method, of class Router, to request router address
+     * @throws java.io.IOException
+     */
+    @Test
+    public void testMessageHandlerToRequestRouterAddress() throws IOException {
+        System.out.println("Testing the message handler method to request router address");
+        Router instance = new Router("R1");
+        Socket s = new Socket();
+        SocketAgent sa = new SocketAgent(instance, s);
+        
+        Message message = new Message(sa.getName(), instance.getName(), MessageType.REQUEST_ROUTER_ADDRESSES, "");
+        instance.messageHandler(sa, message);
+        
+        String expResult = "{}";
+        String result = instance.getRoutingTable().toString();
+        
+        instance.shutdown();
+        
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of messageHandler method, of class Router, to request router address with socket agents on router
+     * @throws java.io.IOException
+     */
+    @Test
+    public void testMessageHandlerToRequestRouterAddressWithSocketAgents() throws IOException {
+        System.out.println("Testing the message handler method to request router address with socket agents on router");
+        Router instance = new Router("R1");
+        Socket s = new Socket();
+        SocketAgent sa = new SocketAgent(instance, s);
+        
+        instance.addAgent("SA", sa);
+        
+        Message message = new Message(sa.getName(), instance.getName(), MessageType.REQUEST_ROUTER_ADDRESSES, "");
+        instance.messageHandler(sa, message);
+        
+        String expResult = "{SA="+sa.toString()+"}";
+        String result = instance.getRoutingTable().toString();
+        
+        instance.shutdown();
+        
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of messageHandler method, of class Router, to remove a portal
+     * @throws java.io.IOException
+     */
+    @Test
+    public void testMessageHandlerToDefaultCase() throws IOException {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method to request router address");
+        Router instance = new Router("R1");
+        
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        Message message = new Message(instance.getName(), "global", MessageType.ERROR, "Test");
+        instance.messageHandler(instance, message);
+        
+        String expResult = "Invalid origin for message: R1/global/ERROR/Test"+System.getProperty("line.separator");
+        instance.shutdown();
+        
+        assertEquals(expResult, outContent.toString());
+        
+    }
+    
+    
 }
