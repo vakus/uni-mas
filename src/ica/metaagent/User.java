@@ -67,8 +67,7 @@ public class User extends MetaAgent
      * @author v8243060
      */
     public void sendMessage (String recipient, String details){
-        if (!recipientValidation(recipient) || recipient.equalsIgnoreCase("global")){
-
+        if (!usernameValidation(recipient)){
             throw new IllegalArgumentException("Recipient name not correct");
         }
         Message msg = new Message(name, recipient, MessageType.USER_MSG, details);
