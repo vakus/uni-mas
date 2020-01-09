@@ -337,7 +337,11 @@ class WriteWorker implements Runnable {
      * @param msg
      */
     public void queueMessage(Message msg) {
-        messageQueue.add(msg);
+        try {
+            messageQueue.put(msg);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(WriteWorker.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
