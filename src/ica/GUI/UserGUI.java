@@ -1,14 +1,10 @@
-/*
-This package holds all the different graphical user interface (GUI) calsses.
- * It is called by the main run methods can has calsses that are passed as parameters
+/**
+ * This package holds all the different graphical user interface (GUI) classes.
+ * It is called by the main run methods can has classes that are passed as parameters
  * to the constructors of other packages. These classes describe the layout for the
  * observer GUI and the layout for the user interface. The methods in these classes
  * are used to help update the GUI's and to display messages. These methods are called
  * within methods of different classes and packages.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package ica.GUI;
 
@@ -37,7 +33,7 @@ public class UserGUI {
      * this is a user agent and is passed as to allow the send message and other
      * methods that are defined in the user agent class.
      *
-     * @param agent
+     * @param agent the user agent which is being connected to the GUI
      */
     public UserGUI(User agent) {
         user = agent;
@@ -45,7 +41,7 @@ public class UserGUI {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = new Dimension((int) (screenSize.getWidth() * 0.275), (int) (screenSize.getHeight() * 0.45));
 
-        iFace = new UserInterface(user, frameSize);
+        iFace = new UserInterface(user);
         userFrame = new JFrame(user.getName());
         userFrame.getContentPane().add(iFace.mainPanel);
         userFrame.setSize(frameSize);
@@ -97,8 +93,8 @@ public class UserGUI {
      * calls the update method from the suer interface which updates the JTable
      * with the new message details.
      *
-     * @param sender
-     * @param details
+     * @param sender the source of the message
+     * @param details the message content
      */
     public void recivedMessage(String sender, String details) {
         iFace.displayMessage(sender, details);

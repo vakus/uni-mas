@@ -2,10 +2,6 @@
  * This is the package that holds all the meta agents that are used throught 
  * the program, all of the emta agents draw from the super class of MetaAgent 
  * which is an abstract class.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package ica.metaagent;
 
@@ -128,7 +124,7 @@ public class Portal extends MetaAgent {
      * in-sensitive) then the message is processed. If the message recipient
      * isn't this portal's name nor "GLOBAL", then the source is checked if the
      * source of the message is correct (see
-     * {@link #isMessageOriginCorrect(icametaagent.MetaAgent, icamessages.Message) isMessageOriginCorrect}).
+     * {@link #isMessageOriginCorrect(ica.metaagent.MetaAgent, ica.messages.Message)  isMessageOriginCorrect}).
      * If the source is correct then message is sent forward to the correct
      * recipient. If the recipient can not be found in routing table, the
      * message is discarded, and message is sent from the portal that the
@@ -248,7 +244,8 @@ public class Portal extends MetaAgent {
      *
      * @param name MetaAgent name to be added
      * @return true if MetaAgent name is allowed and doesn't already exists
-     * @author v8243060 & v8036651
+     * @author v8243060
+     * @author v8036651
      */
     public boolean isNameAllowed(String name) {
         return (routingTable.get(name) == null && usernameValidation(name));
@@ -298,6 +295,7 @@ public class Portal extends MetaAgent {
 
     /**
      * Returns copy of routing Table which is unmodifiable
+     *
      * @return unmodifiable copy of routing table
      */
     public Map<String, MetaAgent> getRoutingTable() {
