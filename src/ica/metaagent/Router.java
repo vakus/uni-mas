@@ -292,4 +292,14 @@ public class Router extends Portal implements Runnable {
             super.messageHandler(agent, message);
         }
     }
+    
+    @Override
+    public void shutdown(){
+        super.shutdown();
+        try {
+            server.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
