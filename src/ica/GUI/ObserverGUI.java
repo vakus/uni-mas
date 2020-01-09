@@ -1,14 +1,10 @@
-/*
- * This package holds all the different graphical user interface (GUI) calsses.
- * It is called by the main run methods can has calsses that are passed as parameters
+/**
+ * This package holds all the different graphical user interface (GUI) classes.
+ * It is called by the main run methods can has classes that are passed as parameters
  * to the constructors of other packages. These classes describe the layout for the
  * observer GUI and the layout for the user interface. The methods in these classes
  * are used to help update the GUI's and to display messages. These methods are called
  * within methods of different classes and packages.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package ica.GUI;
 
@@ -42,7 +38,7 @@ import javax.swing.JOptionPane;
  * This class is to be used to create the observer graphical user interface that
  * is being used to register the messages that are being sent throughout the
  * network, This also sets up the drop down menu bars and adds the action
- * lsitener to each option.
+ * listener to each option.
  *
  * @author v8036651
  * @author v8077971
@@ -71,11 +67,10 @@ public class ObserverGUI {
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frameSize = new Dimension((int) (screenSize.getWidth() * 0.375), (int) (screenSize.getHeight() * 0.45));
 
-        iFace = new ObserverInterface(frameSize);
+        iFace = new ObserverInterface();
         mainFrame = new JFrame("Observer");
         mainFrame.getContentPane().add(iFace.mainPanel);
         mainFrame.setSize(frameSize);
-        mainFrame.setVisible(true);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setLocationRelativeTo(null);
 
@@ -129,7 +124,10 @@ public class ObserverGUI {
         routerStop.setMnemonic(KeyEvent.VK_S);
         routerStop.setEnabled(false);
         routerStop.addActionListener((ActionEvent e) -> {
-            //no clue for now how to disconnect router cleanly from network of routers
+            if(JOptionPane.showConfirmDialog(null, "Are you sure you want to shutdown Router? This will also shutdown the Application.", "Router Stop", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+                GuiMain.router.shutdown();
+                System.exit(0);
+            }
         });
         menuRouter.add(routerStop);
 
@@ -298,17 +296,20 @@ public class ObserverGUI {
 
         mainFrame.setJMenuBar(menubar);
 
-        new TitleClock(mainFrame);
+        TitleClock clock = new TitleClock(mainFrame);
+        
+        mainFrame.setVisible(true);
     }
 
     /**
      * This method updates the JTable that is logging the messages that are
      * being sent across the network regardless of the message type.
      *
-     * @param msg
-     * @param direction
-     * @param actualRecipient
-     * @param actualSender
+     * @param msg the message which should be logged into the table
+     * @param direction information whatever the message is being send or
+     * received
+     * @param actualRecipient the name of the node which received the message
+     * @param actualSender the name of the node which forwarded the message
      * @author v8036651
      */
     public void updateTable(Message msg, String direction, String actualRecipient, String actualSender) {
