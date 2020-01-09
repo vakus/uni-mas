@@ -1,20 +1,41 @@
-This multi agent system (MAS) is allows the user to create multiple routers that 
-can all communicate with each other in a full mesh network structure. It allows 
-the addition of portals to each router and then agents to each of these portals. 
-This MAS does not allow portal to portal connections or user agent to user agent 
-directly due to the strain on these agents.
-This MAS is laid out using an graphical user interface (GUI) and allows the user
-to add agents portals and routers through this GUI. This MAS allows connection
-across devices as well through connection to a router and when creating a portal 
-asks for the IP address to connect to the router.
+# UNI-MAS
 
+MAS stands for Meta Agent System. This project aims to bring multi client network consistent of Routers, Portals and Agents. The MAS system is build to allow sending messages between different parts of a single application, different application running on the same computer, or even applications which are running on separate computers.
 
+The MAS system have 3 basic building blocks: Agents, Portal and Routers. The Agents are simple objects which recieve and send messages to other agents. Agents are also used by users to interact with the network. Portals are grouping Agents within an application, which allows to forward messages quicker if the destination agent is within the same application. The Routers are aimed to be more powerful and be supporting connections between multiple portals and other Routers.
 
-We had some changes we would have made to this MAS however due to time 
-constraints we chose to not add these. Another reason we chose to not add them 
-is due to realising we can only add so much for the submission and we would add
-improvements in future updates.
-Improvements we would make, Time permitting:
-1)
-2)
-3)
+## Network Structure
+
+Our design uses full mesh structure in connection between Routers. When a Router is connected to already existing network, it will query other routers to find out all routers which already are connected, then it will connect to those as well. This allows to optimize path for messages which are sent across routers, as well as reduce strain on the Router network.
+
+The Portals are using a Star structure in connections with agents and router. The portal can connect to only one router. All messages which are sent by agents and are forwarded by portal to correct agent if it is connected to the same portal. If the target is not connected to the same portal, then the message will be forwarded to router to be forwarded to the correct Router or Portal which will deliver them to correct agent.
+
+The portals are unable to connect to another portals, as the portals are supposed to be lightweight, and we have decided that it would be best to limit the strain a portal is put under.
+
+## Program Structure
+
+We tried to make our application modular to allow easy expansion or modification of already existing elements. We allowed to create new Monitors which can be used to do extra processing when the message is recieved by portal or router. Those can be easily attached to portal by calling either of the following:
+```
+Portal.addObserver(myObserver);
+Router.addObserver(myObserver);
+```
+
+The Portals and Routers are capable of running completly without a GUI, which allows to use them from console itself.
+
+The Portals will also accept custom classes which extend MetaAgent class. As a result it is possible to use our Meta Agent System as a part of another application, and use it to forward messages between remote systems.
+
+The application is using strings to send data over network, which allows for easy implementation in another programming language.
+
+## NetHammer
+
+Our application also comes with NetHammer extension, which aims to stress test a network of routers. This allows to test the time it takes for each messages to be delivered between agents, when network is flooded with hundreds or thousands of messages.
+
+## Authors
+
+v8073331 - Dominik Sysojew - Osinski
+
+v8036651 - Ben Ramsden
+
+v8077971 - Dominic Thorp
+
+v8243060 - Patryk Neter

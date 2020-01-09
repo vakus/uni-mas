@@ -64,6 +64,59 @@ public class MetaAgentTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     * Test of usernameValidation method, of class MetaAgent, where the name is global
+     */
+    @Test
+    public void testUsernameValidationWithGlobalAsName() {
+        System.out.println("Testing the username validation method, where the username is 'global'");
+        String name = "";
+        boolean result = true;
+        try{
+        MetaAgent instance = new MetaAgentImpl("global");
+        }
+        catch(IllegalArgumentException ex){
+            result = false;
+        }
+        boolean expResult = false;
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of usernameValidation method, of class MetaAgent, where the name is null
+     */
+    @Test
+    public void testUsernameValidationWithNullAsName() {
+        System.out.println("Testing the username validation method, where the username is null");
+        String name = "";
+        boolean result = true;
+        try{
+        MetaAgent instance = new MetaAgentImpl(null);
+        }
+        catch(IllegalArgumentException ex){
+            result = false;
+        }
+        boolean expResult = false;
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of usernameValidation method, of class MetaAgent, where the name contains '/'
+     */
+    @Test
+    public void testUsernameValidationWithInvalidName() {
+        System.out.println("Testing the username validation method, where the username contains /");
+        String name = "";
+        boolean result = true;
+        try{
+        MetaAgent instance = new MetaAgentImpl("/");
+        }
+        catch(IllegalArgumentException ex){
+            result = false;
+        }
+        boolean expResult = false;
+        assertEquals(expResult, result);
+    }
     
     public class MetaAgentImpl extends MetaAgent {
 

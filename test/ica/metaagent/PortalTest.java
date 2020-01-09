@@ -76,7 +76,7 @@ public class PortalTest {
         System.out.println("Testing the Add Socket Agent to Router method");
         Router R1 = new Router("Test");
         Socket S1 = new Socket();
-        SocketAgent SA1 = new SocketAgent("SA 1", R1, S1);
+        SocketAgent SA1 = new SocketAgent(R1, S1);
         
         R1.addAgent(SA1.getName(), SA1);
         
