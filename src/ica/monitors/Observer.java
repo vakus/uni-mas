@@ -1,8 +1,3 @@
-/**
- * This package is used for monitoring what is being sent across the network in
- * different ways, it adds observers to each MetaAgent when they are created which
- * refer back to the observers that are defined.
- */
 package ica.monitors;
 
 import ica.messages.Message;
@@ -68,7 +63,7 @@ public class Observer {
     }
 
     /**
-     * Updates all the monitors thate in use when called, this is done upon
+     * Updates all the monitors that are in use when called, this is done upon
      * sending a message.
      *
      * @param msg message which is being send
