@@ -56,16 +56,47 @@ public class RouterTest {
         String expResult = "U1";
         String result = instance.getMetaAgent(u.getName()).getName();
         
+        instance.shutdown();
+        
         assertEquals(expResult, result);
         
     }
+    
+    /**
+     * Test of the addAgent method, of class Router, where the agent that already exists.
+     * @throws java.io.IOException
+     */
+    @Test
+    public void testAddAgentWithExistingAgent() throws IOException {
+        System.out.println("Testing the Add Agent to Router method, with the existing agent.");
+        
+        Router instance = new Router("R1");
+        User u = new User("u", instance);
+        
+        instance.addAgent(u.getName(), u);
+        boolean expResult = false;
+        boolean result = true;
+        
+        try{
+           instance.addAgent(u.getName(), u);
+        }
+        catch(IllegalArgumentException ex){
+            result = false;
+        }
+        
+        instance.shutdown();
+        
+        assertTrue(expResult == result);
+        
+    }
+    
     
     /**
      * Test of addAgent method, of class Router, with a valid agent
      */
     @Test
     public void testAddSocketAgent() throws IOException {
-        System.out.println("Testing the  add agent method with a valid agent");
+        System.out.println("Testing the add agent method with a valid agent");
         Router instance = new Router("R1");
         Socket s = new Socket();
         SocketAgent sa = new SocketAgent(instance, s);
@@ -79,8 +110,37 @@ public class RouterTest {
         catch(IllegalArgumentException ex){
             result = false;
         }
+        instance.shutdown();
         
         assertTrue(expResult == result);
+        
+    }
+    
+    /**
+     * Test of addAgent method, of class Router, with a valid agent
+     */
+    @Test
+    public void testAddSocketAgentThatAlreadyExists() throws IOException {
+        System.out.println("Testing the add agent method with a socket agent that already exists");
+        Router instance = new Router("R1");
+        Socket s = new Socket();
+        SocketAgent sa = new SocketAgent(instance, s);
+        
+        boolean expResult = false;
+        boolean result = true;
+        
+            instance.addAgent("SA 1", sa);
+            
+        try{
+            instance.addAgent("SA 1", sa);
+        }
+        catch(IllegalArgumentException ex){
+            result = false;
+        }
+        instance.shutdown();
+        
+        assertTrue(expResult == result);
+        
     }
     
     /**
