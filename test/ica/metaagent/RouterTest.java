@@ -90,7 +90,6 @@ public class RouterTest {
         
     }
     
-    
     /**
      * Test of addAgent method, of class Router, with a valid agent
      */
@@ -145,16 +144,23 @@ public class RouterTest {
     
     /**
      * Test of messageHandler method, of class Router.
+     * @throws java.io.IOException
      */
     @Test
-    public void testMessageHandler() {
+    public void testMessageHandlerToAddPortal() throws IOException {
         System.out.println("messageHandler");
-        MetaAgent agent = null;
-        Message message = null;
-        Router instance = null;
-        instance.messageHandler(agent, message);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Router instance = new Router("R1");
+        Portal p = new Portal("P1");
+        
+        Message message = new Message(p.getName(), "global", MessageType.ADD_PORTAL, "");
+        instance.messageHandler(p, message);
+        
+        String expResult = "P1";
+        String result = instance.getMetaAgent(p.getName()).getName();
+        
+        instance.shutdown();
+        
+        assertEquals(expResult, result);
     }
     
 }

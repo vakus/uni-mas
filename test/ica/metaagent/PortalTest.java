@@ -603,4 +603,24 @@ public class PortalTest {
         instance.addAgent("SA1",sa);
         instance.shutdown();
     }
+    
+    
+    /**
+     * Test of getRoutingTable method
+     */
+    @Test
+    public void testGetRoutingTable(){
+        System.out.println("Testing the get routing table method");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p);
+        User u2 = new User("U2", p);
+        
+        p.addAgent(u.getName(), u);
+        p.addAgent(u2.getName(), u2);
+        
+        String expResult = "{U1="+u.toString()+", U2="+u2.toString()+"}";
+        String result = p.getRoutingTable().toString();
+        assertEquals(expResult, result);
+    }
+    
 }
