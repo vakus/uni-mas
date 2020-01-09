@@ -246,7 +246,6 @@ class ReadWorker implements Runnable {
 
                 }
 
-                System.out.println(messageStr);
                 Message msg = Message.parseMessage(messageStr);
                 agent.portal.messageHandler(agent, msg);
 
@@ -291,7 +290,7 @@ class WriteWorker implements Runnable {
 
     public WriteWorker(SocketAgent agent) {
         this.agent = agent;
-        messageQueue = new ArrayBlockingQueue<>(20);
+        messageQueue = new ArrayBlockingQueue<>(100);
         running = true;
     }
 
