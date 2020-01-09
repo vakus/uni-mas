@@ -55,14 +55,4 @@ public abstract class MetaAgent{
     protected boolean usernameValidation(String name){
         return (name != null && !name.contains("/") && !name.equalsIgnoreCase("global"));
     }
-    
-    /**
-     * Validates the recipient string
-     * @param recipient recipient of the message
-     * @return true if recipient doesn't contain "/"
-     * @author v8243060
-     */
-    public boolean recipientValidation (String recipient){
-        return (!recipient.contains("/")); 
-    }
 }
