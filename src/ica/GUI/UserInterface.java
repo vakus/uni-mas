@@ -1,4 +1,11 @@
 /*
+This package holds all the different graphical user interface (GUI) calsses.
+ * It is called by the main run methods can has calsses that are passed as parameters
+ * to the constructors of other packages. These classes describe the layout for the
+ * observer GUI and the layout for the user interface. The methods in these classes
+ * are used to help update the GUI's and to display messages. These methods are called
+ * within methods of different classes and packages.
+ *
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -6,7 +13,6 @@
 package ica.GUI;
 
 import ica.metaagent.User;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -18,80 +24,89 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
+ * This class is used to layout what will be displayed and how it will be
+ * displayed when using the user GUI.
  *
  * @author v8036651
  */
-public class UserInterface implements ActionListener
-{
+public class UserInterface implements ActionListener {
+
     private final JButton send = new JButton("Send");
     private final JTextArea messageText = new JTextArea();
     private final JTextArea recievedMessage = new JTextArea();
     private final JTextField recipient = new JTextField();
-    private final Dimension buttonSize = new Dimension(200,100);
-    private final Dimension textFieldSize = new Dimension(200,100);
-    private final Dimension textAreaSize = new Dimension(200,100);
+    private final Dimension buttonSize = new Dimension(200, 100);
+    private final Dimension textFieldSize = new Dimension(200, 100);
+    private final Dimension textAreaSize = new Dimension(200, 100);
     private final Dimension size;
     private String messageDetails;
     private String recipientName;
     private final User user;
-    
+
     final JPanel mainPanel;
-    
+
     /**
+     * This is the constructor for the userInterface class, it outlines how the
+     * interface for the GUI will be laid out and what will be on it.
      *
      * @param agent
-     * @param d
+     * @param dimension
      */
-    public UserInterface(User agent, Dimension d) 
-    {
+    public UserInterface(User agent, Dimension dimension) {
         user = agent;
-        size = d;
-        
-        mainPanel = new JPanel(new GridLayout(4,2));
+        size = dimension;
+
+        mainPanel = new JPanel(new GridLayout(4, 2));
         mainPanel.setSize(size);
-        
+
         send.addActionListener(this);
         send.setPreferredSize(buttonSize);
         recipient.setPreferredSize(textFieldSize);
         messageText.setPreferredSize(textAreaSize);
         mainPanel.add(new JLabel("Recipient:"));
         mainPanel.add(recipient);
-        
+
         mainPanel.add(new JLabel("Message:"));
         mainPanel.add(messageText);
-        
+
         mainPanel.add(new JLabel());
         mainPanel.add(send);
-        
+
         mainPanel.add(new JLabel("Recieved Message:"));
         mainPanel.add(recievedMessage);
-        
+
         mainPanel.setName(agent.getName());
     }
-    
+
+    /**
+     * A method that is not called directly at any point in the program but
+     * takes place when the send button is clicked.
+     *
+     * @param event
+     */
     @Override
-    public void actionPerformed(ActionEvent e)
-    {
-        if(e.getSource().equals(send))
-        {
+    public void actionPerformed(ActionEvent event) {
+        if (event.getSource().equals(send)) {
             recipientName = recipient.getText();
-            if (recipientName.equalsIgnoreCase("GLOBAL"))
-            {
+            if (recipientName.equalsIgnoreCase("GLOBAL")) {
                 System.out.println("Error - User cannot send a global message!");
-            }
-            else
-            {
+            } else {
                 messageDetails = messageText.getText();
                 user.sendMessage(recipientName, messageDetails);
                 System.out.println("Sent Message");
             }
         }
     }
-    
-    public void displayMessage (String sender, String details)
-    {
+
+    /**
+     * This method is called when a message is received by a user agent and is
+     * used to display what the contents of the message was.
+     *
+     * @param sender
+     * @param details
+     */
+    public void displayMessage(String sender, String details) {
         String prevMessages = recievedMessage.getText();
         recievedMessage.setText(prevMessages + "\n A message has been recieved by " + sender + ":\n " + details);
     }
 }
-
