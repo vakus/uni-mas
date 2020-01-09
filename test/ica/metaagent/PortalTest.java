@@ -101,7 +101,7 @@ public class PortalTest {
      */
     @Test
     public void testAddSocketAgent() throws IOException{
-        System.out.println("Testing the Add Socket Agent to Router method");
+        System.out.println("Testing the Add Socket Agent to Portal method");
         Portal p = new Portal("P1");
         Socket s = new Socket();
         SocketAgent sa = new SocketAgent(p, s);
@@ -199,7 +199,124 @@ public class PortalTest {
     }
 
     /**
-     * Test of messageHandler method, of class Portal.
+     * Test of messageHandler method, of class Portal, with a message to another user, 
+     * with invalid origin
+     */
+    @Test
+    public void testMessageHandlerForDefaultCase() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method, for the default case");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        
+        p.addAgent("U1", u);
+        
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        Message message = new Message(u.getName(), "global", MessageType.REQUEST_ROUTER_ADDRESSES, "Test");
+        p.messageHandler(u, message);
+        
+        String expResult = "Error"+System.getProperty("line.separator");
+        assertEquals(expResult, outContent.toString());
+        System.out.println(outContent.toString());
+    }
+        
+    /**
+     * Test of messageHandler method, of class Portal, with a message to another user, 
+     * with invalid origin
+     */
+    @Test
+    public void testMessageHandlerForMessageToOtherUserWithInvalidOrigin() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method, whith an invalid origin");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        User u2 = new User("U2", p);
+        
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        Message message = new Message(u.getName(), u2.getName(), MessageType.USER_MSG, "Test");
+        p.messageHandler(u, message);
+        
+        String expResult = "Invalid origin for message: U1/U2/USER_MSG/Test"+System.getProperty("line.separator");
+        assertEquals(expResult, outContent.toString());
+        System.out.println(outContent.toString());
+    }
+    
+    /**
+     * Test of messageHandler method, of class Portal, with a message to another user, 
+     * with invalid origin
+     */
+    @Test
+    public void testMessageHandlerForMessageToOtherUserNotOnRoutingTable() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method, whith a user not on routing table");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        User u2 = new User("U2", p);
+        
+        p.addAgent(u.getName(), u);
+        
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        Message message = new Message(u.getName(), u2.getName(), MessageType.USER_MSG, "Test");
+        p.messageHandler(u, message);
+        
+        String expResult = "Message (ERROR): Could not route message to U2: The recipient was not found"+System.getProperty("line.separator");
+        assertEquals(expResult, outContent.toString());
+        System.out.println(outContent.toString());
+    }
+    
+    /**
+     * Test of messageHandler method, of class Portal, with a valid remove message
+     */
+    @Test
+    public void testMessageHandlerForRemovingAValidAgent() {
+        System.out.println("Testing the message handler method, with a valid removal message");
+        Portal p = new Portal("P1");
+        Portal expResult = p;
+        
+        User u = new User("U1", p );
+        p.addAgent("U1", u);
+        
+        Message message = new Message(u.getName(), "global", MessageType.REMOVE_METAAGENT, "Test");
+        p.messageHandler(u, message);
+        
+        String sExpResult = expResult.toString();
+        String sResult = p.toString();
+        assertEquals(sExpResult, sResult);
+    }
+    
+    /**
+     * Test of messageHandler method, of class Portal, with a valid remove message
+     */
+    @Test
+    public void testMessageHandlerForRemovingAnInvalidAgent() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method, with an invalid agent");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        
+        Message message = new Message(u.getName(), "global", MessageType.REMOVE_METAAGENT, "Test");
+        p.messageHandler(u, message);
+        
+        String expResult = "Invalid origin for message: U1/global/REMOVE_METAAGENT/Test"+System.getProperty("line.separator");
+        assertEquals(expResult, outContent.toString());
+        System.out.println(outContent.toString());
+    }
+    
+    /**
+     * Test of messageHandler method, of class Portal, with a valid message to global
      */
     @Test
     public void testMessageHandlerForUserMsgToGlobal() {
@@ -222,29 +339,49 @@ public class PortalTest {
     }
     
     /**
-     * Test of messageHandler method, of class Portal.
+     * Test of messageHandler method, of class Portal, trying to add a valid meta agent
      */
     @Test
     public void testMessageHandlerForAddMetaAgent() {
+        System.out.println("Testing the message handler method, for the Add meta agent message type");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        
+        
+        Message message = new Message(u.getName(), "global", MessageType.ADD_METAAGENT, "Test");
+        p.messageHandler(u, message);
+        
+        String expResult = "U1";
+        String result = p.getMetaAgent(u.getName()).getName();
+        
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of messageHandler method, of class Portal, trying to add an invalid meta agent
+     */
+    @Test
+    public void testMessageHandlerForAddMetaAgentWithInvalidName() {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
-        System.out.println("Testing the message handler method, for the Add meta agent message type");
+        System.out.println("Testing the message handler method, where the added agent is invalid");
         Portal p = new Portal("P1");
         User u = new User("U1", p );
         System.setOut(null);
         System.setOut(new PrintStream(outContent));
         
         
-        Message message = new Message(u.getName(), "global", MessageType.ADD_METAAGENT, "Test");
+        Message message = new Message("/", "global", MessageType.ADD_METAAGENT, "Test");
         p.messageHandler(u, message);
         
-        String expResult = "Invalid origin for message: U1/global/USER_MSG/Test"+System.getProperty("line.separator");
+        String expResult = "Username not allowed: /"+System.getProperty("line.separator");
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
     
     /**
-     * Test of messageHandler method, of class Portal.
+     * Test of messageHandler method, of class Portal, trying to send a message with an invalid
+     * origin to global
      */
     @Test
     public void testMessageHandlerForUserMsgToGlobalWithInvalidOrigin() {
@@ -293,7 +430,8 @@ public class PortalTest {
     }
     
     /**
-     * Test of messageHandler method, of class Portal, using the load Table message type
+     * Test of messageHandler method, of class Portal, using the load Table message type,
+     * with an empty routing table
      */
     @Test
     public void testMessageHandlerForLoadTableWhenEmpty() {
@@ -317,7 +455,7 @@ public class PortalTest {
     }
     
     /**
-     * Test of messageHandler method, of class Portal.
+     * Test of messageHandler method, of class Portal, for an error message to global
      */
     @Test
     public void testMessageHandlerForErrorMsgToGlobal() {
@@ -340,7 +478,8 @@ public class PortalTest {
     }
     
     /**
-     * Test of messageHandler method, of class Portal.
+     * Test of messageHandler method, of class Portal, for an error message with an
+     * invalid origin
      */
     @Test
     public void testMessageHandlerForErrorMsgToGlobalWithInvalidOrigin() {
@@ -440,7 +579,7 @@ public class PortalTest {
         Portal instance = new Portal("P1");
         instance.addObserver(m);
     }
-
+    
     /**
      * Test of shutdown method, of class Portal.
      */
