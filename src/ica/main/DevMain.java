@@ -1,5 +1,7 @@
+/**
+ * This is the Driver class and is used to run the program in a specific way.
+ */
 package ica.main;
-
 
 import ica.messages.Message;
 import ica.messages.MessageType;
@@ -15,13 +17,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/*
- * This is the Driver class and is used to run the program in a specific way.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
  * @author v8073331
@@ -120,22 +115,20 @@ public class DevMain {
                 }
             } else if (line.equalsIgnoreCase("5") && router != null) {
                 //connect router to router
-                
+
                 String ip = getIP();
                 try {
                     Socket s = new Socket(ip, 42069);
                     SocketAgent sa = new SocketAgent(router, s);
                     sa.start();
-                    
-                    if(askYN("Do you want to auto request router addresses", true)){
+
+                    if (askYN("Do you want to auto request router addresses", true)) {
                         sa.messageHandler(sa, new Message(router.getName(), "GLOBAL", MessageType.REQUEST_ROUTER_ADDRESSES, ""));
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(DevMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                
-                
+
             } else if (line.equalsIgnoreCase("6") && (router != null || !portals.isEmpty())) {
                 //send message
                 System.out.print("Sender: ");
@@ -161,14 +154,14 @@ public class DevMain {
 
             } else if (line.equalsIgnoreCase("7") && !portals.isEmpty()) {
                 //disconnect portal from router
-                
+
                 Portal portal = choosePortal();
                 SocketAgent agent = getSocketFromPortal(portal);
-                
+
                 agent.messageHandler(portal, new Message(portal.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
                 agent.close();
                 socketAgents.remove(agent);
-                
+
             } else if (line.equalsIgnoreCase("8") && !users.isEmpty()) {
                 //disconnect user agent
                 User user = chooseUserAgent();
@@ -194,10 +187,10 @@ public class DevMain {
             System.out.println("[1]\tDisconnect Router");
         }
         System.out.println("[2]\tCreate new Portal");
-        if(portals.isEmpty()){
+        if (portals.isEmpty()) {
             System.out.println("[-]\t!Must have portal first!");
             System.out.println("[-]\t!Must have portal first!");
-        }else{
+        } else {
             System.out.println("[3]\tCreate new User Agent");
             System.out.println("[4]\tConnect Portal to Router");
         }
@@ -206,19 +199,19 @@ public class DevMain {
         } else {
             System.out.println("[-]\t!Must have local router first!");
         }
-        if(router == null && portals.isEmpty()){
+        if (router == null && portals.isEmpty()) {
             System.out.println("[-]\t!Must have local router or portal first");
-        }else{
+        } else {
             System.out.println("[6]\tSend message");
         }
-        if(portals.isEmpty()){
+        if (portals.isEmpty()) {
             System.out.println("[-]\t!Must have portal connected to router first!");
-        }else{
+        } else {
             System.out.println("[7]\tDisconnect Portal from Router");
         }
-        if(users.isEmpty()){
+        if (users.isEmpty()) {
             System.out.println("[-]\t!Must have User Agent first!");
-        }else{
+        } else {
             System.out.println("[8]\tDisconnect User Agent");
         }
         System.out.println("[9]\tKill Socket Agent");
@@ -254,29 +247,29 @@ public class DevMain {
             }
         }
     }
-    
-    public static User chooseUserAgent(){
-        if(users.isEmpty()){
+
+    public static User chooseUserAgent() {
+        if (users.isEmpty()) {
             System.out.println("There is no user agents to be choosen!");
             return null;
-        }else if(users.size() == 1){
+        } else if (users.size() == 1) {
             System.out.println("Automatically choosing only user available (" + users.get(0) + ")");
             return users.get(0);
-        }else{
+        } else {
             System.out.println("Choose user to use: ");
-            for(int x = 0; x < users.size(); x++){
+            for (int x = 0; x < users.size(); x++) {
                 System.out.println("[" + x + "] " + users.get(x).getName());
             }
-            while(true){
+            while (true) {
                 System.out.println("User number: ");
-                while(!keyb.hasNextInt()){
+                while (!keyb.hasNextInt()) {
                     System.out.println("Invalid input.");
                     keyb.nextLine();
                     System.out.println("User number: ");
                 }
                 int choice = keyb.nextInt();
                 keyb.nextLine();
-                if(choice > users.size() || choice < 0){
+                if (choice > users.size() || choice < 0) {
                     System.out.println("Invalid number.");
                     continue;
                 }
@@ -355,7 +348,7 @@ public class DevMain {
     public static MetaAgent chooseNode() {
         while (true) {
             System.out.println("Choose node: ");
-            if(router != null){
+            if (router != null) {
                 System.out.println("[0] " + router.getName());
             }
             for (int x = 1; x < portals.size() + 1; x++) {
@@ -384,9 +377,10 @@ public class DevMain {
             }
         }
     }
-    public static SocketAgent getSocketFromPortal(Portal portal){
-        for(SocketAgent sa : socketAgents){
-            if(sa.getName().contains(portal.getName())){
+
+    public static SocketAgent getSocketFromPortal(Portal portal) {
+        for (SocketAgent sa : socketAgents) {
+            if (sa.getName().contains(portal.getName())) {
                 return sa;
             }
         }
