@@ -14,7 +14,9 @@ import ica.messages.Message;
 import ica.messages.MessageType;
 import ica.monitors.CMDMonitor;
 import ica.monitors.Monitor;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Observer;
 import org.junit.After;
@@ -200,16 +202,143 @@ public class PortalTest {
      * Test of messageHandler method, of class Portal.
      */
     @Test
-    public void testMessageHandler() {
-        System.out.println("messageHandler");
-        MetaAgent agent = null;
-        Message message = null;
-        Portal instance = null;
-        instance.messageHandler(agent, message);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testMessageHandlerForUserMsgToGlobal() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method, where the recipient is 'global'");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        p.addAgent("U1", u);
+        
+        Message message = new Message(u.getName(), "global", MessageType.USER_MSG, "Test");
+        p.messageHandler(u, message);
+        
+        String expResult = "UserMessage: Test"+System.getProperty("line.separator");
+        assertEquals(expResult, outContent.toString());
+        System.out.println(outContent.toString());
     }
-
+    
+    /**
+     * Test of messageHandler method, of class Portal.
+     */
+    @Test
+    public void testMessageHandlerForUserMsgToGlobalWithInvalidOrigin() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method, where the recipient is 'global', but with invalid origin");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        
+        Message message = new Message(u.getName(), "global", MessageType.USER_MSG, "Test");
+        p.messageHandler(u, message);
+        
+        String expResult = "Invalid origin for message: U1/global/USER_MSG/Test"+System.getProperty("line.separator");
+        assertEquals(expResult, outContent.toString());
+        System.out.println(outContent.toString());
+    }
+    
+    /**
+     * Test of messageHandler method, of class Portal, using the load Table message type
+     */
+    @Test
+    public void testMessageHandlerForLoadTableWithContents() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method, where the messsage is load table");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        Socket s = new Socket();
+        SocketAgent sa = new SocketAgent(p, s);
+        
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        p.addAgent("U1", u);
+        p.addAgent("S1", sa);
+        
+        Message message = new Message(u.getName(), "global", MessageType.LOAD_TABLE, "Test");
+        p.messageHandler(sa, message);
+        
+        String expResult = "Error: Can not load routing table, as it is not empty."+System.getProperty("line.separator");
+        assertEquals(expResult, outContent.toString());
+        System.out.println(outContent.toString());
+    }
+    
+    /**
+     * Test of messageHandler method, of class Portal, using the load Table message type
+     */
+    @Test
+    public void testMessageHandlerForLoadTableWhenEmpty() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method, where the messsage is load table, which is empty");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        
+        Message message = new Message(u.getName(), "global", MessageType.LOAD_TABLE, "Test");
+        p.messageHandler(u, message);
+        
+        String expResult = "Error: Can not load routing table, as it is not empty."+System.getProperty("line.separator");
+        assertEquals(expResult, outContent.toString());
+        System.out.println(outContent.toString());
+        System.out.println(p.getMetaAgent("U1"));
+    }
+    
+    /**
+     * Test of messageHandler method, of class Portal.
+     */
+    @Test
+    public void testMessageHandlerForErrorMsgToGlobal() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method, where the messsage is an error");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        p.addAgent("U1", u);
+        
+        Message message = new Message(u.getName(), "global", MessageType.ERROR, "Test");
+        p.messageHandler(u, message);
+        
+        String expResult = "Error: Test"+System.getProperty("line.separator");
+        assertEquals(expResult, outContent.toString());
+        System.out.println(outContent.toString());
+    }
+    
+    /**
+     * Test of messageHandler method, of class Portal.
+     */
+    @Test
+    public void testMessageHandlerForErrorMsgToGlobalWithInvalidOrigin() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method, where the messsage is an error, but with invalid origin");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        
+        Message message = new Message(u.getName(), "global", MessageType.ERROR, "Test");
+        p.messageHandler(u, message);
+        
+        String expResult = "Invalid origin for message: U1/global/ERROR/Test"+System.getProperty("line.separator");
+        assertEquals(expResult, outContent.toString());
+        System.out.println(outContent.toString());
+    }
+    
     /**
      * Test of the isNameAllowed method, of class Portal, with an invalid name
      */
@@ -267,15 +396,15 @@ public class PortalTest {
      */
     @Test
     public void testIsMessageOriginCorrect() {
-        System.out.println("Test the is message origin correct method");
-        Portal instance = new Portal("Fuck you, piece of shit");
-        User agent = new User("Fuck my life", instance);
-        User agent2 = new User("Fuck everything", instance);
+        System.out.println("Testing the is message origin correct method");
+        Portal p = new Portal("P1");
+        User u1 = new User("U1", p);
         
-        instance.addAgent(agent.getName(), agent);
-        Message msg = new Message(agent.getName(), agent.getName(), MessageType.USER_MSG, "FUCK YOU PIECE OF SHIT");
+        p.addAgent(u1.getName(), u1);
+        Message msg = new Message(u1.getName(), u1.getName(), MessageType.USER_MSG, "Test");
         boolean expResult = true;
-        boolean result = instance.isMessageOriginCorrect(agent, msg);
+        boolean result = p.isMessageOriginCorrect(u1, msg);
+        
         assertEquals(expResult, result);
     }
 
@@ -288,20 +417,6 @@ public class PortalTest {
         CMDMonitor m = new CMDMonitor("M1");
         Portal instance = new Portal("P1");
         instance.addObserver(m);
-    }
-
-    /**
-     * Test of forwardGlobal method, of class Portal.
-     */
-    @Test
-    public void testForwardGlobal() {
-        System.out.println("forwardGlobal");
-        MetaAgent source = null;
-        Message msg = null;
-        Portal instance = null;
-        instance.forwardGlobal(source, msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
