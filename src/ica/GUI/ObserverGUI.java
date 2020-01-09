@@ -71,7 +71,6 @@ public class ObserverGUI {
         mainFrame = new JFrame("Observer");
         mainFrame.getContentPane().add(iFace.mainPanel);
         mainFrame.setSize(frameSize);
-        mainFrame.setVisible(true);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setLocationRelativeTo(null);
 
@@ -294,7 +293,9 @@ public class ObserverGUI {
 
         mainFrame.setJMenuBar(menubar);
 
-        new TitleClock(mainFrame);
+        TitleClock clock = new TitleClock(mainFrame);
+        
+        mainFrame.setVisible(true);
     }
 
     /**
