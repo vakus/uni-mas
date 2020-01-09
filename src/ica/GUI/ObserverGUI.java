@@ -124,7 +124,10 @@ public class ObserverGUI {
         routerStop.setMnemonic(KeyEvent.VK_S);
         routerStop.setEnabled(false);
         routerStop.addActionListener((ActionEvent e) -> {
-            //no clue for now how to disconnect router cleanly from network of routers
+            if(JOptionPane.showConfirmDialog(null, "Are you sure you want to shutdown Router? This will also shutdown the Application.", "Router Stop", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+                GuiMain.router.shutdown();
+                System.exit(0);
+            }
         });
         menuRouter.add(routerStop);
 
