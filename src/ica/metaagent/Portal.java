@@ -117,7 +117,6 @@ public class Portal extends MetaAgent {
     }
 
     /**
-     * Receives and processes the message.
      * <p>
      * First all monitors are being notified of the received message. If the
      * message recipient is either the name of this portal or is "GLOBAL" (case
