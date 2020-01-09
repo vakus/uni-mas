@@ -125,7 +125,7 @@ public class PortalTest {
      */
     @Test
     public void testAddAgentToSocketAgent() throws IOException{
-        System.out.println("Testing the Add Socket Agent to Router method");
+        System.out.println("Testing the Add Socket Agent to Portal method");
         Portal p = new Portal("P1");
         Socket s = new Socket();
         User u = new User("SA 1", p);
