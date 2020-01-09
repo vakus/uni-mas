@@ -1,4 +1,11 @@
 /*
+ * This package holds all the different graphical user interface (GUI) calsses.
+ * It is called by the main run methods can has calsses that are passed as parameters
+ * to the constructors of other packages. These classes describe the layout for the
+ * observer GUI and the layout for the user interface. The methods in these classes
+ * are used to help update the GUI's and to display messages. These methods are called
+ * within methods of different classes and packages.
+ *
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -32,6 +39,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 /**
+ * This class is to be used to create the observer graphical user interface that
+ * is being used to register the messages that are being sent throughout the
+ * network, This also sets up the drop down menu bars and adds the action
+ * lsitener to each option.
  *
  * @author v8036651
  * @author v8077971
@@ -49,6 +60,13 @@ public class ObserverGUI {
     private JMenuItem routerConnect;
     private JMenuItem routerStop;
 
+    /**
+     * Observer GUI constructor, this sets up the observer view that monitors
+     * the messages that are being sent over the network.
+     *
+     * @author v8036651
+     * @author v8073331
+     */
     public ObserverGUI() {
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frameSize = new Dimension((int) (screenSize.getWidth() * 0.375), (int) (screenSize.getHeight() * 0.45));
@@ -126,10 +144,10 @@ public class ObserverGUI {
 
             String portalName = JOptionPane.showInputDialog("Please input the name of the portal: ");
             Portal portal = new Portal(portalName);
-            CMDMonitor m2 = new CMDMonitor(portal.getName());
-            GUIMonitor mg2 = new GUIMonitor(portal.getName(), GuiMain.gui);
-            portal.addObserver(m2);
-            portal.addObserver(mg2);
+            CMDMonitor monitor2 = new CMDMonitor(portal.getName());
+            GUIMonitor monitorgui2 = new GUIMonitor(portal.getName(), GuiMain.gui);
+            portal.addObserver(monitor2);
+            portal.addObserver(monitorgui2);
 
             JMenu portalsMenu = new JMenu(portalName);
 
@@ -138,11 +156,11 @@ public class ObserverGUI {
             portalsConnect.addActionListener((ActionEvent e1) -> {
                 try {
                     String address = JOptionPane.showInputDialog(null, "Please input the address for the socket: ", "127.0.0.1");
-                    Socket s = new Socket(address, 42069);
-                    SocketAgent a = new SocketAgent(portal, s);
-                    a.start();
+                    Socket socket = new Socket(address, 42069);
+                    SocketAgent socketAgent = new SocketAgent(portal, socket);
+                    socketAgent.start();
 
-                    a.messageHandler(portal, new Message(portal.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
+                    socketAgent.messageHandler(portal, new Message(portal.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
                 } catch (IOException ex) {
                     Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(null, "Could not connect router", "Error", JOptionPane.ERROR_MESSAGE);
@@ -154,9 +172,13 @@ public class ObserverGUI {
             portalsAddAgent.setMnemonic(KeyEvent.VK_A);
             portalsAddAgent.addActionListener((ActionEvent e1) -> {
                 String name = JOptionPane.showInputDialog("Please input the name of the user: ");
-                User agent = new User(name, portal);
-
-                portal.messageHandler(agent, new Message(agent.getName(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
+                //Add check here
+                if (portal.isNameAllowed(name)) {
+                    User agent = new User(name, portal);
+                    portal.messageHandler(agent, new Message(agent.getName(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
+                } else {
+                    JOptionPane.showMessageDialog(null, "Could not create agent as one already exists with that name.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             });
             portalsMenu.add(portalsAddAgent);
 
@@ -279,6 +301,16 @@ public class ObserverGUI {
         new TitleClock(mainFrame);
     }
 
+    /**
+     * This method updates the JTable that is logging the messages that are
+     * being sent across the network regardless of the message type.
+     *
+     * @param msg
+     * @param direction
+     * @param actualRecipient
+     * @param actualSender
+     * @author v8036651
+     */
     public void updateTable(Message msg, String direction, String actualRecipient, String actualSender) {
         iFace.update(msg, direction, actualRecipient, actualSender);
     }

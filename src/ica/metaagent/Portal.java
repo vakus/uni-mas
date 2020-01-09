@@ -1,4 +1,8 @@
 /*
+ * This is the package that holds all the meta agents that are used throught 
+ * the program, all of the emta agents draw from the super class of MetaAgent 
+ * which is an abstract class.
+ *
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -15,6 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * This class is where all methods that are used by the portal are defined and
+ * some methods that are also used in the router class, it also holds the
+ * constructor and acts as a super class to router while extending the super
+ * class of MetaAgent.
  *
  * @author v8073331
  * @author v8036651
@@ -52,11 +60,11 @@ public class Portal extends MetaAgent {
     /**
      * Method for adding an observer to be used when handling a message.
      *
-     * @param obs the observer which should be added.
+     * @param observer the observer which should be added.
      * @author v8036651
      */
-    public void addObserver(Monitor obs) {
-        observers.addObserver(obs);
+    public void addObserver(Monitor observer) {
+        observers.addObserver(observer);
     }
 
     /**
@@ -75,7 +83,8 @@ public class Portal extends MetaAgent {
     }
 
     /**
-     * Adds a new agent to the routing table of the portal.
+     * Adds a new agent to the routing table of the portal as long as there is
+     * no agent with the same name already in the routing table.
      *
      * @param name the name of the agent to be added
      * @param meta the {@link MetaAgent} which the messages should be forwarded
@@ -112,7 +121,7 @@ public class Portal extends MetaAgent {
     }
 
     /**
-     * Recieves and processes the message.
+     * Receives and processes the message.
      * <p>
      * First all monitors are being notified of the received message. If the
      * message recipient is either the name of this portal or is "GLOBAL" (case
@@ -241,7 +250,7 @@ public class Portal extends MetaAgent {
      * @return true if MetaAgent name is allowed and doesn't already exists
      * @author v8243060 & v8036651
      */
-    protected boolean isNameAllowed(String name) {
+    public boolean isNameAllowed(String name) {
         return (routingTable.get(name) == null && usernameValidation(name));
     }
 
@@ -270,19 +279,21 @@ public class Portal extends MetaAgent {
      * @author v8073331
      */
     protected void forwardGlobal(MetaAgent source, Message msg) {
-        for (SocketAgent sa : socketAgents) {
-            if (!sa.equals(source)) {
-                observers.updateSender(msg, source.getName());
-                sa.messageHandler(this, msg);
-            }
-        }
+        socketAgents.stream().filter((socketAgent) -> (!socketAgent.equals(source))).forEachOrdered((sa) -> {
+            observers.updateSender(msg, source.getName());
+            sa.messageHandler(this, msg);
+        });
     }
 
+    /**
+     * Method that turns off a portal and disconnects it from the router and the
+     * agents that were connected to that portal, removing all from the network.
+     */
     public void shutdown() {
         forwardGlobal(this, new Message(this.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
-        for (SocketAgent sa : socketAgents) {
-            sa.close();
-        }
+        socketAgents.forEach((socketAgent) -> {
+            socketAgent.close();
+        });
     }
 
     /**
