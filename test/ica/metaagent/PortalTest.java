@@ -225,6 +225,28 @@ public class PortalTest {
      * Test of messageHandler method, of class Portal.
      */
     @Test
+    public void testMessageHandlerForAddMetaAgent() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        
+        System.out.println("Testing the message handler method, for the Add meta agent message type");
+        Portal p = new Portal("P1");
+        User u = new User("U1", p );
+        System.setOut(null);
+        System.setOut(new PrintStream(outContent));
+        
+        
+        Message message = new Message(u.getName(), "global", MessageType.ADD_METAAGENT, "Test");
+        p.messageHandler(u, message);
+        
+        String expResult = "Invalid origin for message: U1/global/USER_MSG/Test"+System.getProperty("line.separator");
+        assertEquals(expResult, outContent.toString());
+        System.out.println(outContent.toString());
+    }
+    
+    /**
+     * Test of messageHandler method, of class Portal.
+     */
+    @Test
     public void testMessageHandlerForUserMsgToGlobalWithInvalidOrigin() {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
@@ -285,10 +307,10 @@ public class PortalTest {
         System.setOut(new PrintStream(outContent));
         
         
-        Message message = new Message(u.getName(), "global", MessageType.LOAD_TABLE, "Test");
+        Message message = new Message(u.getName(), "global", MessageType.LOAD_TABLE, "");
         p.messageHandler(u, message);
         
-        String expResult = "Error: Can not load routing table, as it is not empty."+System.getProperty("line.separator");
+        String expResult = "";
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
         System.out.println(p.getMetaAgent("U1"));
