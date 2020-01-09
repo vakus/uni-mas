@@ -2,10 +2,6 @@
  * This is the package that holds all the meta agents that are used throught 
  * the program, all of the emta agents draw from the super class of MetaAgent 
  * which is an abstract class.
- *
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package ica.metaagent;
 
@@ -121,11 +117,11 @@ public class SocketAgent extends MetaAgent {
             readWorker.stop();
             readWorkerThread.interrupt();
 
-            try {
+            /*try {
                 readWorkerThread.join();
             } catch (InterruptedException ex) {
                 Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
         }
 
         /**
@@ -135,11 +131,11 @@ public class SocketAgent extends MetaAgent {
             writeWorker.stop();
             writeWorkerThread.interrupt();
 
-            try {
+            /*try {
                 writeWorkerThread.join();
             } catch (InterruptedException ex) {
                 Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
         }
 
         /**
@@ -341,7 +337,11 @@ class WriteWorker implements Runnable {
      * @param msg
      */
     public void queueMessage(Message msg) {
-        messageQueue.add(msg);
+        try {
+            messageQueue.put(msg);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(WriteWorker.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
