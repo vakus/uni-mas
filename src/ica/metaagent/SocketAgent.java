@@ -125,8 +125,10 @@ public class SocketAgent extends MetaAgent {
          * Close the output stream
          */
         try {
-            socket.getOutputStream().flush();
-            socket.getOutputStream().close();
+            if(!socket.isClosed()){
+                socket.getOutputStream().flush();
+                socket.getOutputStream().close();
+            }
         } catch (IOException ex) {
             Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -135,7 +137,9 @@ public class SocketAgent extends MetaAgent {
          * Close the input stream
          */
         try {
-            socket.getInputStream().close();
+            if(!socket.isClosed()){
+                socket.getInputStream().close();
+            }
         } catch (IOException ex) {
             Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -144,7 +148,9 @@ public class SocketAgent extends MetaAgent {
          * Close the socket itself
          */
         try {
-            socket.close();
+            if(!socket.isClosed()){
+                socket.close();
+            }
         } catch (IOException ex) {
             Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }

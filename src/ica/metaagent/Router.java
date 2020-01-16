@@ -384,7 +384,6 @@ class ServerThread implements Runnable {
                 SocketAgent newAgent = new SocketAgent(parent, socket);
                 newAgent.start();
             } catch (IOException ex) {
-                Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
