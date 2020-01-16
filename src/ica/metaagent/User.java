@@ -3,6 +3,9 @@ package ica.metaagent;
 import ica.GUI.UserGUI;
 import ica.messages.Message;
 import ica.messages.MessageType;
+import ica.messages.ReceivedMessage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is for the user to interact with, it loads the GUI and has all the
@@ -12,11 +15,13 @@ import ica.messages.MessageType;
  * @author v8073331
  * @author v8243060
  */
-public class User extends MetaAgent {
+public class User extends MetaAgent implements Runnable {
 
     public Portal connection;
     protected UserGUI GUI;
-
+    private boolean running;
+    private Thread userThread;
+    
     /**
      * Constructor for a user, Draws from the super class of MetaAgent.
      *
@@ -29,6 +34,9 @@ public class User extends MetaAgent {
         super(name);
         connection = portal;
         GUI = new UserGUI(this);
+        running = true;
+        userThread = new Thread(this, name);
+        userThread.start();
     }
 
     /**
@@ -42,13 +50,11 @@ public class User extends MetaAgent {
      */
     @Override
     public void messageHandler(MetaAgent agent, Message msg) {
-        if (msg.getRecipient().equals(this.name)) {
-            System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
-            GUI.recivedMessage(msg.getSender(), msg.getMessageDetails());
-        } else {
-            connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
+        try {
+            messageQueue.put(new ReceivedMessage(agent, msg));
+        } catch (InterruptedException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     /**
@@ -68,4 +74,27 @@ public class User extends MetaAgent {
         connection.messageHandler(this, msg);
     }
 
+    @Override
+    public void run() {
+        while (running) {
+            try {
+                ReceivedMessage receivedMessage = messageQueue.take();
+                
+                Message msg = receivedMessage.getMessage();
+
+                if (msg.getRecipient().equals(this.name)) {
+                    System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
+                    GUI.recivedMessage(msg.getSender(), msg.getMessageDetails());
+                } else {
+                    connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void stop(){
+        running = false;
+    }
 }

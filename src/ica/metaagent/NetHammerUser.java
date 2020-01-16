@@ -3,16 +3,22 @@ package ica.metaagent;
 import ica.messages.Message;
 import ica.messages.MessageType;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author v8073331
  */
-public class NetHammerUser extends MetaAgent {
+public class NetHammerUser extends MetaAgent implements Runnable{
 
     public Portal connection;
 
     private ArrayList<Long> times;
+    
+    private boolean running;
+    
+    private Thread thread;
 
     /**
      * Constructor for a user, Draws from the super class of MetaAgent.
@@ -25,25 +31,10 @@ public class NetHammerUser extends MetaAgent {
     public NetHammerUser(String name, Portal portal) {
         super(name);
         connection = portal;
+        running = true;
         times = new ArrayList<>();
-    }
-
-    /**
-     * This function is used to display incoming message. Since user agent
-     * should not forward any messages, if the recipient is invalid, an error
-     * message is sent back to the sender, and the message is discarded.
-     *
-     * @param agent the source of the message which is being received.
-     * @param msg the message to be processed.
-     * @author v8073331
-     */
-    @Override
-    public void messageHandler(MetaAgent agent, Message msg) {
-        if (msg.getRecipient().equals(this.name) && msg.getMessageType().equals(MessageType.USER_MSG)) {
-            times.add(System.currentTimeMillis() - Long.decode(msg.getMessageDetails()));
-        } else {
-            System.out.println("Error: " + msg.getMessageDetails());
-        }
+        thread = new Thread(this, name);
+        thread.start();
     }
 
     /**
@@ -90,5 +81,32 @@ public class NetHammerUser extends MetaAgent {
             }
         }
         return longest;
+    }
+
+    
+    /**
+     * This function is used to display incoming message. Since user agent
+     * should not forward any messages, if the recipient is invalid, an error
+     * message is sent back to the sender, and the message is discarded.
+     * @author v8073331
+     */
+    @Override
+    public void run() {
+        while(running){
+            try {
+                Message msg = messageQueue.take().getMessage();
+                if (msg.getRecipient().equals(this.name) && msg.getMessageType().equals(MessageType.USER_MSG)) {
+                    times.add(System.currentTimeMillis() - Long.decode(msg.getMessageDetails()));
+                } else {
+                    System.out.println("Error: " + msg.getMessageDetails());
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(NetHammerUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public void shutdown(){
+        running = false;
     }
 }

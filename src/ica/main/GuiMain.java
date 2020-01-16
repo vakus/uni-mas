@@ -13,6 +13,7 @@ public class GuiMain {
 
     public static ObserverGUI gui;
     public static Router router;
+    public static Thread routerThread;
 
     /**
      * This is the main class that will run and simply loads the GUI that then

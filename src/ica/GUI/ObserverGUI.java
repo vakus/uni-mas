@@ -77,12 +77,12 @@ public class ObserverGUI {
             try {
                 String routerName = JOptionPane.showInputDialog("Please input the name of the router: ");
                 GuiMain.router = new Router(routerName);
+                GuiMain.routerThread = new Thread(GuiMain.router, GuiMain.router.getName());
+                GuiMain.routerThread.start();
                 CMDMonitor m1 = new CMDMonitor(GuiMain.router.getName());
                 GUIMonitor mg1 = new GUIMonitor(GuiMain.router.getName(), GuiMain.gui);
                 GuiMain.router.addObserver(m1);
                 GuiMain.router.addObserver(mg1);
-                Thread t = new Thread(GuiMain.router);
-                t.start();
                 routerCreate.setEnabled(false);
                 routerConnect.setEnabled(true);
                 routerStop.setEnabled(true);
@@ -116,7 +116,7 @@ public class ObserverGUI {
         routerStop.setMnemonic(KeyEvent.VK_S);
         routerStop.setEnabled(false);
         routerStop.addActionListener((ActionEvent e) -> {
-            if(JOptionPane.showConfirmDialog(null, "Are you sure you want to shutdown Router? This will also shutdown the Application.", "Router Stop", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+            if (JOptionPane.showConfirmDialog(null, "Are you sure you want to shutdown Router? This will also shutdown the Application.", "Router Stop", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 GuiMain.router.shutdown();
                 System.exit(0);
             }
@@ -261,8 +261,12 @@ public class ObserverGUI {
                     Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                for (int x = 0; x < portals.length; x++) {
-                    portals[x].shutdown();
+                for (Portal portal : portals) {
+                    portal.shutdown();
+                }
+
+                for (NetHammerUser user : users) {
+                    user.shutdown();
                 }
 
                 //calculate the results and display them
@@ -289,7 +293,7 @@ public class ObserverGUI {
         mainFrame.setJMenuBar(menubar);
 
         TitleClock clock = new TitleClock(mainFrame);
-        
+
         mainFrame.setVisible(true);
     }
 

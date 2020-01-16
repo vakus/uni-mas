@@ -57,14 +57,14 @@ public class SocketAgent extends MetaAgent {
      * @author v8073331
      */
     public SocketAgent(Portal portal, Socket socket) {
-        super("Socket from: " + portal.getName());
+        super(portal.getName() + "-socket");
 
         this.portal = portal;
         this.socket = socket;
         writeWorker = new WriteWorker(this);
         readWorker = new ReadWorker(this);
-        readWorkerThread = new Thread(readWorker);
-        writeWorkerThread = new Thread(writeWorker);
+        readWorkerThread = new Thread(readWorker, name + "-readWorkerThread");
+        writeWorkerThread = new Thread(writeWorker, name + "-writeWorkerThread");
     }
 
     /**
@@ -111,12 +111,6 @@ public class SocketAgent extends MetaAgent {
         if (!readWorkerThread.getState().equals(Thread.State.TERMINATED)) {
             readWorker.stop();
             readWorkerThread.interrupt();
-
-            /*try {
-                readWorkerThread.join();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
         }
 
         /**
@@ -125,12 +119,6 @@ public class SocketAgent extends MetaAgent {
         if (!writeWorkerThread.getState().equals(Thread.State.TERMINATED)) {
             writeWorker.stop();
             writeWorkerThread.interrupt();
-
-            /*try {
-                writeWorkerThread.join();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
         }
 
         /**
@@ -261,7 +249,6 @@ class ReadWorker implements Runnable {
 
             }
         } catch (IOException ex) {
-            Logger.getLogger(ReadWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -320,7 +307,6 @@ class WriteWorker implements Runnable {
                     agent.socket.getOutputStream().flush();
                     agent.writeWorker.wait();
                 } catch (IOException | InterruptedException ex) {
-                    Logger.getLogger(WriteWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -335,7 +321,6 @@ class WriteWorker implements Runnable {
         try {
             messageQueue.put(msg);
         } catch (InterruptedException ex) {
-            Logger.getLogger(WriteWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
