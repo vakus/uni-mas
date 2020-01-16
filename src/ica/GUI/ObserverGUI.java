@@ -1,6 +1,8 @@
 package ica.GUI;
 
+import ica.GUI.Dialog.RouterCreator;
 import com.sun.glass.events.KeyEvent;
+import ica.GUI.Dialog.RouterConnector;
 import ica.NetHammer.NetHammer;
 import ica.main.GuiMain;
 import ica.messages.Message;
@@ -65,53 +67,60 @@ public class ObserverGUI {
         routerCreate.setMnemonic(KeyEvent.VK_C);
         routerCreate.addActionListener((ActionEvent e) -> {
             try {
-                String routerName = JOptionPane.showInputDialog("Please input the name of the router: ");
-                GuiMain.router = new Router(routerName);
-                GuiMain.routerThread = new Thread(GuiMain.router, GuiMain.router.getName());
-                GuiMain.routerThread.start();
-                CMDMonitor m1 = new CMDMonitor(GuiMain.router.getName());
-                GUIMonitor mg1 = new GUIMonitor(GuiMain.router.getName(), GuiMain.gui);
-                GuiMain.router.addObserver(m1);
-                GuiMain.router.addObserver(mg1);
-                routerCreate.setEnabled(false);
-                routerConnect.setEnabled(true);
-                routerStop.setEnabled(true);
+
+                RouterCreator rc = new RouterCreator();
+                if (!rc.isCancelled()) {
+                    Router router = new Router(rc.getRouterName(), rc.getRouterPort());
+                    Thread routerThread = new Thread(router, router.getName());
+                    routerThread.start();
+                    //CMDMonitor m1 = new CMDMonitor(router.getName());
+                    GUIMonitor mg1 = new GUIMonitor(router.getName(), GuiMain.gui);
+                    //router.addObserver(m1);
+                    router.addObserver(mg1);
+
+                    JMenu routersMenu = new JMenu(router.getName());
+
+                    JMenuItem routerConnect = new JMenuItem("Connect to Router");
+
+                    routerConnect.setMnemonic(KeyEvent.VK_O);
+                    routerConnect.addActionListener((ActionEvent e1) -> {
+
+                        try {
+
+                            RouterConnector rc1 = new RouterConnector();
+                            if (!rc.isCancelled()) {
+                                Socket s = new Socket(rc1.getRouterIP(), rc1.getRouterPort());
+                                SocketAgent a = new SocketAgent(router, s);
+                                a.start();
+
+                                a.messageHandler(router, new Message(router.getName(), "GLOBAL", MessageType.REQUEST_ROUTER_ADDRESSES, ""));
+                            }
+                        } catch (IOException ex) {
+                            Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(null, "Could not connect to router", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    });
+
+                    JMenuItem routerStop = new JMenuItem("Stop Router");
+
+                    routerStop.setMnemonic(KeyEvent.VK_S);
+                    routerStop.addActionListener((ActionEvent e1) -> {
+                        router.shutdown();
+                        menuRouter.remove(routersMenu);
+                    });
+
+                    routersMenu.add(routerConnect);
+                    routersMenu.add(routerStop);
+                    menuRouter.add(routersMenu);
+
+                }
             } catch (IOException ex) {
                 Logger.getLogger(ObserverInterface.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, "Could not create router", "error", JOptionPane.ERROR_MESSAGE);
             }
         });
         menuRouter.add(routerCreate);
-
-        routerConnect = new JMenuItem("Connect to Router");
-        routerConnect.setMnemonic(KeyEvent.VK_O);
-        routerConnect.setEnabled(false);
-        routerConnect.addActionListener((ActionEvent e) -> {
-
-            try {
-                String address = JOptionPane.showInputDialog("Please input the address for the socket: ");
-                Socket s = new Socket(address, 42069);
-                SocketAgent a = new SocketAgent(GuiMain.router, s);
-                a.start();
-
-                a.messageHandler(GuiMain.router, new Message(GuiMain.router.getName(), "GLOBAL", MessageType.REQUEST_ROUTER_ADDRESSES, ""));
-            } catch (IOException ex) {
-                Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null, "Could not connect router", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        menuRouter.add(routerConnect);
-
-        routerStop = new JMenuItem("Stop Router");
-        routerStop.setMnemonic(KeyEvent.VK_S);
-        routerStop.setEnabled(false);
-        routerStop.addActionListener((ActionEvent e) -> {
-            if (JOptionPane.showConfirmDialog(null, "Are you sure you want to shutdown Router? This will also shutdown the Application.", "Router Stop", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                GuiMain.router.shutdown();
-                System.exit(0);
-            }
-        });
-        menuRouter.add(routerStop);
+        menuRouter.addSeparator();
 
         menubar.add(menuRouter);
 
@@ -124,9 +133,9 @@ public class ObserverGUI {
 
             String portalName = JOptionPane.showInputDialog("Please input the name of the portal: ");
             Portal portal = new Portal(portalName);
-            CMDMonitor monitor2 = new CMDMonitor(portal.getName());
+            //CMDMonitor monitor2 = new CMDMonitor(portal.getName());
             GUIMonitor monitorgui2 = new GUIMonitor(portal.getName(), GuiMain.gui);
-            portal.addObserver(monitor2);
+            //portal.addObserver(monitor2);
             portal.addObserver(monitorgui2);
 
             JMenu portalsMenu = new JMenu(portalName);
@@ -135,12 +144,15 @@ public class ObserverGUI {
             portalsConnect.setMnemonic(KeyEvent.VK_C);
             portalsConnect.addActionListener((ActionEvent e1) -> {
                 try {
-                    String address = JOptionPane.showInputDialog(null, "Please input the address for the socket: ", "127.0.0.1");
-                    Socket socket = new Socket(address, 42069);
-                    SocketAgent socketAgent = new SocketAgent(portal, socket);
-                    socketAgent.start();
 
-                    socketAgent.messageHandler(portal, new Message(portal.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
+                    RouterConnector rc = new RouterConnector();
+                    if (!rc.isCancelled()) {
+                        Socket socket = new Socket(rc.getRouterIP(), rc.getRouterPort());
+                        SocketAgent socketAgent = new SocketAgent(portal, socket);
+                        socketAgent.start();
+
+                        socketAgent.messageHandler(portal, new Message(portal.getName(), "GLOBAL", MessageType.ADD_PORTAL, ""));
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(ObserverGUI.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(null, "Could not connect router", "Error", JOptionPane.ERROR_MESSAGE);

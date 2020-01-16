@@ -37,7 +37,9 @@ public class Router extends Portal implements Runnable {
      * @throws IOException if unable to instantiate {@link ServerSocket} on port
      * 42069
      * @author v8036651
+     * @deprecated use {@link #Router(java.lang.String, int)} instead
      */
+    @Deprecated
     public Router(String name) throws IOException {
         this(name, 42069);
     }
