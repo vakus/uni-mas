@@ -1,6 +1,5 @@
 package ica.metaagent;
 
-import ica.GUI.UserGUI;
 import ica.messages.Message;
 import ica.messages.MessageType;
 import ica.messages.ReceivedMessage;
@@ -17,10 +16,9 @@ import java.util.logging.Logger;
  */
 public class User extends MetaAgent implements Runnable {
 
-    public Portal connection;
-    protected UserGUI GUI;
-    private boolean running;
-    private Thread userThread;
+    protected Portal connection;
+    protected boolean running;
+    protected Thread userThread;
     
     /**
      * Constructor for a user, Draws from the super class of MetaAgent.
@@ -33,7 +31,6 @@ public class User extends MetaAgent implements Runnable {
     public User(String name, Portal portal) {
         super(name);
         connection = portal;
-        GUI = new UserGUI(this);
         running = true;
         userThread = new Thread(this, name);
         userThread.start();
@@ -84,7 +81,6 @@ public class User extends MetaAgent implements Runnable {
 
                 if (msg.getRecipient().equals(this.name)) {
                     System.out.println("Message (" + msg.getMessageType().toString() + "): " + msg.getMessageDetails());
-                    GUI.recivedMessage(msg.getSender(), msg.getMessageDetails());
                 } else {
                     connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
                 }

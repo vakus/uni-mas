@@ -40,7 +40,7 @@ public abstract class MetaAgent{
      * @return String of the name of the MetaAgent
      * @author v8036651
      */
-    public String getName() {
+    public final String getName() {
         return name;
     }
 

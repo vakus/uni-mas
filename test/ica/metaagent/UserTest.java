@@ -11,6 +11,8 @@ import ica.messages.Message;
 import ica.messages.MessageType;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -48,7 +50,7 @@ public class UserTest {
      * Test of messageHandler method, of class User, where the message is to the user
      */
     @Test
-    public void testMessageHandlerWithMessageToSelf() {
+    public void testMessageHandlerWithMessageToSelf() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler where the message is to the user");
@@ -62,6 +64,11 @@ public class UserTest {
         instance.messageHandler(instance, msg);
         
         String expResult = "Message (USER_MSG): Test"+System.getProperty("line.separator");
+        
+        
+        Thread.sleep(50);
+        
+        
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
@@ -70,7 +77,7 @@ public class UserTest {
      * Test of messageHandler method, of class User, where the message is to another user
      */
     @Test
-    public void testMessageHandlerWithMessageToAnotherUser() {
+    public void testMessageHandlerWithMessageToAnotherUser() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler where the message is to another user");
@@ -90,6 +97,10 @@ public class UserTest {
         
         String expResult = "Message (ERROR): Message recieved by wrong agent"+System.getProperty("line.separator");
         
+        
+        Thread.sleep(50);
+        
+        
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
@@ -98,7 +109,7 @@ public class UserTest {
      * Test of sendMessage method, of class User, with a valid recipient
      */
     @Test
-    public void testSendMessageWithValidRecipient() {
+    public void testSendMessageWithValidRecipient() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing send message method where the recipient is valid");
@@ -115,6 +126,8 @@ public class UserTest {
         
         p.addAgent(instance.getName(), instance);
         instance.sendMessage(recipient, details);
+        
+        Thread.sleep(50);
         
         assertEquals(expResult, outContent.toString());
     }

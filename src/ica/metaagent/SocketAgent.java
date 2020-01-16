@@ -130,7 +130,6 @@ public class SocketAgent extends MetaAgent {
                 socket.getOutputStream().close();
             }
         } catch (IOException ex) {
-            Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         /**
@@ -141,7 +140,6 @@ public class SocketAgent extends MetaAgent {
                 socket.getInputStream().close();
             }
         } catch (IOException ex) {
-            Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         /**
@@ -152,7 +150,6 @@ public class SocketAgent extends MetaAgent {
                 socket.close();
             }
         } catch (IOException ex) {
-            Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

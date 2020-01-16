@@ -8,7 +8,6 @@ import ica.metaagent.NetHammerUser;
 import ica.metaagent.Portal;
 import ica.metaagent.Router;
 import ica.metaagent.SocketAgent;
-import ica.metaagent.User;
 import ica.monitors.CMDMonitor;
 import ica.monitors.GUIMonitor;
 import java.awt.Dimension;
@@ -164,7 +163,7 @@ public class ObserverGUI {
                 String name = JOptionPane.showInputDialog("Please input the name of the user: ");
                 //Add check here
                 if (portal.isNameAllowed(name)) {
-                    User agent = new User(name, portal);
+                    UserGUI agent = new UserGUI(name, portal);
                     portal.messageHandler(agent, new Message(agent.getName(), "GLOBAL", MessageType.ADD_METAAGENT, ""));
                 } else {
                     JOptionPane.showMessageDialog(null, "Could not create agent as one already exists with that name.", "Error", JOptionPane.ERROR_MESSAGE);
