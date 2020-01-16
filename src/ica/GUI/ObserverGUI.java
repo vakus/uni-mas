@@ -10,8 +10,6 @@ import ica.metaagent.Router;
 import ica.metaagent.SocketAgent;
 import ica.monitors.CMDMonitor;
 import ica.monitors.GUIMonitor;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.Socket;
@@ -35,11 +33,9 @@ import javax.swing.JOptionPane;
  */
 public class ObserverGUI {
 
-    private JFrame mainFrame;
-    private ObserverInterface iFace;
-    private Dimension frameSize;
-    private Dimension screenSize;
-    private JMenuBar menubar;
+    private final JFrame mainFrame;
+    private final ObserverInterface iFace;
+    private final JMenuBar menubar;
 
     private JMenuItem routerCreate;
     private JMenuItem routerConnect;
@@ -53,14 +49,11 @@ public class ObserverGUI {
      * @author v8073331
      */
     public ObserverGUI() {
-        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frameSize = new Dimension((int) (screenSize.getWidth() * 0.375), (int) (screenSize.getHeight() * 0.45));
-
         iFace = new ObserverInterface();
         mainFrame = new JFrame("Observer");
-        mainFrame.getContentPane().add(iFace.mainPanel);
-        mainFrame.setSize(frameSize);
+        mainFrame.add(iFace.mainPanel);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.pack();
         mainFrame.setLocationRelativeTo(null);
 
         menubar = new JMenuBar();

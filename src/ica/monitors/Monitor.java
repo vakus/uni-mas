@@ -8,6 +8,9 @@ import ica.messages.Message;
  */
 public abstract class Monitor {
 
+    /**
+     * Name of the meta agent which this monitor will be attached to.
+     */
     protected String agentName;
 
     /**

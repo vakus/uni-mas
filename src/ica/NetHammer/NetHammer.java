@@ -115,14 +115,14 @@ public class NetHammer {
                 long min = Long.MAX_VALUE;
                 long max = Long.MIN_VALUE;
                 long averageTotal = 0;
-                for (int x = 0; x < users.length; x++) {
-                    if (users[x].getMaxTime() > max) {
-                        max = users[x].getMaxTime();
+                for (NetHammerUser user : users) {
+                    if (user.getMaxTime() > max) {
+                        max = user.getMaxTime();
                     }
-                    if (users[x].getMinTime() < min) {
-                        min = users[x].getMinTime();
+                    if (user.getMinTime() < min) {
+                        min = user.getMinTime();
                     }
-                    averageTotal += users[x].getAverageTime();
+                    averageTotal += user.getAverageTime();
                 }
                 JOptionPane.showMessageDialog(null, "NetHammer Results:\nMin: " + min + "ms\nMax: " + max + "ms\nAverage: " + (averageTotal / users.length) + "ms", "NetHammer Result", JOptionPane.INFORMATION_MESSAGE);
             }

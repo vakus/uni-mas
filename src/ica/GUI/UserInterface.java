@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -73,11 +74,10 @@ public class UserInterface implements ActionListener {
         if (event.getSource().equals(send)) {
             recipientName = recipient.getText();
             if (recipientName.equalsIgnoreCase("GLOBAL")) {
-                System.out.println("Error - User cannot send a global message!");
+                JOptionPane.showMessageDialog(null, "User can not send global message!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 messageDetails = messageText.getText();
                 user.sendMessage(recipientName, messageDetails);
-                System.out.println("Sent Message");
             }
         }
     }
