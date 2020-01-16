@@ -36,10 +36,10 @@ public class Portal extends MetaAgent implements Runnable {
      */
     protected final Observer observers;
 
-    
     private final Thread portalThread;
-    
+
     private boolean running;
+
     /**
      * Creates new portal with specific node name.
      *
@@ -78,7 +78,6 @@ public class Portal extends MetaAgent implements Runnable {
      */
     public MetaAgent getMetaAgent(String name) {
         return routingTable.get(name);
-
     }
 
     /**
@@ -129,7 +128,7 @@ public class Portal extends MetaAgent implements Runnable {
      * @author v8036651
      */
     public boolean isNameAllowed(String name) {
-        return (routingTable.get(name) == null && usernameValidation(name));
+        return (routingTable.get(name) == null && MetaAgent.usernameValidation(name));
     }
 
     /**
@@ -172,6 +171,7 @@ public class Portal extends MetaAgent implements Runnable {
         socketAgents.forEach((socketAgent) -> {
             socketAgent.close();
         });
+        running = false;
     }
 
     /**
@@ -231,9 +231,9 @@ public class Portal extends MetaAgent implements Runnable {
     public void run() {
         while (running) {
             try {
-                
+
                 ReceivedMessage receivedMessage = messageQueue.take();
-                
+
                 Message message = receivedMessage.getMessage();
                 MetaAgent agent = receivedMessage.getSource();
 
@@ -319,9 +319,5 @@ public class Portal extends MetaAgent implements Runnable {
             } catch (InterruptedException ex) {
             }
         }
-    }
-    
-    public void stop(){
-        running = false;
     }
 }

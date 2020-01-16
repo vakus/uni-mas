@@ -1,7 +1,9 @@
-package ica.metaagent;
+package ica.NetHammer;
 
 import ica.messages.Message;
 import ica.messages.MessageType;
+import ica.metaagent.MetaAgent;
+import ica.metaagent.Portal;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;

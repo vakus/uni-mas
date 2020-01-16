@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class is used to create the socket agents that connect portals and
@@ -85,7 +83,11 @@ public class SocketAgent extends MetaAgent {
      */
     @Override
     public void messageHandler(MetaAgent agent, Message msg) {
-        writeWorker.queueMessage(msg);
+        if(agent.equals(portal)){
+            writeWorker.queueMessage(msg);
+        }else{
+            throw new IllegalArgumentException("Invalid message Source");
+        }
     }
 
     /**

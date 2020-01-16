@@ -26,7 +26,7 @@ public abstract class MetaAgent{
      * @param name the name of the node to be created
      * @author v8036651
      */
-    MetaAgent(String name) {
+    public MetaAgent(String name) {
         if (!usernameValidation(name)) {
             throw new IllegalArgumentException("Invalid user name");
         }
@@ -52,7 +52,6 @@ public abstract class MetaAgent{
      * @author v8036651
      */
     public void messageHandler(MetaAgent agent, Message message){
-        
         try {
             messageQueue.put(new ReceivedMessage(agent, message));
         } catch (InterruptedException ex) {
@@ -67,7 +66,7 @@ public abstract class MetaAgent{
      * @return true if metaAgent name allowed
      * @author v8243060
      */
-    protected final boolean usernameValidation(String name) {
+    public static final boolean usernameValidation(String name) {
         return (name != null && !name.contains("/") && !name.equalsIgnoreCase("global"));
     }
 }

@@ -36,23 +36,6 @@ public class User extends MetaAgent implements Runnable {
         userThread.start();
     }
 
-    /**
-     * This function is used to display incoming message. Since user agent
-     * should not forward any messages, if the recipient is invalid, an error
-     * message is sent back to the sender, and the message is discarded.
-     *
-     * @param agent the source of the message which is being received.
-     * @param msg the message to be processed.
-     * @author v8073331
-     */
-    @Override
-    public void messageHandler(MetaAgent agent, Message msg) {
-        try {
-            messageQueue.put(new ReceivedMessage(agent, msg));
-        } catch (InterruptedException ex) {
-            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     /**
      * Creates a message and sends it to the portal but checks if the desired
@@ -64,13 +47,20 @@ public class User extends MetaAgent implements Runnable {
      * @author v8243060
      */
     public void sendMessage(String recipient, String details) {
-        if (!usernameValidation(recipient)) {
+        if (!MetaAgent.usernameValidation(recipient)) {
             throw new IllegalArgumentException("Recipient name not correct");
         }
         Message msg = new Message(name, recipient, MessageType.USER_MSG, details);
         connection.messageHandler(this, msg);
     }
 
+    /**
+     * This function is used to display incoming message. Since user agent
+     * should not forward any messages, if the recipient is invalid, an error
+     * message is sent back to the sender, and the message is discarded.
+     *
+     * @author v8073331
+     */
     @Override
     public void run() {
         while (running) {
