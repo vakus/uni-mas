@@ -39,9 +39,6 @@ public class ObserverGUI {
     private final ObserverInterface iFace;
     private final JMenuBar menubar;
 
-    private JMenuItem routerCreate;
-    private JMenuItem routerConnect;
-    private JMenuItem routerStop;
 
     /**
      * Observer GUI constructor, this sets up the observer view that monitors
@@ -63,7 +60,7 @@ public class ObserverGUI {
         JMenu menuRouter = new JMenu("Router");
         menuRouter.setMnemonic(KeyEvent.VK_R);
 
-        routerCreate = new JMenuItem("Create Router");
+        JMenuItem routerCreate = new JMenuItem("Create Router");
         routerCreate.setMnemonic(KeyEvent.VK_C);
         routerCreate.addActionListener((ActionEvent e) -> {
             try {

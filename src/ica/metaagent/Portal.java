@@ -141,7 +141,7 @@ public class Portal extends MetaAgent implements Runnable {
      * @author v8243060
      */
     protected boolean isMessageOriginCorrect(MetaAgent agent, Message msg) {
-        return (agent.equals(this.routingTable.get(msg.getSender())));
+        return (agent.equals(routingTable.get(msg.getSender())));
     }
 
     /**
