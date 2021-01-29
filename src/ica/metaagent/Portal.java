@@ -2,6 +2,7 @@ package ica.metaagent;
 
 import ica.messages.Message;
 import ica.messages.MessageType;
+import ica.messages.ReceivedMessage;
 import ica.monitors.Monitor;
 import ica.monitors.Observer;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.Map;
  * @author v8036651
  * @author v8243060
  */
-public class Portal extends MetaAgent {
+public class Portal extends MetaAgent implements Runnable {
 
     /**
      * The routing table for all known meta agents.
@@ -35,6 +36,10 @@ public class Portal extends MetaAgent {
      */
     protected final Observer observers;
 
+    private final Thread portalThread;
+
+    private boolean running;
+
     /**
      * Creates new portal with specific node name.
      *
@@ -46,6 +51,9 @@ public class Portal extends MetaAgent {
         this.routingTable = new HashMap<>();
         this.socketAgents = new ArrayList<>();
         this.observers = new Observer();
+        running = true;
+        portalThread = new Thread(this, name);
+        portalThread.start();
     }
 
     /**
@@ -70,7 +78,6 @@ public class Portal extends MetaAgent {
      */
     public MetaAgent getMetaAgent(String name) {
         return routingTable.get(name);
-
     }
 
     /**
@@ -109,6 +116,71 @@ public class Portal extends MetaAgent {
      */
     public void removeAgent(String name) {
         routingTable.remove(name);
+    }
+
+    /**
+     * Checks whatever the agent name is allowed. This function checks if the
+     * agent name is not already in use and if the username is valid.
+     *
+     * @param name MetaAgent name to be added
+     * @return true if MetaAgent name is allowed and doesn't already exists
+     * @author v8243060
+     * @author v8036651
+     */
+    public boolean isNameAllowed(String name) {
+        return (routingTable.get(name) == null && MetaAgent.usernameValidation(name));
+    }
+
+    /**
+     * Checks whether the message came from the correct branch/agent
+     *
+     * @param agent MetaAgent that send/propagated the message
+     * @param msg message sent
+     * @return true if MetaAgent in the routing table for the message sender is
+     * the same as the MetaAgent who sent the message
+     * @author v8243060
+     */
+    protected boolean isMessageOriginCorrect(MetaAgent agent, Message msg) {
+        return (agent.equals(routingTable.get(msg.getSender())));
+    }
+
+    /**
+     * This function sends message to all other nodes This function may be
+     * overridden to modify the behaviour in which global messages are sent. For
+     * example portal would only send global message forward to router while
+     * router would send it to other places as well.
+     *
+     * @param msg the message to be sent
+     * @param source the location from which the message came. This node will
+     * not be sent the global message as it already seen it before
+     * @author v8073331
+     */
+    protected void forwardGlobal(MetaAgent source, Message msg) {
+        socketAgents.stream().filter((socketAgent) -> (!socketAgent.equals(source))).forEachOrdered((sa) -> {
+            observers.updateSender(msg, source.getName());
+            sa.messageHandler(this, msg);
+        });
+    }
+
+    /**
+     * Method that turns off a portal and disconnects it from the router and the
+     * agents that were connected to that portal, removing all from the network.
+     */
+    public void shutdown() {
+        forwardGlobal(this, new Message(this.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
+        socketAgents.forEach((socketAgent) -> {
+            socketAgent.close();
+        });
+        running = false;
+    }
+
+    /**
+     * Returns copy of routing Table which is unmodifiable
+     *
+     * @return unmodifiable copy of routing table
+     */
+    public Map<String, MetaAgent> getRoutingTable() {
+        return Collections.unmodifiableMap(routingTable);
     }
 
     /**
@@ -153,152 +225,99 @@ public class Portal extends MetaAgent {
      * forwarding messages.
      * </p>
      *
-     * @param agent the source from which the message is being sent
-     * @param message the message which is being received.
      * @author v8073331
      */
     @Override
-    public void messageHandler(MetaAgent agent, Message message) {
-        observers.updateReceiver(message, agent.getName());
-        if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
+    public void run() {
+        while (running) {
+            try {
 
-            synchronized (routingTable) {
-                switch (message.getMessageType()) {
-                    case ADD_METAAGENT:
-                        if (isNameAllowed(message.getSender())) {
-                            addAgent(message.getSender(), agent);
+                ReceivedMessage receivedMessage = messageQueue.take();
 
-                            forwardGlobal(agent, message);
+                Message message = receivedMessage.getMessage();
+                MetaAgent agent = receivedMessage.getSource();
 
-                        } else {
-                            System.out.println("Username not allowed: " + message.getSender());
+                observers.updateReceiver(message, agent.getName());
+                if (message.getRecipient().equals(this.name) || message.getRecipient().equalsIgnoreCase("GLOBAL")) {
+
+                    synchronized (routingTable) {
+                        switch (message.getMessageType()) {
+                            case ADD_METAAGENT:
+                                if (isNameAllowed(message.getSender())) {
+                                    addAgent(message.getSender(), agent);
+
+                                    forwardGlobal(agent, message);
+
+                                } else {
+                                    System.out.println("Username not allowed: " + message.getSender());
+                                }
+                                break;
+                            case REMOVE_METAAGENT:
+                                if (isMessageOriginCorrect(agent, message)) {
+                                    removeAgent(message.getSender());
+
+                                    forwardGlobal(agent, message);
+
+                                } else {
+                                    System.out.println("Invalid origin for message: " + message.toString());
+                                }
+                                break;
+                            case USER_MSG:
+                                if (isMessageOriginCorrect(agent, message)) {
+                                    System.out.println("UserMessage: " + message.getMessageDetails());
+                                } else {
+                                    System.out.println("Invalid origin for message: " + message.toString());
+                                }
+                                break;
+
+                            case LOAD_TABLE:
+                                if (routingTable.isEmpty()) {
+                                    String[] values2 = message.getMessageDetails().split("\n");
+                                    for (String s : values2) {
+                                        addAgent(s, agent);
+                                    }
+                                } else {
+                                    /**
+                                     * We should only load the routing table if
+                                     * it is empty to prevent case where one
+                                     * portal may have different data than the
+                                     * other We also can just disconnect since
+                                     * the connection was unsuccessful
+                                     */
+                                    System.out.println("Error: Can not load routing table, as it is not empty.");
+                                    ((SocketAgent) agent).close();
+                                }
+                                break;
+                            case ERROR:
+                                if (isMessageOriginCorrect(agent, message)) {
+                                    System.out.println("Error: " + message.getMessageDetails());
+                                } else {
+                                    System.out.println("Invalid origin for message: " + message.toString());
+                                }
+                                break;
+                            default:
+                                Message msg = new Message(this.name, message.getSender(), MessageType.ERROR, "Could not process the message: Invalid message type");
+                                observers.updateSender(msg, agent.getName());
+                                agent.messageHandler(this, msg);
                         }
-                        break;
-                    case REMOVE_METAAGENT:
-                        if (isMessageOriginCorrect(agent, message)) {
-                            removeAgent(message.getSender());
-
-                            forwardGlobal(agent, message);
-
-                        } else {
-                            System.out.println("Invalid origin for message: " + message.toString());
-                        }
-                        break;
-                    case USER_MSG:
-                        if (isMessageOriginCorrect(agent, message)) {
-                            System.out.println("UserMessage: " + message.getMessageDetails());
-                        } else {
-                            System.out.println("Invalid origin for message: " + message.toString());
-                        }
-                        break;
-
-                    case LOAD_TABLE:
-                        if (routingTable.isEmpty()) {
-                            String[] values2 = message.getMessageDetails().split("\n");
-                            for (String s : values2) {
-                                addAgent(s, agent);
-                            }
-                        } else {
-                            /**
-                             * We should only load the routing table if it is
-                             * empty to prevent case where one portal may have
-                             * different data than the other We also can just
-                             * disconnect since the connection was unsuccessful
-                             */
-                            System.out.println("Error: Can not load routing table, as it is not empty.");
-                            ((SocketAgent) agent).close();
-                        }
-                        break;
-                    case ERROR:
-                        if (isMessageOriginCorrect(agent, message)) {
-                            System.out.println("Error: " + message.getMessageDetails());
-                        } else {
-                            System.out.println("Invalid origin for message: " + message.toString());
-                        }
-                        break;
-                    default:
-                        Message msg = new Message(this.name, message.getSender(), MessageType.ERROR, "Could not process the message: Invalid message type");
-                        observers.updateSender(msg, agent.getName());
-                        agent.messageHandler(this, msg);
-                }
-            }
-        } else {
-            if (isMessageOriginCorrect(agent, message)) {
-                if (routingTable.containsKey(message.getRecipient())) {
-                    observers.updateSender(message, agent.getName());
-                    routingTable.get(message.getRecipient()).messageHandler(this, message);
+                    }
                 } else {
-                    Message msg = new Message(this.getName(), message.getSender(), MessageType.ERROR, "Could not route message to " + message.getRecipient() + ": The recipient was not found");
-                    observers.updateSender(msg, agent.getName());
-                    agent.messageHandler(this, msg);
+                    if (isMessageOriginCorrect(agent, message)) {
+                        if (routingTable.containsKey(message.getRecipient())) {
+                            observers.updateSender(message, agent.getName());
+                            routingTable.get(message.getRecipient()).messageHandler(this, message);
+                        } else {
+                            Message msg = new Message(this.getName(), message.getSender(), MessageType.ERROR, "Could not route message to " + message.getRecipient() + ": The recipient was not found");
+                            observers.updateSender(msg, agent.getName());
+                            agent.messageHandler(this, msg);
+                        }
+                    } else {
+                        System.out.println("Invalid origin for message: " + message.toString());
+                    }
                 }
-            } else {
-                System.out.println("Invalid origin for message: " + message.toString());
+
+            } catch (InterruptedException ex) {
             }
         }
-    }
-
-    /**
-     * Checks whatever the agent name is allowed. This function checks if the
-     * agent name is not already in use and if the username is valid.
-     *
-     * @param name MetaAgent name to be added
-     * @return true if MetaAgent name is allowed and doesn't already exists
-     * @author v8243060
-     * @author v8036651
-     */
-    public boolean isNameAllowed(String name) {
-        return (routingTable.get(name) == null && usernameValidation(name));
-    }
-
-    /**
-     * Checks whether the message came from the correct branch/agent
-     *
-     * @param agent MetaAgent that send/propagated the message
-     * @param msg message sent
-     * @return true if MetaAgent in the routing table for the message sender is
-     * the same as the MetaAgent who sent the message
-     * @author v8243060
-     */
-    protected boolean isMessageOriginCorrect(MetaAgent agent, Message msg) {
-        return (agent.equals(this.routingTable.get(msg.getSender())));
-    }
-
-    /**
-     * This function sends message to all other nodes This function may be
-     * overridden to modify the behaviour in which global messages are sent. For
-     * example portal would only send global message forward to router while
-     * router would send it to other places as well.
-     *
-     * @param msg the message to be sent
-     * @param source the location from which the message came. This node will
-     * not be sent the global message as it already seen it before
-     * @author v8073331
-     */
-    protected void forwardGlobal(MetaAgent source, Message msg) {
-        socketAgents.stream().filter((socketAgent) -> (!socketAgent.equals(source))).forEachOrdered((sa) -> {
-            observers.updateSender(msg, source.getName());
-            sa.messageHandler(this, msg);
-        });
-    }
-
-    /**
-     * Method that turns off a portal and disconnects it from the router and the
-     * agents that were connected to that portal, removing all from the network.
-     */
-    public void shutdown() {
-        forwardGlobal(this, new Message(this.getName(), "GLOBAL", MessageType.REMOVE_PORTAL, ""));
-        socketAgents.forEach((socketAgent) -> {
-            socketAgent.close();
-        });
-    }
-
-    /**
-     * Returns copy of routing Table which is unmodifiable
-     *
-     * @return unmodifiable copy of routing table
-     */
-    public Map<String, MetaAgent> getRoutingTable() {
-        return Collections.unmodifiableMap(routingTable);
     }
 }

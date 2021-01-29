@@ -2,11 +2,15 @@ package ica.GUI;
 
 import ica.messages.Message;
 import ica.messages.MessageType;
+import ica.messages.ReceivedMessage;
+import ica.metaagent.Portal;
 import ica.metaagent.User;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -15,26 +19,26 @@ import javax.swing.JFrame;
  *
  * @author v8036651
  */
-public class UserGUI {
+public class UserGUI extends User{
 
-    private User user;
-    private UserInterface iFace;
+    private final UserInterface iFace;
 
     /**
      * Constructor for the user GUI class which requires an agent to be passed,
      * this is a user agent and is passed as to allow the send message and other
      * methods that are defined in the user agent class.
      *
-     * @param agent the user agent which is being connected to the GUI
+     * @param name
+     * @param connection
      */
-    public UserGUI(User agent) {
-        user = agent;
+    public UserGUI(String name, Portal connection) {
+        super(name, connection);
         JFrame userFrame;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = new Dimension((int) (screenSize.getWidth() * 0.275), (int) (screenSize.getHeight() * 0.45));
 
-        iFace = new UserInterface(user);
-        userFrame = new JFrame(user.getName());
+        iFace = new UserInterface(this);
+        userFrame = new JFrame(this.getName());
         userFrame.getContentPane().add(iFace.mainPanel);
         userFrame.setSize(frameSize);
         userFrame.setVisible(true);
@@ -51,7 +55,7 @@ public class UserGUI {
 
             @Override
             public void windowClosing(WindowEvent event) {
-                user.connection.messageHandler(user, new Message(user.getName(), "GLOBAL", MessageType.REMOVE_METAAGENT, ""));
+                connection.messageHandler(UserGUI.this, new Message(UserGUI.this.getName(), "GLOBAL", MessageType.REMOVE_METAAGENT, ""));
                 userFrame.setVisible(false);
             }
 
@@ -77,18 +81,25 @@ public class UserGUI {
         });
         userFrame.setLocationRelativeTo(null);
 
-        userFrame.setTitle(user.getName());
+        userFrame.setTitle(this.getName());
     }
+    
+    @Override
+    public void run() {
+        while (running) {
+            try {
+                ReceivedMessage receivedMessage = messageQueue.take();
+                
+                Message msg = receivedMessage.getMessage();
 
-    /**
-     * This method is called when a message is received by a user agent and
-     * calls the update method from the suer interface which updates the JTable
-     * with the new message details.
-     *
-     * @param sender the source of the message
-     * @param details the message content
-     */
-    public void recivedMessage(String sender, String details) {
-        iFace.displayMessage(sender, details);
+                if (msg.getRecipient().equals(this.name)) {
+                    iFace.displayMessage(msg.getSender(), msg.getMessageDetails());
+                } else {
+                    connection.messageHandler(this, new Message(this.name, msg.getSender(), MessageType.ERROR, "Message recieved by wrong agent"));
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

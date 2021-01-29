@@ -12,23 +12,23 @@ public class Message {
     /**
      * String name of the sender of the message.
      */
-    private String sender;
+    private final String sender;
 
     /**
      * String name of the recipient of the message If "global" then the message
      * is a broadcast.
      */
-    private String recipient;
+    private final String recipient;
 
     /**
      * Enum type of the message.
      */
-    private MessageType type;
+    private final MessageType type;
 
     /**
      * Contains the message itself.
      */
-    private String messageDetails;
+    private final String messageDetails;
 
     /**
      * Constructor for message class

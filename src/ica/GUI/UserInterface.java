@@ -1,13 +1,16 @@
 package ica.GUI;
 
 import ica.metaagent.User;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -19,13 +22,10 @@ import javax.swing.JTextField;
  */
 public class UserInterface implements ActionListener {
 
-    private final JButton send = new JButton("Send");
-    private final JTextArea messageText = new JTextArea();
-    private final JTextArea recievedMessage = new JTextArea();
-    private final JTextField recipient = new JTextField();
-    private final Dimension buttonSize = new Dimension(200, 100);
-    private final Dimension textFieldSize = new Dimension(200, 100);
-    private final Dimension textAreaSize = new Dimension(200, 100);
+    private final JButton send;
+    private final JTextArea messageText;
+    private final JTextArea recievedMessage;
+    private final JTextField recipient;
     private String messageDetails;
     private String recipientName;
     private final User user;
@@ -41,25 +41,48 @@ public class UserInterface implements ActionListener {
     public UserInterface(User agent) {
         user = agent;
 
-        mainPanel = new JPanel(new GridLayout(4, 2));
+        mainPanel = new JPanel(new GridBagLayout());
 
+        send = new JButton("Send");
         send.addActionListener(this);
-        send.setPreferredSize(buttonSize);
-        recipient.setPreferredSize(textFieldSize);
-        messageText.setPreferredSize(textAreaSize);
-        mainPanel.add(new JLabel("Recipient:"));
-        mainPanel.add(recipient);
+        
+        messageText = new JTextArea();
+        recievedMessage = new JTextArea();
+        recievedMessage.setEditable(false);
+        recipient = new JTextField();
 
-        mainPanel.add(new JLabel("Message:"));
-        mainPanel.add(messageText);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        constraints.gridheight = 1;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.weightx = 0.5;
+        constraints.weighty = 0.8;
 
-        mainPanel.add(new JLabel());
-        mainPanel.add(send);
+        constraints.gridwidth = 3;
+        mainPanel.add(new JScrollPane(recievedMessage), constraints);
 
-        mainPanel.add(new JLabel("Recieved Message:"));
-        mainPanel.add(recievedMessage);
+        constraints.gridwidth = 1;
+        constraints.gridy++;
+        constraints.weighty = 0.1;
+        constraints.weightx = 0.2;
+        mainPanel.add(new JLabel("Recipient:"), constraints);
+        constraints.gridx++;
+        constraints.weightx = 0.6;
+        mainPanel.add(recipient, constraints);
 
-        mainPanel.setName(agent.getName());
+        constraints.gridy++;
+        constraints.gridx = 1;
+        constraints.weightx = 0.2;
+        mainPanel.add(new JLabel("Message:"), constraints);
+        constraints.gridx++;
+        constraints.weightx = 0.6;
+        mainPanel.add(new JScrollPane(messageText), constraints);
+        constraints.gridx++;
+        constraints.weightx = 0.2;
+        mainPanel.add(send, constraints);
     }
 
     /**
@@ -73,11 +96,11 @@ public class UserInterface implements ActionListener {
         if (event.getSource().equals(send)) {
             recipientName = recipient.getText();
             if (recipientName.equalsIgnoreCase("GLOBAL")) {
-                System.out.println("Error - User cannot send a global message!");
+                JOptionPane.showMessageDialog(null, "User can not send global message!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 messageDetails = messageText.getText();
                 user.sendMessage(recipientName, messageDetails);
-                System.out.println("Sent Message");
+                messageText.setText("");
             }
         }
     }
@@ -90,7 +113,9 @@ public class UserInterface implements ActionListener {
      * @param details the content of the message being received.
      */
     public void displayMessage(String sender, String details) {
+        recievedMessage.setEditable(true);
         String prevMessages = recievedMessage.getText();
-        recievedMessage.setText(prevMessages + "\n A message has been recieved by " + sender + ":\n " + details);
+        recievedMessage.setText(prevMessages + sender + ": " + details + "\n");
+        recievedMessage.setEditable(false);
     }
 }

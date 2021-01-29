@@ -1,4 +1,4 @@
-package ica.GUI;
+package ica.NetHammer;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -18,7 +18,7 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author v8073331
  */
-public class NetHammer extends JDialog {
+public class NetHammerDialogue extends JDialog {
 
     private static final String DISCLAIMER
             = "<html>You are about to run NetHammer stress test on the network.<br/>"
@@ -40,7 +40,7 @@ public class NetHammer extends JDialog {
     private final JSpinner timeout;
     private boolean cancelled;
 
-    public NetHammer() {
+    public NetHammerDialogue() {
 
         setTitle("NetHammer");
         setModal(true);

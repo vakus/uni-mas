@@ -5,20 +5,16 @@
  */
 package ica.metaagent;
 
-import ica.metaagent.MetaAgent;
 import ica.metaagent.SocketAgent;
 import ica.metaagent.User;
 import ica.metaagent.Portal;
-import ica.metaagent.Router;
 import ica.messages.Message;
 import ica.messages.MessageType;
 import ica.monitors.CMDMonitor;
-import ica.monitors.Monitor;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.Observer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -203,7 +199,7 @@ public class PortalTest {
      * with invalid origin
      */
     @Test
-    public void testMessageHandlerForDefaultCase() {
+    public void testMessageHandlerForDefaultCase() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method, for the default case");
@@ -219,6 +215,11 @@ public class PortalTest {
         p.messageHandler(u, message);
         
         String expResult = "Message (ERROR): Could not process the message: Invalid message type"+System.getProperty("line.separator");
+        
+        
+        Thread.sleep(50);
+        
+        
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
@@ -228,7 +229,7 @@ public class PortalTest {
      * with invalid origin
      */
     @Test
-    public void testMessageHandlerForMessageToOtherUserWithInvalidOrigin() {
+    public void testMessageHandlerForMessageToOtherUserWithInvalidOrigin() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method, whith an invalid origin");
@@ -243,6 +244,10 @@ public class PortalTest {
         p.messageHandler(u, message);
         
         String expResult = "Invalid origin for message: U1/U2/USER_MSG/Test"+System.getProperty("line.separator");
+
+        Thread.sleep(50);
+        
+
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
@@ -252,7 +257,7 @@ public class PortalTest {
      * with invalid origin
      */
     @Test
-    public void testMessageHandlerForMessageToOtherUserNotOnRoutingTable() {
+    public void testMessageHandlerForMessageToOtherUserNotOnRoutingTable() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method, whith a user not on routing table");
@@ -269,6 +274,11 @@ public class PortalTest {
         p.messageHandler(u, message);
         
         String expResult = "Message (ERROR): Could not route message to U2: The recipient was not found"+System.getProperty("line.separator");
+        
+        
+        Thread.sleep(50);
+        
+        
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
@@ -297,7 +307,7 @@ public class PortalTest {
      * Test of messageHandler method, of class Portal, with a valid remove message
      */
     @Test
-    public void testMessageHandlerForRemovingAnInvalidAgent() {
+    public void testMessageHandlerForRemovingAnInvalidAgent() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method, with an invalid agent");
@@ -311,6 +321,11 @@ public class PortalTest {
         p.messageHandler(u, message);
         
         String expResult = "Invalid origin for message: U1/global/REMOVE_METAAGENT/Test"+System.getProperty("line.separator");
+        
+        
+        Thread.sleep(50);
+        
+        
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
@@ -319,7 +334,7 @@ public class PortalTest {
      * Test of messageHandler method, of class Portal, with a valid message to global
      */
     @Test
-    public void testMessageHandlerForUserMsgToGlobal() {
+    public void testMessageHandlerForUserMsgToGlobal() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method, where the recipient is 'global'");
@@ -334,6 +349,11 @@ public class PortalTest {
         p.messageHandler(u, message);
         
         String expResult = "UserMessage: Test"+System.getProperty("line.separator");
+        
+        
+        Thread.sleep(50);
+        
+        
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
@@ -342,7 +362,7 @@ public class PortalTest {
      * Test of messageHandler method, of class Portal, trying to add a valid meta agent
      */
     @Test
-    public void testMessageHandlerForAddMetaAgent() {
+    public void testMessageHandlerForAddMetaAgent() throws InterruptedException{
         System.out.println("Testing the message handler method, for the Add meta agent message type");
         Portal p = new Portal("P1");
         User u = new User("U1", p );
@@ -351,8 +371,14 @@ public class PortalTest {
         Message message = new Message(u.getName(), "global", MessageType.ADD_METAAGENT, "Test");
         p.messageHandler(u, message);
         
+        Thread.sleep(50);
+        
         String expResult = "U1";
         String result = p.getMetaAgent(u.getName()).getName();
+        
+        
+        Thread.sleep(50);
+        
         
         assertEquals(expResult, result);
     }
@@ -361,7 +387,7 @@ public class PortalTest {
      * Test of messageHandler method, of class Portal, trying to add an invalid meta agent
      */
     @Test
-    public void testMessageHandlerForAddMetaAgentWithInvalidName() {
+    public void testMessageHandlerForAddMetaAgentWithInvalidName() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method, where the added agent is invalid");
@@ -375,6 +401,11 @@ public class PortalTest {
         p.messageHandler(u, message);
         
         String expResult = "Username not allowed: /"+System.getProperty("line.separator");
+        
+        
+        Thread.sleep(50);
+        
+        
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
@@ -384,7 +415,7 @@ public class PortalTest {
      * origin to global
      */
     @Test
-    public void testMessageHandlerForUserMsgToGlobalWithInvalidOrigin() {
+    public void testMessageHandlerForUserMsgToGlobalWithInvalidOrigin() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method, where the recipient is 'global', but with invalid origin");
@@ -398,6 +429,7 @@ public class PortalTest {
         p.messageHandler(u, message);
         
         String expResult = "Invalid origin for message: U1/global/USER_MSG/Test"+System.getProperty("line.separator");
+        Thread.sleep(50);
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
@@ -406,7 +438,7 @@ public class PortalTest {
      * Test of messageHandler method, of class Portal, using the load Table message type
      */
     @Test
-    public void testMessageHandlerForLoadTableWithContents() {
+    public void testMessageHandlerForLoadTableWithContents() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method, where the messsage is load table");
@@ -425,6 +457,10 @@ public class PortalTest {
         p.messageHandler(sa, message);
         
         String expResult = "Error: Can not load routing table, as it is not empty."+System.getProperty("line.separator");
+        
+        
+        Thread.sleep(50);
+        
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
@@ -434,7 +470,7 @@ public class PortalTest {
      * with an empty routing table
      */
     @Test
-    public void testMessageHandlerForLoadTableWhenEmpty() {
+    public void testMessageHandlerForLoadTableWhenEmpty() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method, where the messsage is load table, which is empty");
@@ -449,6 +485,10 @@ public class PortalTest {
         p.messageHandler(u, message);
         
         String expResult = "";
+        
+        Thread.sleep(50);
+        
+        
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
         System.out.println(p.getMetaAgent("U1"));
@@ -458,7 +498,7 @@ public class PortalTest {
      * Test of messageHandler method, of class Portal, for an error message to global
      */
     @Test
-    public void testMessageHandlerForErrorMsgToGlobal() {
+    public void testMessageHandlerForErrorMsgToGlobal() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method, where the messsage is an error");
@@ -473,6 +513,11 @@ public class PortalTest {
         p.messageHandler(u, message);
         
         String expResult = "Error: Test"+System.getProperty("line.separator");
+        
+        
+        Thread.sleep(50);
+        
+        
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }
@@ -482,7 +527,7 @@ public class PortalTest {
      * invalid origin
      */
     @Test
-    public void testMessageHandlerForErrorMsgToGlobalWithInvalidOrigin() {
+    public void testMessageHandlerForErrorMsgToGlobalWithInvalidOrigin() throws InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method, where the messsage is an error, but with invalid origin");
@@ -496,6 +541,7 @@ public class PortalTest {
         p.messageHandler(u, message);
         
         String expResult = "Invalid origin for message: U1/global/ERROR/Test"+System.getProperty("line.separator");
+        Thread.sleep(50);
         assertEquals(expResult, outContent.toString());
         System.out.println(outContent.toString());
     }

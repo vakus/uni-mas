@@ -1,7 +1,6 @@
 package ica.main;
 
 import ica.GUI.ObserverGUI;
-import ica.metaagent.Router;
 
 /**
  * This is the main driver class that uses the GUI and would be given to the end
@@ -12,7 +11,6 @@ import ica.metaagent.Router;
 public class GuiMain {
 
     public static ObserverGUI gui;
-    public static Router router;
 
     /**
      * This is the main class that will run and simply loads the GUI that then

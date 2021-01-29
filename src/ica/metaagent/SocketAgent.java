@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class is used to create the socket agents that connect portals and
@@ -57,14 +55,14 @@ public class SocketAgent extends MetaAgent {
      * @author v8073331
      */
     public SocketAgent(Portal portal, Socket socket) {
-        super("Socket from: " + portal.getName());
+        super(portal.getName() + "-socket");
 
         this.portal = portal;
         this.socket = socket;
         writeWorker = new WriteWorker(this);
         readWorker = new ReadWorker(this);
-        readWorkerThread = new Thread(readWorker);
-        writeWorkerThread = new Thread(writeWorker);
+        readWorkerThread = new Thread(readWorker, name + "-readWorkerThread");
+        writeWorkerThread = new Thread(writeWorker, name + "-writeWorkerThread");
     }
 
     /**
@@ -85,7 +83,11 @@ public class SocketAgent extends MetaAgent {
      */
     @Override
     public void messageHandler(MetaAgent agent, Message msg) {
-        writeWorker.queueMessage(msg);
+        if(agent.equals(portal)){
+            writeWorker.queueMessage(msg);
+        }else{
+            throw new IllegalArgumentException("Invalid message Source");
+        }
     }
 
     /**
@@ -111,12 +113,6 @@ public class SocketAgent extends MetaAgent {
         if (!readWorkerThread.getState().equals(Thread.State.TERMINATED)) {
             readWorker.stop();
             readWorkerThread.interrupt();
-
-            /*try {
-                readWorkerThread.join();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
         }
 
         /**
@@ -125,40 +121,37 @@ public class SocketAgent extends MetaAgent {
         if (!writeWorkerThread.getState().equals(Thread.State.TERMINATED)) {
             writeWorker.stop();
             writeWorkerThread.interrupt();
-
-            /*try {
-                writeWorkerThread.join();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
         }
 
         /**
          * Close the output stream
          */
         try {
-            socket.getOutputStream().flush();
-            socket.getOutputStream().close();
+            if(!socket.isClosed()){
+                socket.getOutputStream().flush();
+                socket.getOutputStream().close();
+            }
         } catch (IOException ex) {
-            Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         /**
          * Close the input stream
          */
         try {
-            socket.getInputStream().close();
+            if(!socket.isClosed()){
+                socket.getInputStream().close();
+            }
         } catch (IOException ex) {
-            Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         /**
          * Close the socket itself
          */
         try {
-            socket.close();
+            if(!socket.isClosed()){
+                socket.close();
+            }
         } catch (IOException ex) {
-            Logger.getLogger(SocketAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
@@ -261,7 +254,6 @@ class ReadWorker implements Runnable {
 
             }
         } catch (IOException ex) {
-            Logger.getLogger(ReadWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -320,7 +312,6 @@ class WriteWorker implements Runnable {
                     agent.socket.getOutputStream().flush();
                     agent.writeWorker.wait();
                 } catch (IOException | InterruptedException ex) {
-                    Logger.getLogger(WriteWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -335,7 +326,6 @@ class WriteWorker implements Runnable {
         try {
             messageQueue.put(msg);
         } catch (InterruptedException ex) {
-            Logger.getLogger(WriteWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

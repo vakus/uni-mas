@@ -13,7 +13,7 @@ import ica.messages.Message;
  */
 public class GUIMonitor extends Monitor {
 
-    private ObserverGUI gui;
+    private final ObserverGUI gui;
 
     /**
      * This is the constructor for the GUI monitor and must receive a name so it

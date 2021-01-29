@@ -20,13 +20,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ObserverInterface {
 
-    public JPanel buttonsPanel;
-
     public final String[] columnNames = {"No", "Direction", "Sender", "Actual Sender", "Recipient", "Actual Recipient", "Message Type", "Date", "Content"};
     public JTable record;
-    public JScrollPane scrollPane;
     public final JPanel mainPanel;
-    public Object[][] data = new Object[][]{};
+    public Object[][] data;
     private long msgCount;
 
     /**
@@ -38,9 +35,11 @@ public class ObserverInterface {
      */
     public ObserverInterface() {
 
+        data = new Object[][]{};
+
         msgCount = 0;
         record = new JTable(new DefaultTableModel(data, columnNames));
-        scrollPane = new JScrollPane(record);
+        JScrollPane scrollPane = new JScrollPane(record);
 
         mainPanel = new JPanel(new GridLayout(1, 1));
 

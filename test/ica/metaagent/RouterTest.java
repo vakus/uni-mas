@@ -148,13 +148,15 @@ public class RouterTest {
      * @throws java.io.IOException
      */
     @Test
-    public void testMessageHandlerToAddPortal() throws IOException {
+    public void testMessageHandlerToAddPortal() throws IOException, InterruptedException {
         System.out.println("Testing the message handler to add a portal");
         Router instance = new Router("R1");
         Portal p = new Portal("P1");
         
         Message message = new Message(p.getName(), "global", MessageType.ADD_PORTAL, "");
         instance.messageHandler(p, message);
+        
+        Thread.sleep(50);
         
         String expResult = "P1";
         String result = instance.getMetaAgent(p.getName()).getName();
@@ -198,7 +200,7 @@ public class RouterTest {
      * @throws java.io.IOException
      */
     @Test
-    public void testMessageHandlerToRemovePortalWithoutSocketAgents() throws IOException {
+    public void testMessageHandlerToRemovePortalWithoutSocketAgents() throws IOException, InterruptedException {
         System.out.println("Testing the message handler method without using socket agents");
         Router instance = new Router("R1");
         Portal p = new Portal("P1");
@@ -209,6 +211,9 @@ public class RouterTest {
         
         message = new Message(p.getName(), instance.getName(), MessageType.REMOVE_PORTAL, "");
         instance.messageHandler(p, message);
+        
+        
+        Thread.sleep(50);
         
         String expResult = "{P1="+p.toString()+"}";
         String result = instance.getRoutingTable().toString();
@@ -268,7 +273,7 @@ public class RouterTest {
      * @throws java.io.IOException
      */
     @Test
-    public void testMessageHandlerToRequestRouterAddress() throws IOException {
+    public void testMessageHandlerToRequestRouterAddress() throws IOException, InterruptedException {
         System.out.println("Testing the message handler method to request router address");
         Router instance = new Router("R1");
         Socket s = new Socket();
@@ -276,6 +281,8 @@ public class RouterTest {
         
         Message message = new Message(sa.getName(), instance.getName(), MessageType.REQUEST_ROUTER_ADDRESSES, "");
         instance.messageHandler(sa, message);
+        
+        Thread.sleep(50);
         
         String expResult = "{}";
         String result = instance.getRoutingTable().toString();
@@ -314,7 +321,7 @@ public class RouterTest {
      * @throws java.io.IOException
      */
     @Test
-    public void testMessageHandlerToDefaultCase() throws IOException {
+    public void testMessageHandlerToDefaultCase() throws IOException, InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         
         System.out.println("Testing the message handler method to request router address");
@@ -325,6 +332,8 @@ public class RouterTest {
         
         Message message = new Message(instance.getName(), "global", MessageType.ERROR, "Test");
         instance.messageHandler(instance, message);
+        
+        Thread.sleep(50);
         
         String expResult = "Invalid origin for message: R1/global/ERROR/Test"+System.getProperty("line.separator");
         instance.shutdown();
